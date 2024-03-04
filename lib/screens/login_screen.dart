@@ -28,10 +28,20 @@ class _LoginScreenState extends State<LoginScreen> {
         ],
       ),
       body: SizedBox(
-        height: 2000,
+        height: 1000,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            SizedBox(
+              height: 200,
+              width: 350,
+              child: Image(
+                image: AssetImage(
+                  'assets/images/convivencia.png',
+                ),
+                fit: BoxFit.cover,
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.all(20),
               child: Column(
@@ -80,7 +90,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
             SizedBox(
-              height: 120,
+              height: 125,
               child: Column(
                 children: [
                   ElevatedButton(
@@ -112,8 +122,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 ],
               ),
             ),
-            SizedBox(
-              height: 200,
+            Padding(
+              padding: const EdgeInsets.only(top: 100),
               child: Column(
                 children: [
                   const Text(
