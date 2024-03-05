@@ -32,7 +32,7 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            SizedBox(
+            const SizedBox(
               height: 200,
               width: 350,
               child: Image(
@@ -46,7 +46,7 @@ class _LoginScreenState extends State<LoginScreen> {
               padding: const EdgeInsets.all(20),
               child: Column(
                 children: [
-                  SizedBox(
+                  const SizedBox(
                     height: 90,
                     child: TextField(
                       decoration: InputDecoration(
@@ -98,7 +98,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor:
                           Theme.of(context).textTheme.labelLarge?.color,
-                      foregroundColor: Theme.of(context).colorScheme.secondary,
+                      foregroundColor: Theme.of(context).colorScheme.primary,
                       minimumSize: Size(200, 70),
                     ),
                     child: const Text(

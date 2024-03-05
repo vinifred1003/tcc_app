@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import './screens/login_screen.dart';
+import './screens/initial_screen.dart';
 
 void main() {
   runApp(MeproviApp());
@@ -15,7 +16,7 @@ class MeproviApp extends StatelessWidget {
     final ThemeData tema = ThemeData();
 
     return MaterialApp(
-      home: LoginScreen(),
+      home: InitialScreen(),
       theme: tema.copyWith(
         colorScheme: tema.colorScheme.copyWith(
           primary: Colors.lightBlue,
