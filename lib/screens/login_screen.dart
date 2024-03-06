@@ -114,7 +114,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         fontSize: 16,
                         color: Colors.blue,
                         decoration: TextDecoration.underline,
-                        decorationColor: Colors.blue, // Set the color you want
+                        decorationColor: Colors.blue,
                         decorationThickness: 2.0,
                       ),
                     ),
