@@ -10,6 +10,9 @@ class InitialScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(" Aplicativo Meprovi"),
         backgroundColor: Theme.of(context).colorScheme.primary,
+        iconTheme: IconThemeData(
+          color: Colors.white, // Defina a cor desejada para o botão do Drawer
+        ),
         actions: const <Widget>[
           CircleAvatar(
             backgroundColor: Colors.white,
@@ -20,6 +23,31 @@ class InitialScreen extends StatelessWidget {
             ),
           ),
         ],
+      ),
+      drawer: Container(
+        color: Colors.white,
+        child: Drawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              const DrawerHeader(
+                decoration: BoxDecoration(
+                  color: Colors.blue,
+                ),
+                child: Text(
+                  'Aplicativo Meprovi',
+                  style: TextStyle(color: Colors.white, fontSize: 40),
+                ),
+              ),
+              ListTile(title: const Text('Home'), onTap: () {}),
+              ListTile(title: const Text('Educandos'), onTap: () {}),
+              ListTile(title: const Text('Educadores'), onTap: () {}),
+              ListTile(title: const Text('Entradas e Saidas'), onTap: () {}),
+              ListTile(title: const Text('Advertencias'), onTap: () {}),
+              ListTile(title: const Text('Sair'), onTap: () {}),
+            ],
+          ),
+        ),
       ),
       body: Center(
         child: Column(
