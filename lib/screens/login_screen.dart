@@ -125,6 +125,7 @@ class _LoginScreenState extends State<LoginScreen> {
             Padding(
               padding: const EdgeInsets.only(top: 100),
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   const Text(
                     'Não tem cadastro?',
