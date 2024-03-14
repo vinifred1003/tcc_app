@@ -1,8 +1,11 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:tcc_app/screens/entry_record.dart';
 import './screens/login_screen.dart';
 import './screens/initial_screen.dart';
 import './screens/register_screen.dart';
+import './screens/entry_record.dart';
+import './data/dummy_data.dart';
 
 void main() {
   runApp(MeproviApp());
@@ -17,7 +20,7 @@ class MeproviApp extends StatelessWidget {
     final ThemeData tema = ThemeData();
 
     return MaterialApp(
-      home: RegisterScreen(),
+      home: EntryRecord(dummyStudentEntry),
       theme: tema.copyWith(
         colorScheme: tema.colorScheme.copyWith(
           primary: Colors.lightBlue,
