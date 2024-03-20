@@ -1,7 +1,38 @@
 import 'package:flutter/material.dart';
+import './entry_record.dart';
+import '../data/dummy_data.dart';
+import 'package:camera/camera.dart';
+import './camera_screen.dart';
 
-class InitialScreen extends StatelessWidget {
+class InitialScreen extends StatefulWidget {
   const InitialScreen({super.key});
+
+  @override
+  State<InitialScreen> createState() => _InitialScreenState();
+}
+
+class _InitialScreenState extends State<InitialScreen> {
+  CameraDescription? firstCamera;
+
+  void _selectEntryRecords(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) {
+        return EntryRecord(dummyStudentEntry);
+      }),
+    );
+  }
+
+  void _InitCamera(BuildContext context) {
+    if (firstCamera != null) {
+      Navigator.of(context).push(
+        MaterialPageRoute(builder: (_) {
+          return CameraScreen(camera: firstCamera!);
+        }),
+      );
+    } else {
+      // Tratar o caso em que firstCamera é null
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,11 +71,26 @@ class InitialScreen extends StatelessWidget {
                 ),
               ),
               ListTile(title: const Text('Home'), onTap: () {}),
-              ListTile(title: const Text('Educandos'), onTap: () {}),
-              ListTile(title: const Text('Educadores'), onTap: () {}),
-              ListTile(title: const Text('Entradas e Saidas'), onTap: () {}),
-              ListTile(title: const Text('Advertencias'), onTap: () {}),
-              ListTile(title: const Text('Sair'), onTap: () {}),
+              ListTile(
+                title: Text('Educandos'),
+                onTap: () => _selectEntryRecords(context),
+              ),
+              ListTile(
+                title: const Text('Educadores'),
+                onTap: () {},
+              ),
+              ListTile(
+                title: const Text('Entradas e Saidas'),
+                onTap: () {},
+              ),
+              ListTile(
+                title: const Text('Advertencias'),
+                onTap: () {},
+              ),
+              ListTile(
+                title: const Text('Sair'),
+                onTap: () {},
+              ),
             ],
           ),
         ),
@@ -117,7 +163,7 @@ class InitialScreen extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.all(10),
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () => _InitCamera(context),
                         child: Text(
                           "Chegada",
                           style: TextStyle(
