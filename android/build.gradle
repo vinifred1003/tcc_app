@@ -16,19 +16,19 @@ allprojects {
         mavenCentral()
     }
 }
-subprojects {
-    afterEvaluate {
-        android {
-            compileSdkVersion 31
-            buildToolsVersion "31.0.0"
+// subprojects {
+//     afterEvaluate {
+//         android {
+//             compileSdkVersion 31
+//             buildToolsVersion "31.0.0"
 
-            defaultConfig {
-                minSdkVersion 21
-                targetSdkVersion 31
-            }
-        }
-    }
-}
+//             defaultConfig {
+//                 minSdkVersion 21
+//                 targetSdkVersion 31
+//             }
+//         }
+//     }
+// }
 rootProject.buildDir = '../build'
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"

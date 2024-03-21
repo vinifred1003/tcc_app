@@ -16,11 +16,11 @@ class _LoginScreenState extends State<LoginScreen> {
       appBar: AppBar(
         title: Text("Bem vindo"),
         backgroundColor: Theme.of(context).colorScheme.primary,
-        actions: const <Widget>[
+        actions: <Widget>[
           CircleAvatar(
-            backgroundColor: Colors.white,
+            backgroundColor: Theme.of(context).colorScheme.inversePrimary,
             radius: 20,
-            child: Padding(
+            child: const Padding(
               padding: EdgeInsets.all(4.0),
               child: Icon(Icons.question_mark),
             ),
@@ -69,7 +69,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         Row(
                           children: [
                             Checkbox(
-                              checkColor: Colors.white,
+                              checkColor:
+                                  Theme.of(context).colorScheme.inversePrimary,
                               value: isChecked,
                               onChanged: (bool? value) {
                                 setState(() {

@@ -6,7 +6,7 @@ import './screens/initial_screen.dart';
 import './screens/register_screen.dart';
 import './screens/entry_record.dart';
 import 'package:flutter/material.dart';
-import 'package:camera/camera.dart'; // Certifique-se de importar a biblioteca da câmera se ainda não o fez
+// import 'package:camera/camera.dart'; // Certifique-se de importar a biblioteca da câmera se ainda não o fez
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,6 +26,7 @@ class MeproviApp extends StatelessWidget {
         colorScheme: tema.colorScheme.copyWith(
           primary: Colors.lightBlue,
           secondary: Color.fromARGB(255, 162, 222, 250),
+          inversePrimary: Colors.white,
         ),
         textTheme: tema.textTheme.copyWith(
           titleLarge: const TextStyle(
