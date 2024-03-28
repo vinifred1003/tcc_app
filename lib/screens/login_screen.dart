@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:tcc_app/components/login/footer_buttons.dart';
+import '../components/global/base_app_bar.dart';
+import '../components/login/inputs.dart';
+import '../components/login/center_buttons.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -8,25 +12,11 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  bool isChecked = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.secondary,
-      appBar: AppBar(
-        title: Text("Bem vindo"),
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        actions: <Widget>[
-          CircleAvatar(
-            backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-            radius: 20,
-            child: const Padding(
-              padding: EdgeInsets.all(4.0),
-              child: Icon(Icons.question_mark),
-            ),
-          ),
-        ],
-      ),
+      appBar: const BaseAppBar(screen_title: Text("Bem vindo")),
       body: SizedBox(
         height: 1000,
         child: Column(
@@ -42,112 +32,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 fit: BoxFit.cover,
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                children: [
-                  const SizedBox(
-                    height: 90,
-                    child: TextField(
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        hintText: '',
-                        labelText: 'E-mail',
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 120,
-                    child: Column(
-                      children: [
-                        TextField(
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(),
-                            labelText: 'Senha',
-                          ),
-                        ),
-                        Row(
-                          children: [
-                            Checkbox(
-                              checkColor:
-                                  Theme.of(context).colorScheme.inversePrimary,
-                              value: isChecked,
-                              onChanged: (bool? value) {
-                                setState(() {
-                                  isChecked = value!;
-                                });
-                              },
-                            ),
-                            Text(
-                              'Lembrar-se de mim',
-                              style: TextStyle(fontSize: 16),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: 125,
-              child: Column(
-                children: [
-                  ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor:
-                          Theme.of(context).textTheme.labelLarge?.color,
-                      foregroundColor: Theme.of(context).colorScheme.primary,
-                      minimumSize: Size(200, 70),
-                    ),
-                    child: const Text(
-                      "Entrar",
-                      style: TextStyle(fontSize: 25),
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () {},
-                    child: const Text(
-                      "Esqueci minha senha",
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.blue,
-                        decoration: TextDecoration.underline,
-                        decorationColor: Colors.blue,
-                        decorationThickness: 2.0,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 100),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  const Text(
-                    'Não tem cadastro?',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                  TextButton(
-                    onPressed: () {},
-                    child: const Text(
-                      "Cadastrar",
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.blue,
-                        decoration: TextDecoration.underline,
-                        decorationColor: Colors.blue, // Set the color you want
-                        decorationThickness: 2.0,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            Inputs(),
+            const CenterButtons(),
+            const FooterButtons(),
           ],
         ),
       ),
