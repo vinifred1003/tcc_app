@@ -19,17 +19,24 @@ class InitialScreen extends StatefulWidget {
 
 class _InitialScreenState extends State<InitialScreen> {
   String scanResult = "";
+
   Future<void> scanCode() async {
     String barcodeScanRes;
     try {
-      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
-          "#ff6666", "Cancel", true, ScanMode.QR);
+      // Explicitly cast the stream to Stream<String>
+      Stream<String>? barcodeStream =
+          await FlutterBarcodeScanner.getBarcodeStreamReceiver(
+              "#ff6666", "Cancel", true, ScanMode.QR) as Stream<String>?;
+      if (barcodeStream != null) {
+        barcodeStream.listen((barcode) {
+          setState(() {
+            scanResult = barcode;
+          });
+        });
+      }
     } on PlatformException {
       barcodeScanRes = "Failed to scan: $e";
     }
-    setState(() {
-      scanResult = barcodeScanRes;
-    });
   }
 
   @override
