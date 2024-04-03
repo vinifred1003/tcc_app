@@ -1,4 +1,8 @@
+import 'dart:math';
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:flutter/services.dart';
 import '../components/global/app_drawer.dart';
 import '../components/global/base_app_bar.dart';
 // import 'package:camera/camera.dart';
@@ -7,26 +11,27 @@ import '../components/initial/center_buttons.dart';
 import '../components/initial/profile_display.dart';
 
 class InitialScreen extends StatefulWidget {
-  const InitialScreen({super.key});
+  InitialScreen({super.key});
 
   @override
   State<InitialScreen> createState() => _InitialScreenState();
 }
 
 class _InitialScreenState extends State<InitialScreen> {
-  // CameraDescription? firstCamera;
+  String scanResult = "";
+  Future<void> scanCode() async {
+    String barcodeScanRes;
+    try {
+      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
+          "#ff6666", "Cancel", true, ScanMode.QR);
+    } on PlatformException {
+      barcodeScanRes = "Failed to scan: $e";
+    }
+    setState(() {
+      scanResult = barcodeScanRes;
+    });
+  }
 
-  // void _InitCamera(BuildContext context) {
-  //   if (firstCamera != null) {
-  //     Navigator.of(context).push(
-  //       MaterialPageRoute(builder: (_) {
-  //         return CameraScreen(camera: firstCamera!);
-  //       }),
-  //     );
-  //   } else {
-  //     // Tratar o caso em que firstCamera é null
-  //   }
-  // }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,7 +52,9 @@ class _InitialScreenState extends State<InitialScreen> {
                     child: Column(
                       children: [
                         TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            scanCode();
+                          },
                           child: Text(
                             "Logar em outra conta",
                             style: TextStyle(
