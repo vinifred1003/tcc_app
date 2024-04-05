@@ -12,6 +12,15 @@ class QRCodeGenerator extends StatefulWidget {
 
 class _QRCodeGeneratorState extends State<QRCodeGenerator> {
   String? qrData;
+  late QrCode qrCode;
+  void initState() {
+    super.initState();
+    final qrCode = QrCode.fromData(
+      data: qrData ?? '',
+      errorCorrectLevel: QrErrorCorrectLevel.H,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,7 +40,25 @@ class _QRCodeGeneratorState extends State<QRCodeGenerator> {
                 });
               },
             ),
-            if (qrData != null) PrettyQrView.data(data: qrData!),
+            Container(
+              height: 400,
+              width: 600,
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Colors.grey,
+                  width: 1,
+                ),
+              ),
+              alignment: Alignment.center,
+              child: qrData != null
+                  ? FittedBox(
+                      child: PrettyQrView.data(
+                        data: qrData!,
+                      ),
+                      fit: BoxFit.cover,
+                    )
+                  : const Text("Digite o nome referenciado no QRCode"),
+            ),
           ],
         ),
       ),
