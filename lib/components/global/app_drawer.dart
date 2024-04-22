@@ -48,10 +48,10 @@ class AppDrawer extends StatelessWidget {
               title: const Text('Advertencias'),
               onTap: () {},
             ),
-            ListTile(
-              title: const Text('QRCode'),
-              onTap: () {},
-            ),
+            // ListTile(
+            //   title: const Text('QRCode'),
+            //   onTap: () {},
+            // ),
             ListTile(
               title: const Text('Sair'),
               onTap: () {},

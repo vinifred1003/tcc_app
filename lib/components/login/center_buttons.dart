@@ -1,15 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:tcc_app/screens/initial_screen.dart';
+import 'package:tcc_app/screens/home_screen.dart';
 
 class CenterButtons extends StatelessWidget {
-  const CenterButtons({super.key});
-  void _selectInitial(BuildContext context) {
-    Navigator.of(context).push(
-      MaterialPageRoute(builder: (_) {
-        return InitialScreen();
-      }),
-    );
-  }
+  void Function() selectedHome;
+  CenterButtons({super.key, required this.selectedHome});
 
   @override
   Widget build(BuildContext context) {
@@ -18,9 +12,7 @@ class CenterButtons extends StatelessWidget {
       child: Column(
         children: [
           ElevatedButton(
-            onPressed: () {
-              _selectInitial(context);
-            },
+            onPressed: selectedHome,
             style: ElevatedButton.styleFrom(
               backgroundColor: Theme.of(context).textTheme.labelLarge?.color,
               foregroundColor: Theme.of(context).colorScheme.primary,

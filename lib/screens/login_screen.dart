@@ -1,14 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:tcc_app/components/login/footer_buttons.dart';
+import 'package:tcc_app/screens/register_screen.dart';
 import '../components/global/base_app_bar.dart';
 import '../components/login/inputs.dart';
 import '../components/login/center_buttons.dart';
+import 'home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
+}
+
+void _selectHome(BuildContext context) {
+  Navigator.of(context).push(
+    MaterialPageRoute(builder: (_) {
+      return HomeScreen();
+    }),
+  );
+}
+
+void _selectRegister(BuildContext context) {
+  Navigator.of(context).push(
+    MaterialPageRoute(builder: (_) {
+      return RegisterScreen();
+    }),
+  );
 }
 
 class _LoginScreenState extends State<LoginScreen> {
@@ -33,8 +51,12 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
             Inputs(),
-            const CenterButtons(),
-            const FooterButtons(),
+            CenterButtons(
+              selectedHome: () => _selectHome(context),
+            ),
+            FooterButtons(
+              selectedRegister: () => _selectRegister(context),
+            ),
           ],
         ),
       ),

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class FooterButtons extends StatelessWidget {
-  const FooterButtons({super.key});
+  void Function() selectedRegister;
+  FooterButtons({super.key, required this.selectedRegister});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +16,7 @@ class FooterButtons extends StatelessWidget {
             style: TextStyle(fontSize: 16),
           ),
           TextButton(
-            onPressed: () {},
+            onPressed: selectedRegister,
             child: const Text(
               "Cadastrar",
               style: TextStyle(

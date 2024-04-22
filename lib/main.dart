@@ -20,7 +20,7 @@ class MeproviApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final ThemeData tema = ThemeData();
     return MaterialApp(
-      home: QRCodeGenerator(),
+      home: LoginScreen(),
       theme: tema.copyWith(
         colorScheme: tema.colorScheme.copyWith(
           primary: Colors.lightBlue,

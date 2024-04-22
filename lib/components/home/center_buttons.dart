@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class CenterButtons extends StatelessWidget {
-  const CenterButtons({super.key});
+  void Function() selectedScanQRCode;
+  CenterButtons({super.key, required this.selectedScanQRCode});
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +13,7 @@ class CenterButtons extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(10),
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: selectedScanQRCode,
                 child: Text(
                   "Chegada",
                   style: TextStyle(
