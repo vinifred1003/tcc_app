@@ -92,6 +92,35 @@ class RegisterScreen extends StatelessWidget {
                 ),
               ),
             ),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+              child: TextField(
+                decoration: InputDecoration(
+                  fillColor: Colors.white,
+                  filled: true,
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(30))),
+                  hintText: '',
+                  labelText: 'Função',
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 100, right: 100, top: 25),
+              child: ElevatedButton(
+                onPressed: () {},
+                style: ElevatedButton.styleFrom(
+                  backgroundColor:
+                      Theme.of(context).textTheme.labelLarge?.color,
+                  foregroundColor: Theme.of(context).colorScheme.primary,
+                  minimumSize: Size(50, 75),
+                ),
+                child: const Text(
+                  "Cadastrar",
+                  style: TextStyle(fontSize: 25),
+                ),
+              ),
+            ),
           ],
         ),
       ),
