@@ -2,29 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class StudentRegister extends StatefulWidget {
-  final void Function(String, double, DateTime) onSubmit;
-  StudentRegister(this.onSubmit, {Key? key}) : super(key: key);
+  const StudentRegister({super.key});
 
   @override
   State<StudentRegister> createState() => _StudentRegisterState();
 }
 
 class _StudentRegisterState extends State<StudentRegister> {
-  final _titleController = TextEditingController();
-  final _valueController = TextEditingController();
   DateTime _selectedDate = DateTime.now();
 
-  _submitForm() {
-    final title = _titleController.text;
-    final value = double.tryParse(_valueController.text) ?? 0.0;
-    if (title.isEmpty || value <= 0) {
-      return;
-    }
-
-    widget.onSubmit(title, value, _selectedDate);
-  }
-
-  showDatePicker() {
+  _showDatePicker() {
     showDatePicker(
       context: context,
       initialDate: DateTime.now(),
@@ -77,70 +64,83 @@ class _StudentRegisterState extends State<StudentRegister> {
                 ),
               ],
             ),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-              child: TextField(
-                decoration: InputDecoration(
-                  fillColor: Colors.white,
-                  filled: true,
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(30))),
-                  hintText: '',
-                  labelText: 'Nome Completo',
+            const Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                  child: TextField(
+                    decoration: InputDecoration(
+                      fillColor: Colors.white,
+                      filled: true,
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(30))),
+                      hintText: '',
+                      labelText: 'Nome Completo',
+                    ),
+                  ),
                 ),
-              ),
-            ),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-              child: TextField(
-                decoration: InputDecoration(
-                  fillColor: Colors.white,
-                  filled: true,
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(30))),
-                  hintText: '',
-                  labelText: 'N° Matricula',
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                  child: TextField(
+                    decoration: InputDecoration(
+                      fillColor: Colors.white,
+                      filled: true,
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(30))),
+                      hintText: '',
+                      labelText: 'N° Matricula',
+                    ),
+                  ),
                 ),
-              ),
-            ),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-              child: TextField(
-                decoration: InputDecoration(
-                  fillColor: Colors.white,
-                  filled: true,
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(30))),
-                  hintText: '',
-                  labelText: 'Senha',
+                Row(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(right: 40, top: 16, bottom: 16),
+                      child: TextField(
+                        decoration: InputDecoration(
+                          fillColor: Colors.white,
+                          filled: true,
+                          border: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(30))),
+                          hintText: '',
+                          labelText: 'Data de Nascimento',
+                          suffixIcon: IconButton(
+                            onPressed: null,
+                            icon: Icon(Icons.calendar_today),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-              child: TextField(
-                decoration: InputDecoration(
-                  fillColor: Colors.white,
-                  filled: true,
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(30))),
-                  hintText: '',
-                  labelText: 'Turma',
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                  child: TextField(
+                    decoration: InputDecoration(
+                      fillColor: Colors.white,
+                      filled: true,
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(30))),
+                      hintText: '',
+                      labelText: 'Turma',
+                    ),
+                  ),
                 ),
-              ),
-            ),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-              child: TextField(
-                decoration: InputDecoration(
-                  fillColor: Colors.white,
-                  filled: true,
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(30))),
-                  hintText: '',
-                  labelText: 'Função',
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                  child: TextField(
+                    decoration: InputDecoration(
+                      fillColor: Colors.white,
+                      filled: true,
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(30))),
+                      hintText: '',
+                      labelText: 'Função',
+                    ),
+                  ),
                 ),
-              ),
+              ],
             ),
             Padding(
               padding: const EdgeInsets.only(left: 100, right: 100, top: 25),
