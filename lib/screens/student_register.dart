@@ -15,7 +15,7 @@ class _StudentRegisterState extends State<StudentRegister> {
     showDatePicker(
       context: context,
       initialDate: DateTime.now(),
-      firstDate: DateTime(2019),
+      firstDate: DateTime(1924),
       lastDate: DateTime.now(),
     ).then((pickedDate) {
       if (pickedDate == null) {
@@ -64,9 +64,9 @@ class _StudentRegisterState extends State<StudentRegister> {
                 ),
               ],
             ),
-            const Column(
+            Column(
               children: [
-                Padding(
+                const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
                   child: TextField(
                     decoration: InputDecoration(
@@ -79,7 +79,7 @@ class _StudentRegisterState extends State<StudentRegister> {
                     ),
                   ),
                 ),
-                Padding(
+                const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
                   child: TextField(
                     decoration: InputDecoration(
@@ -92,27 +92,25 @@ class _StudentRegisterState extends State<StudentRegister> {
                     ),
                   ),
                 ),
-                Row(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(right: 40, top: 16, bottom: 16),
-                      child: TextField(
-                        decoration: InputDecoration(
-                          fillColor: Colors.white,
-                          filled: true,
-                          border: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(30))),
-                          hintText: '',
-                          labelText: 'Data de Nascimento',
-                          suffixIcon: IconButton(
-                            onPressed: null,
-                            icon: Icon(Icons.calendar_today),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                  child: TextField(
+                    decoration: InputDecoration(
+                        fillColor: Colors.white,
+                        filled: true,
+                        border: OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(30))),
+                        hintText: '',
+                        labelText: 'Data de Nascimento',
+                        suffixIcon: IconButton(
+                            onPressed: _showDatePicker(),
+                            icon: Icon(
+                              Icons.calendar_today,
+                              color: Colors.black,
+                              size: 30,
+                            ))),
+                  ),
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
@@ -143,7 +141,8 @@ class _StudentRegisterState extends State<StudentRegister> {
               ],
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 100, right: 100, top: 25),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 100, vertical: 16),
               child: ElevatedButton(
                 onPressed: () {},
                 style: ElevatedButton.styleFrom(
