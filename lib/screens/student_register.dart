@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:pretty_qr_code/pretty_qr_code.dart';
 
 class StudentRegister extends StatefulWidget {
   const StudentRegister({super.key});
@@ -9,6 +10,25 @@ class StudentRegister extends StatefulWidget {
 }
 
 class _StudentRegisterState extends State<StudentRegister> {
+  String? qrData;
+  late QrCode qrCode;
+
+  void initState() async {
+    super.initState();
+    qrCode = QrCode.fromData(
+      data: qrData ?? '',
+      errorCorrectLevel: QrErrorCorrectLevel.H,
+    );
+    final qrImage = QrImage(qrCode);
+    final pngQrImage = await qrImage.toImageAsBytes(
+      size: 600,
+      decoration: const PrettyQrDecoration(),
+    );
+    PrettyQrView.data(
+      data: qrData!,
+    );
+  }
+
   final TextEditingController _controller = TextEditingController();
   DateTime _selectedDate = DateTime.now();
   _showDatePicker() {
@@ -80,10 +100,16 @@ class _StudentRegisterState extends State<StudentRegister> {
                     ),
                   ),
                 ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
                   child: TextField(
-                    decoration: InputDecoration(
+                    onSubmitted: (value) {
+                      setState(() {
+                        qrData = value;
+                      });
+                    },
+                    decoration: const InputDecoration(
                       fillColor: Colors.white,
                       filled: true,
                       border: OutlineInputBorder(
@@ -138,6 +164,22 @@ class _StudentRegisterState extends State<StudentRegister> {
                       labelText: 'Função',
                     ),
                   ),
+                ),
+                Container(
+                  height: 400,
+                  width: 600,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                      width: 1,
+                    ),
+                  ),
+                  alignment: Alignment.center,
+                  child: qrData != null
+                      ? FittedBox(
+                          fit: BoxFit.cover,
+                        )
+                      : const Text("Digite o nome referenciado no QRCode"),
                 ),
               ],
             ),
