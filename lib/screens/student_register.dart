@@ -9,8 +9,8 @@ class StudentRegister extends StatefulWidget {
 }
 
 class _StudentRegisterState extends State<StudentRegister> {
+  final TextEditingController _controller = TextEditingController();
   DateTime _selectedDate = DateTime.now();
-
   _showDatePicker() {
     showDatePicker(
       context: context,
@@ -23,6 +23,7 @@ class _StudentRegisterState extends State<StudentRegister> {
       }
       setState(() {
         _selectedDate = pickedDate;
+        _controller.text = '${DateFormat('dd/MM/y').format(_selectedDate)}';
       });
     });
   }
@@ -95,17 +96,17 @@ class _StudentRegisterState extends State<StudentRegister> {
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
                   child: TextField(
+                    controller: _controller,
                     decoration: InputDecoration(
                         fillColor: Colors.white,
                         filled: true,
-                        border: OutlineInputBorder(
+                        border: const OutlineInputBorder(
                             borderRadius:
                                 BorderRadius.all(Radius.circular(30))),
-                        hintText: '',
                         labelText: 'Data de Nascimento',
                         suffixIcon: IconButton(
-                            onPressed: _showDatePicker(),
-                            icon: Icon(
+                            onPressed: _showDatePicker,
+                            icon: const Icon(
                               Icons.calendar_today,
                               color: Colors.black,
                               size: 30,
