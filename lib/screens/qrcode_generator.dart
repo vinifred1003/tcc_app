@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'dart:typed_data';
 import 'dart:ui' as ui;
+import 'dart:async';
 import '../components/global/base_app_bar.dart';
 import '../components/global/app_drawer.dart';
 import 'package:pretty_qr_code/pretty_qr_code.dart';
-
+import 'package:pretty_qr_code/src/painting/pretty_qr_painter.dart';
+import 'package:pretty_qr_code/src/rendering/pretty_qr_painting_context.dart';
+import 'package:pretty_qr_code/src/painting/decoration/pretty_qr_decoration.dart';
 
 class QRCodeGenerator extends StatefulWidget {
   const QRCodeGenerator({super.key});
@@ -13,102 +17,118 @@ class QRCodeGenerator extends StatefulWidget {
 }
 
 class _QRCodeGeneratorState extends State<QRCodeGenerator> {
+  late final QrImage qrImage;
+
+  bool get _isNestedImagesSupported => true;
   String? qrData;
+  ByteData? pngQrImage;
   late QrCode qrCode;
- 
-Future<ui.Image> toImage({
-  required final int size,
-  final PrettyQrDecoration decoration = const PrettyQrDecoration(),
-  final ImageConfiguration configuration = ImageConfiguration.empty,
-}) {
-  PrettyQrDecoration safeDecoration = decoration;
-  if (decoration.image != null && !_isNestedImagesSupported) {
-    safeDecoration = PrettyQrDecoration(shape: decoration.shape);
+  late final qrImageGenerate;
+
+  @override
+  void initState() {
+    super.initState();
+    qrData = "Your QR data here"; // Set your QR data
+    _generateQRCode();
   }
 
-  final imageSize = Size.square(size.toDouble());
-  final imageCompleter = Completer<ui.Image>();
-  final pictureRecorder = ui.PictureRecorder();
-  final imageConfiguration = configuration.copyWith(size: imageSize);
+  Future<ui.Image> toImage({
+    required final int size,
+    final PrettyQrDecoration decoration = const PrettyQrDecoration(),
+    final ImageConfiguration configuration = ImageConfiguration.empty,
+  }) {
+    PrettyQrDecoration safeDecoration = decoration;
+    if (decoration.image != null && !_isNestedImagesSupported) {
+      safeDecoration = PrettyQrDecoration(shape: decoration.shape);
+    }
 
-  final context = PrettyQrPaintingContext(
-    Canvas(pictureRecorder),
-    Offset.zero & imageSize,
-    matrix: PrettyQrMatrix.fromQrImage(this),
-    textDirection: configuration.textDirection,
-  );
+    final imageSize = Size.square(size.toDouble());
+    final imageCompleter = Completer<ui.Image>();
+    final pictureRecorder = ui.PictureRecorder();
+    final imageConfiguration = configuration.copyWith(size: imageSize);
 
-  late PrettyQrPainter decorationPainter;
-  try {
-    decorationPainter = safeDecoration.createPainter(() {
-      decorationPainter.paint(context, imageConfiguration);
-      final picture = pictureRecorder.endRecording();
-      imageCompleter.complete(picture.toImage(size, size));
-    });
-    decorationPainter.paint(context, imageConfiguration);
-
-    final decorationImageStream = safeDecoration.image?.image.resolve(
-      configuration,
+    final context = PrettyQrPaintingContext(
+      Canvas(pictureRecorder),
+      Offset.zero & imageSize,
+      matrix: PrettyQrMatrix.fromQrImage(qrImage),
+      textDirection: configuration.textDirection,
     );
 
-    if (decorationImageStream == null) {
-      final picture = pictureRecorder.endRecording();
-      imageCompleter.complete(picture.toImage(size, size));
-    } else {
-      late ImageStreamListener imageStreamListener;
-      imageStreamListener = ImageStreamListener(
-        (imageInfo, synchronous) {
-          decorationImageStream.removeListener(imageStreamListener);
-          imageInfo.dispose();
-          if (synchronous) {
-            final picture = pictureRecorder.endRecording();
-            imageCompleter.complete(picture.toImage(size, size));
-          }
-        },
-        onError: (error, stackTrace) {
-          decorationImageStream.removeListener(imageStreamListener);
-          imageCompleter.completeError(error, stackTrace);
-        },
+    late PrettyQrPainter decorationPainter;
+    try {
+      decorationPainter = safeDecoration.createPainter(() {
+        decorationPainter.paint(context, imageConfiguration);
+        final picture = pictureRecorder.endRecording();
+        imageCompleter.complete(picture.toImage(size, size));
+      });
+      decorationPainter.paint(context, imageConfiguration);
+
+      final decorationImageStream = safeDecoration.image?.image.resolve(
+        configuration,
       );
-      decorationImageStream.addListener(imageStreamListener);
+
+      if (decorationImageStream == null) {
+        final picture = pictureRecorder.endRecording();
+        imageCompleter.complete(picture.toImage(size, size));
+      } else {
+        late ImageStreamListener imageStreamListener;
+        imageStreamListener = ImageStreamListener(
+          (imageInfo, synchronous) {
+            decorationImageStream.removeListener(imageStreamListener);
+            imageInfo.dispose();
+            if (synchronous) {
+              final picture = pictureRecorder.endRecording();
+              imageCompleter.complete(picture.toImage(size, size));
+            }
+          },
+          onError: (error, stackTrace) {
+            decorationImageStream.removeListener(imageStreamListener);
+            imageCompleter.completeError(error, stackTrace);
+          },
+        );
+        decorationImageStream.addListener(imageStreamListener);
+      }
+    } catch (error, stackTrace) {
+      imageCompleter.completeError(error, stackTrace);
     }
-  } catch (error, stackTrace) {
-    imageCompleter.completeError(error, stackTrace);
+
+    return imageCompleter.future.whenComplete(() {
+      decorationPainter.dispose();
+    });
   }
 
-  return imageCompleter.future.whenComplete(() {
-    decorationPainter.dispose();
-  });
-}
+  Future<ByteData?> toImageAsBytes({
+    required final int size,
+    final ui.ImageByteFormat format = ui.ImageByteFormat.png,
+    final PrettyQrDecoration decoration = const PrettyQrDecoration(),
+    final ImageConfiguration configuration = ImageConfiguration.empty,
+  }) async {
+    final image = await toImage(
+      size: size,
+      decoration: decoration,
+      configuration: configuration,
+    );
+    return image.toByteData(format: format);
+  }
 
- Future<ByteData?> toImageAsBytes({
-  required final int size,
-  final ui.ImageByteFormat format = ui.ImageByteFormat.png,
-  final PrettyQrDecoration decoration = const PrettyQrDecoration(),
-  final ImageConfiguration configuration = ImageConfiguration.empty,
-}) async {
-  final image = await toImage(
-    size: size,
-    decoration: decoration,
-    configuration: configuration,
-  );
-  return image.toByteData(format: format);
-}
- 
-  void initState()  async{
-    super.initState();
-     qrCode = QrCode.fromData(
+  Future<void> _generateQRCode() async {
+    qrCode = QrCode.fromData(
       data: qrData ?? '',
       errorCorrectLevel: QrErrorCorrectLevel.H,
     );
-    final qrImage = QrImage(qrCode);
-    final pngQrImage = await qrImage. toImageAsBytes(size: 600, format: ImageByteFormat.png , decoration: const PrettyQrDecoration(),);
-     PrettyQrView.data(  data: qrData!);
+    qrImageGenerate = QrImage(qrCode);
+    final ByteData? generatedPngQrImage = await qrImageGenerate.toImageAsBytes(
+      size: 600,
+      format: ui.ImageByteFormat.png,
+      decoration: const PrettyQrDecoration(),
+    );
+    setState(() {
+      pngQrImage = generatedPngQrImage;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
       appBar: const BaseAppBar(screen_title: Text("Gerador de QRCode")),
       drawer: AppDrawer(),
@@ -138,8 +158,9 @@ Future<ui.Image> toImage({
               alignment: Alignment.center,
               child: qrData != null
                   ? FittedBox(
-                      child: 
-                      
+                      child: pngQrImage != null
+                          ? PrettyQrView(qrImage: pngQrImage)
+                          : CircularProgressIndicator(),
                       fit: BoxFit.cover,
                     )
                   : const Text("Digite o nome referenciado no QRCode"),
