@@ -117,10 +117,10 @@ class _QRCodeGeneratorState extends State<QRCodeGenerator> {
       errorCorrectLevel: QrErrorCorrectLevel.H,
     );
     qrImageGenerate = QrImage(qrCode);
-    final ByteData? generatedPngQrImage = await qrImageGenerate.toImageAsBytes(
-      size: 600,
-      format: ui.ImageByteFormat.png,
+    final ByteData? generatedPngQrImage = await toImageAsBytes(
       decoration: const PrettyQrDecoration(),
+      format: ui.ImageByteFormat.png,
+      size: 600,
     );
     setState(() {
       pngQrImage = generatedPngQrImage;
@@ -143,28 +143,11 @@ class _QRCodeGeneratorState extends State<QRCodeGenerator> {
               onSubmitted: (value) {
                 setState(() {
                   qrData = value;
+                  _generateQRCode();
                 });
               },
             ),
-            Container(
-              height: 400,
-              width: 600,
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Colors.grey,
-                  width: 1,
-                ),
-              ),
-              alignment: Alignment.center,
-              child: qrData != null
-                  ? FittedBox(
-                      child: pngQrImage != null
-                          ? PrettyQrView(qrImage: pngQrImage)
-                          : CircularProgressIndicator(),
-                      fit: BoxFit.cover,
-                    )
-                  : const Text("Digite o nome referenciado no QRCode"),
-            ),
+            if (qrData != null) PrettyQrView.data(data: qrData!),
           ],
         ),
       ),
