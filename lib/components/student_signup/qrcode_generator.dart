@@ -2,15 +2,16 @@ import 'package:flutter/material.dart';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'dart:async';
-import '../components/global/base_app_bar.dart';
-import '../components/global/app_drawer.dart';
+import '../global/base_app_bar.dart';
+import '../global/app_drawer.dart';
 import 'package:pretty_qr_code/pretty_qr_code.dart';
 import 'package:pretty_qr_code/src/painting/pretty_qr_painter.dart';
 import 'package:pretty_qr_code/src/rendering/pretty_qr_painting_context.dart';
 import 'package:pretty_qr_code/src/painting/decoration/pretty_qr_decoration.dart';
 
 class QRCodeGenerator extends StatefulWidget {
-  const QRCodeGenerator({super.key});
+  final String? qrDataStudent;
+  QRCodeGenerator({super.key, required this.qrDataStudent});
 
   @override
   State<QRCodeGenerator> createState() => _QRCodeGeneratorState();
@@ -18,18 +19,17 @@ class QRCodeGenerator extends StatefulWidget {
 
 class _QRCodeGeneratorState extends State<QRCodeGenerator> {
   late final QrImage qrImage;
-
   bool get _isNestedImagesSupported => true;
   String? qrData;
-  ByteData? pngQrImage;
   late QrCode qrCode;
   late final qrImageGenerate;
-
+  late final showQrCode;
+  late String qrCodeStringData;
   @override
   void initState() {
     super.initState();
-    qrData = "Your QR data here"; // Set your QR data
-    _generateQRCode();
+    qrData = widget.qrDataStudent; // Set your QR data
+    generateQRCode();
   }
 
   Future<ui.Image> toImage({
@@ -111,46 +111,62 @@ class _QRCodeGeneratorState extends State<QRCodeGenerator> {
     return image.toByteData(format: format);
   }
 
-  Future<void> _generateQRCode() async {
+  Future<void> generateQRCode() async {
     qrCode = QrCode.fromData(
       data: qrData ?? '',
       errorCorrectLevel: QrErrorCorrectLevel.H,
     );
     qrImageGenerate = QrImage(qrCode);
-    final ByteData? generatedPngQrImage = await toImageAsBytes(
+    final ByteData? byteQrImage = await qrImageGenerate.toImageAsBytes(
       decoration: const PrettyQrDecoration(),
       format: ui.ImageByteFormat.png,
-      size: 600,
+      size: 400,
     );
     setState(() {
-      pngQrImage = generatedPngQrImage;
+      qrCodeStringData = qrData ?? "valor padrão";
+      showQrCode = PrettyQrView.data(
+        data: qrCodeStringData,
+        decoration: const PrettyQrDecoration(
+          image: PrettyQrDecorationImage(
+            image: AssetImage('images/flutter.png'),
+          ),
+        ),
+      );
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const BaseAppBar(screen_title: Text("Gerador de QRCode")),
-      drawer: AppDrawer(),
-      body: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            TextField(
-              onSubmitted: (value) {
-                setState(() {
-                  qrData = value;
-                  _generateQRCode();
-                });
-              },
-            ),
-            if (qrData != null) PrettyQrView.data(data: qrData!),
-          ],
+        body: Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Container(
+        width: 200,
+        height: 200,
+        decoration: BoxDecoration(
+          border: Border.all(
+            width: 1,
+            color: Theme.of(context).colorScheme.inversePrimary,
+          ),
         ),
+        alignment: Alignment.center,
+        child: qrImageGenerate != null
+            ? Image.file(
+                showQrCode,
+                width: double.infinity,
+                fit: BoxFit.cover,
+              )
+            : Text('Nenhuma Imagem!'),
       ),
-    );
+      // TextField(
+      //   onSubmitted: (value) {
+      //     setState(() {
+      //       qrData = value;
+      //       generateQRCode();
+      //     });
+      //   },
+      // ),
+    ) // PrettyQrView.data(data: qrData!)),
+        );
   }
 }

@@ -1,33 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:pretty_qr_code/pretty_qr_code.dart';
+import '../components/student_signup/qrcode_generator.dart';
 
-class StudentRegister extends StatefulWidget {
-  const StudentRegister({super.key});
+class StudentSignup extends StatefulWidget {
+  const StudentSignup({super.key});
 
   @override
-  State<StudentRegister> createState() => _StudentRegisterState();
+  State<StudentSignup> createState() => _StudentSignupState();
 }
 
-class _StudentRegisterState extends State<StudentRegister> {
+class _StudentSignupState extends State<StudentSignup> {
   String? qrData;
-  late QrCode qrCode;
+  // late QrCode qrCode;
 
-  void initState() async {
-    super.initState();
-    qrCode = QrCode.fromData(
-      data: qrData ?? '',
-      errorCorrectLevel: QrErrorCorrectLevel.H,
-    );
-    final qrImage = QrImage(qrCode);
-    final pngQrImage = await qrImage.toImageAsBytes(
-      size: 600,
-      decoration: const PrettyQrDecoration(),
-    );
-    PrettyQrView.data(
-      data: qrData!,
-    );
-  }
+  // void initState() async {
+  //   super.initState();
+  //   qrCode = QrCode.fromData(
+  //     data: qrData ?? '',
+  //     errorCorrectLevel: QrErrorCorrectLevel.H,
+  //   );
+  //   final qrImage = QrImage(qrCode);
+  //   final pngQrImage = await qrImage.toImageAsBytes(
+  //     size: 600,
+  //     decoration: const PrettyQrDecoration(),
+  //   );
+  //   PrettyQrView.data(
+  //     data: qrData!,
+  //   );
+  // }
 
   final TextEditingController _controller = TextEditingController();
   DateTime _selectedDate = DateTime.now();
@@ -165,22 +165,7 @@ class _StudentRegisterState extends State<StudentRegister> {
                     ),
                   ),
                 ),
-                Container(
-                  height: 400,
-                  width: 600,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                      width: 1,
-                    ),
-                  ),
-                  alignment: Alignment.center,
-                  child: qrData != null
-                      ? FittedBox(
-                          fit: BoxFit.cover,
-                        )
-                      : const Text("Digite o nome referenciado no QRCode"),
-                ),
+                QRCodeGenerator(qrDataStudent: qrData),
               ],
             ),
             Padding(

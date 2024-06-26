@@ -4,8 +4,8 @@ import './screens/login_screen.dart';
 import './screens/register_screen.dart';
 import './screens/entry_record.dart';
 import 'package:flutter/material.dart';
-import './screens/qrcode_generator.dart';
-import './screens/student_register.dart';
+import 'components/student_signup/qrcode_generator.dart';
+import 'screens/student_signup.dart';
 // import 'package:camera/camera.dart'; // Certifique-se de importar a biblioteca da câmera se ainda não o fez
 
 void main() async {
@@ -21,7 +21,7 @@ class MeproviApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final ThemeData tema = ThemeData();
     return MaterialApp(
-      home: QRCodeGenerator(),
+      home: StudentSignup(),
       theme: tema.copyWith(
         colorScheme: tema.colorScheme.copyWith(
           primary: Colors.lightBlue,
