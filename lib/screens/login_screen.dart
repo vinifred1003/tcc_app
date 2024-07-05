@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tcc_app/components/login/footer_buttons.dart';
-import 'package:tcc_app/screens/register_screen.dart';
+import 'package:tcc_app/screens/manager_signup.dart';
 import '../components/global/base_app_bar.dart';
 import '../components/login/inputs.dart';
 import '../components/login/center_buttons.dart';
@@ -24,7 +24,7 @@ void _selectHome(BuildContext context) {
 void _selectRegister(BuildContext context) {
   Navigator.of(context).push(
     MaterialPageRoute(builder: (_) {
-      return RegisterScreen();
+      return ManagerSignup();
     }),
   );
 }

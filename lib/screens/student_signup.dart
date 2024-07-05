@@ -11,6 +11,14 @@ class StudentSignup extends StatefulWidget {
 
 class _StudentSignupState extends State<StudentSignup> {
   String? qrData;
+  late final qrCodeGenerator;
+
+  @override
+  void initState() {
+    super.initState();
+    qrCodeGenerator = QRCodeGenerator(qrDataStudent: qrData);
+  }
+
   // late QrCode qrCode;
 
   // void initState() async {
@@ -107,6 +115,7 @@ class _StudentSignupState extends State<StudentSignup> {
                     onSubmitted: (value) {
                       setState(() {
                         qrData = value;
+                        qrCodeGenerator.generateQRCode();
                       });
                     },
                     decoration: const InputDecoration(

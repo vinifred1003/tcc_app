@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
@@ -23,6 +25,7 @@ class _QRCodeGeneratorState extends State<QRCodeGenerator> {
   String? qrData;
   late QrCode qrCode;
   late final qrImageGenerate;
+  File? teste;
   late final showQrCode;
   late String qrCodeStringData;
   @override
@@ -150,9 +153,9 @@ class _QRCodeGeneratorState extends State<QRCodeGenerator> {
           ),
         ),
         alignment: Alignment.center,
-        child: qrImageGenerate != null
+        child: teste != null
             ? Image.file(
-                showQrCode,
+                teste!,
                 width: double.infinity,
                 fit: BoxFit.cover,
               )

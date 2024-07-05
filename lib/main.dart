@@ -1,7 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import './screens/login_screen.dart';
-import './screens/register_screen.dart';
+import 'screens/manager_signup.dart';
 import './screens/entry_record.dart';
 import 'package:flutter/material.dart';
 import 'components/student_signup/qrcode_generator.dart';
