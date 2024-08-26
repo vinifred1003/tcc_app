@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../screens/entry_record.dart';
+import '../../screens/listScreens/entry_record.dart';
 import '../../data/dummy_data.dart';
 
 class AppDrawer extends StatelessWidget {
@@ -22,7 +22,7 @@ class AppDrawer extends StatelessWidget {
           children: [
             DrawerHeader(
               decoration: BoxDecoration(
-                color: Colors.blue,
+                color: Theme.of(context).colorScheme.primary,
               ),
               child: Text(
                 'Aplicativo Meprovi',
@@ -34,7 +34,7 @@ class AppDrawer extends StatelessWidget {
             ListTile(title: const Text('Home'), onTap: () {}),
             ListTile(
               title: Text('Educandos'),
-              onTap: () => _selectEntryRecords(context),
+              onTap: () {},
             ),
             ListTile(
               title: const Text('Educadores'),
@@ -42,7 +42,7 @@ class AppDrawer extends StatelessWidget {
             ),
             ListTile(
               title: const Text('Entradas e Saidas'),
-              onTap: () {},
+              onTap: () => _selectEntryRecords(context),
             ),
             ListTile(
               title: const Text('Advertencias'),

@@ -1,4 +1,8 @@
-import 'package:tcc_app/models/student.dart';
+// import 'dart:html';
+
+// import 'package:tcc_app/models/student.dart';
+// import 'package:flutter/foundation.dart';
+// import 'package:tcc_app/utils/db_util.dart';
 
 // class EnrolledStudents extends ChangeNotifier {
 //   List<Student> _items = [];
@@ -13,5 +17,19 @@ import 'package:tcc_app/models/student.dart';
 
 //   Student itemByIndex(int index) {
 //     return _items[index];
+//   }
+
+//   void addStudents(String name, String registration_number, DateTime birth_date,
+//       String student_class, Blob photo, Blob qrcode) {
+//     final newStudent = Student(
+//         name: name,
+//         registration_number: registration_number,
+//         birth_date: birth_date,
+//         student_class: student_class,
+//         photo: photo,
+//         qrCode: qrcode);
+//     _items.add(newStudent);
+//     DbUtil.insert("students", {});
+//     notifyListeners();
 //   }
 // }

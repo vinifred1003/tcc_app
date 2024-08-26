@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../models/student_entry.dart';
+import '../../models/student_entry.dart';
 import 'package:intl/intl.dart';
 
 class EntryRecord extends StatelessWidget {
@@ -13,7 +13,7 @@ class EntryRecord extends StatelessWidget {
             children: [
               const SizedBox(height: 20),
               Text(
-                'Nenhuma Transação Cadastrada!',
+                'Nenhuma Saida ou Entrada',
                 style: Theme.of(context).textTheme.titleLarge,
               ),
               const SizedBox(height: 20),

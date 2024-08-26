@@ -1,21 +1,22 @@
 import 'dart:html';
+import 'dart:typed_data'; // For Uint8List
 
 class Student {
-  final int id;
+  final int? id;
   final String name;
-  final String registration_number;
-  final DateTime age;
-  final String student_class;
-  final Blob photo;
-  final Blob qrCode;
+  final String registrationNumber;
+  final DateTime birthDate;
+  final String? studentClass;
+  final Blob? photo;
+  final Uint8List qrCode;
 
   Student({
-    required this.id,
+    this.id,
     required this.name,
-    required this.registration_number,
-    required this.age,
-    required this.student_class,
-    required this.photo,
+    required this.registrationNumber,
+    required this.birthDate,
+    this.studentClass,
+    this.photo,
     required this.qrCode,
   });
 }
