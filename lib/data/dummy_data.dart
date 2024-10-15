@@ -36,20 +36,35 @@ const dummyUser = [
       email: 'viniciusfrederico1003@gmail.com',
       username: 'vinicius Fedrigo Frederico',
       password: '123456',
-      jobPosition: 'Professor')
+      jobPosition: 'Professor'),
+  User(
+      id: 'u2',
+      email: 'juliaRibPaiva@gmail.com',
+      username: 'Julia Ribeiro Paiva',
+      password: '123456',
+      jobPosition: 'Inpetora'),
+  User(
+      id: 'u3',
+      email: 'jhonyAllan@hotmail.com',
+      username: 'Jhony Allan Paes',
+      password: '123456',
+      jobPosition: 'Diretor')
 ];
 final dummyStudentEntry = [
   StudentEntry(
     name: 'Roberto Silva',
     date: DateTime.now(),
+    type: "Entrada",
   ),
   StudentEntry(
     name: 'João Ribeiro',
     date: DateTime.now(),
+    type: "Saída",
   ),
   StudentEntry(
     name: 'Maria Joaquina dos Santos',
     date: DateTime.now(),
+    type: "Entrada",
   ),
 ];
 

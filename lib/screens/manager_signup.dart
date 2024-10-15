@@ -92,19 +92,6 @@ class ManagerSignup extends StatelessWidget {
                 ),
               ),
             ),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-              child: TextField(
-                decoration: InputDecoration(
-                  fillColor: Colors.white,
-                  filled: true,
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(30))),
-                  hintText: '',
-                  labelText: 'Função',
-                ),
-              ),
-            ),
             Padding(
               padding: const EdgeInsets.only(left: 100, right: 100, top: 25),
               child: ElevatedButton(

@@ -1,4 +1,3 @@
-import 'dart:html';
 import 'dart:typed_data'; // For Uint8List
 
 class Student {
@@ -7,7 +6,7 @@ class Student {
   final String registrationNumber;
   final DateTime birthDate;
   final String? studentClass;
-  final Blob? photo;
+  final Uint8List? photo;
   final Uint8List qrCode;
 
   Student({

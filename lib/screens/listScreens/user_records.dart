@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
-import '../../models/student_entry.dart';
-import 'package:intl/intl.dart';
+import 'package:tcc_app/models/user.dart';
+import '../../models/user.dart';
 import '../../components/global/base_app_bar.dart';
 import '../../components/global/app_drawer.dart';
 
-class EntryRecord extends StatelessWidget {
-  final List<StudentEntry> students;
-  const EntryRecord(this.students, {Key? key}) : super(key: key);
+class UserRecord extends StatelessWidget {
+  final List<User> users;
+  const UserRecord(this.users, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    bool isEmpty = students.isEmpty;
+    bool isEmpty = users.isEmpty;
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.secondary,
-      appBar: const BaseAppBar(screen_title: Text("Registros de Entrada")),
-      drawer: AppDrawer(),
+      appBar: const BaseAppBar(screen_title: Text("Registros de Usuários")),
+      drawer: const AppDrawer(),
       body: Column(
         children: [
           Padding(
@@ -66,9 +66,9 @@ class EntryRecord extends StatelessWidget {
                 )
               : Expanded(
                   child: ListView.builder(
-                    itemCount: students.length,
+                    itemCount: users.length,
                     itemBuilder: (ctx, index) {
-                      final tr = students[index];
+                      final tr = users[index];
                       return Card(
                         elevation: 5,
                         margin: const EdgeInsets.symmetric(
@@ -84,14 +84,10 @@ class EntryRecord extends StatelessWidget {
                             ),
                           ),
                           title: Text(
-                            tr.name,
+                            tr.username,
                             style: Theme.of(context).textTheme.titleLarge,
                           ),
-                          subtitle: Text(
-                            tr.type +
-                                " " +
-                                DateFormat('d MMM y').format(tr.date),
-                          ),
+                          subtitle: Text(tr.jobPosition),
                         ),
                       );
                     },

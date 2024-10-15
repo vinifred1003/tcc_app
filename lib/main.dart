@@ -6,6 +6,7 @@ import 'screens/listScreens/entry_record.dart';
 import 'package:flutter/material.dart';
 import 'components/student_signup/qrcode_generator.dart';
 import 'screens/student_signup.dart';
+import 'screens/listScreens/user_records.dart';
 import '../../data/dummy_data.dart';
 // import 'package:camera/camera.dart'; // Certifique-se de importar a biblioteca da câmera se ainda não o fez
 
@@ -22,11 +23,11 @@ class MeproviApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final ThemeData tema = ThemeData();
     return MaterialApp(
-      home: EntryRecord(dummyStudentEntry),
+      home: UserRecord(dummyUser),
       theme: tema.copyWith(
         colorScheme: tema.colorScheme.copyWith(
           primary: Colors.lightBlue,
-          secondary: Color.fromARGB(255, 162, 222, 250),
+          secondary: const Color.fromARGB(255, 162, 222, 250),
           inversePrimary: Colors.white,
         ),
         textTheme: tema.textTheme.copyWith(
