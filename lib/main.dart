@@ -1,12 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import './screens/login_screen.dart';
-import 'screens/manager_signup.dart';
-import 'screens/listScreens/entry_record.dart';
+import 'package:tcc_app/screens/profileScreens/student_profile.dart';
 import 'package:flutter/material.dart';
-import 'components/student_signup/qrcode_generator.dart';
-import 'screens/student_signup.dart';
-import 'screens/listScreens/user_records.dart';
 import '../../data/dummy_data.dart';
 // import 'package:camera/camera.dart'; // Certifique-se de importar a biblioteca da câmera se ainda não o fez
 
@@ -23,7 +18,7 @@ class MeproviApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final ThemeData tema = ThemeData();
     return MaterialApp(
-      home: UserRecord(dummyUser),
+      home: StudentProfile(),
       theme: tema.copyWith(
         colorScheme: tema.colorScheme.copyWith(
           primary: Colors.lightBlue,

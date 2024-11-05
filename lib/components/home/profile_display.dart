@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
 class ProfileDisplay extends StatelessWidget {
-  const ProfileDisplay({super.key});
+  final String name;
+  final String classOrInstitution;
+  final String? jobPosition;
+  const ProfileDisplay({super.key, required this.name, required this.classOrInstitution,  this.jobPosition});
 
   @override
   Widget build(BuildContext context) {
@@ -24,10 +27,10 @@ class ProfileDisplay extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(
+         SizedBox(
           height: 30,
           child: Text(
-            "Vinicius Frederico",
+            name,
             style: TextStyle(
               fontSize: 25,
               fontWeight: FontWeight.bold,
@@ -35,13 +38,13 @@ class ProfileDisplay extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(
+         SizedBox(
           width: 101,
           height: 20,
           child: Row(
             children: [
               Text(
-                "Aluno",
+                jobPosition ??"Educando",
                 style: TextStyle(
                   fontSize: 18,
                   color: Colors.white,
@@ -55,7 +58,7 @@ class ProfileDisplay extends StatelessWidget {
                 ),
               ),
               Text(
-                "IFPR",
+                classOrInstitution,
                 style: TextStyle(
                   fontSize: 18,
                   color: Colors.white,

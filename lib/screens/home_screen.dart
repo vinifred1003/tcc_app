@@ -58,7 +58,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Center(
         child: Column(
           children: [
-            ProfileDisplay(),
+          const  ProfileDisplay(),
             Padding(
               padding: const EdgeInsets.only(top: 50, left: 55),
               child: Column(

@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'dart:async';
-import '../global/base_app_bar.dart';
-import '../global/app_drawer.dart';
 import 'package:pretty_qr_code/pretty_qr_code.dart';
 import 'package:pretty_qr_code/src/painting/pretty_qr_painter.dart';
 import 'package:pretty_qr_code/src/rendering/pretty_qr_painting_context.dart';

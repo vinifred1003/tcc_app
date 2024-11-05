@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:tcc_app/screens/listScreens/people_records.dart';
 import '../../screens/listScreens/entry_record.dart';
 import '../../data/dummy_data.dart';
+import '';
+
 
 class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key});
@@ -8,6 +11,20 @@ class AppDrawer extends StatelessWidget {
     Navigator.of(context).push(
       MaterialPageRoute(builder: (_) {
         return EntryRecord(dummyStudentEntry);
+      }),
+    );
+  }
+  void _selectUserRecords(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) {
+        return PeopleRecords(dummyUser, null);
+      }),
+    );
+  }
+  void _selectStudentRecords(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) {
+        return PeopleRecords(null, dummyStudents);
       }),
     );
   }
@@ -34,11 +51,11 @@ class AppDrawer extends StatelessWidget {
             ListTile(title: const Text('Home'), onTap: () {}),
             ListTile(
               title: Text('Educandos'),
-              onTap: () {},
+              onTap: () => _selectStudentRecords(context),
             ),
             ListTile(
               title: const Text('Educadores'),
-              onTap: () {},
+              onTap: () => _selectUserRecords(context),
             ),
             ListTile(
               title: const Text('Entradas e Saidas'),

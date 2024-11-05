@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:tcc_app/models/student.dart';
 import 'package:tcc_app/models/user.dart';
-import '../../models/user.dart';
 import '../../components/global/base_app_bar.dart';
 import '../../components/global/app_drawer.dart';
 
-class UserRecord extends StatelessWidget {
-  final List<User> users;
-  const UserRecord(this.users, {Key? key}) : super(key: key);
+class PeopleRecords extends StatelessWidget {
+  final List<User>? users;
+  final List<Student>? students;
+  const PeopleRecords(this.users, this.students ,{Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    bool isEmpty = users.isEmpty;
+   
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.secondary,
@@ -24,7 +25,7 @@ class UserRecord extends StatelessWidget {
               builder: (BuildContext context, SearchController controller) {
                 return SearchBar(
                   controller: controller,
-                  padding: const MaterialStatePropertyAll<EdgeInsets>(
+                  padding: const WidgetStatePropertyAll<EdgeInsets>(
                       EdgeInsets.symmetric(horizontal: 16.0)),
                   onTap: () {},
                   onChanged: (_) {},
@@ -46,29 +47,12 @@ class UserRecord extends StatelessWidget {
               },
             ),
           ),
-          isEmpty
-              ? Column(
-                  children: [
-                    const SizedBox(height: 20),
-                    Text(
-                      'Nenhuma Saida ou Entrada',
-                      style: Theme.of(context).textTheme.titleLarge,
-                    ),
-                    const SizedBox(height: 20),
-                    SizedBox(
-                      height: 200,
-                      child: Image.asset(
-                        'assets/images/waiting.png',
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ],
-                )
-              : Expanded(
+           Expanded(
                   child: ListView.builder(
-                    itemCount: users.length,
+                    itemCount: users?.length ?? students?.length,
                     itemBuilder: (ctx, index) {
-                      final tr = users[index];
+                      final user = users?[index];
+                      final student = students?[index];
                       return Card(
                         elevation: 5,
                         margin: const EdgeInsets.symmetric(
@@ -84,10 +68,10 @@ class UserRecord extends StatelessWidget {
                             ),
                           ),
                           title: Text(
-                            tr.username,
+                            user?.username ?? student?.name ?? "Fail",
                             style: Theme.of(context).textTheme.titleLarge,
                           ),
-                          subtitle: Text(tr.jobPosition),
+                          subtitle: Text(user?.jobPosition ?? student?.studentClass ?? "Fail"),
                         ),
                       );
                     },
