@@ -5,18 +5,19 @@ import '../components/global/base_app_bar.dart';
 import '../components/login/inputs.dart';
 import '../components/login/center_buttons.dart';
 import 'home_screen.dart';
-
+import '../models/user.dart';
+import '../data/dummy_data.dart';
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
 }
-
+final User u0 = User(id:dummyUser[0].id,username:dummyUser[0].username,password: dummyUser[0].password,email:dummyUser[0].email ,jobPosition: dummyUser[0].jobPosition );
 void _selectHome(BuildContext context) {
   Navigator.of(context).push(
     MaterialPageRoute(builder: (_) {
-      return HomeScreen();
+      return HomeScreen(userId: u0.id);
     }),
   );
 }
