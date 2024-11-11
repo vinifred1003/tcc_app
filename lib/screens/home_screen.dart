@@ -16,9 +16,9 @@ import '../components/home/profile_display.dart';
 import '../components/home/footer.dart';
 
 class HomeScreen extends StatefulWidget {
-  final String userId;
+  final User user;
   
-  HomeScreen({super.key , required this.userId});
+  HomeScreen({super.key , required this.user});
   
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -26,22 +26,17 @@ class HomeScreen extends StatefulWidget {
 
 
 class _HomeScreenState extends State<HomeScreen> {
-  final Object u;
+   late User u;
+
   String scanResult = "";
   
- void findUser(){
-  User? foundUser = dummyUser.firstWhere(
-  (user) => user.id == this.userId,
-  orElse: () => null, // Handle case if not found
-);
+ @override
+  void initState() {
+    super.initState();
+    // Use widget.user to access the user property passed from the StatefulWidget
+    u = widget.user;
+  }
 
-if (foundUser != null) {
-   u = foundUser;
-} else {
-  print('No user found with ID $yourId');
-}
- }
-  
   Future<void> scanCode() async {
     String barcodeScanRes;
     try {
@@ -79,7 +74,7 @@ if (foundUser != null) {
       body: Center(
         child: Column(
           children: [  
-            ProfileDisplay(name:u0.username, classOrInstitution:u0.jobPosition),
+            ProfileDisplay(name:u.username, classOrInstitution:u.jobPosition),
             Padding(
               padding: const EdgeInsets.only(top: 50, left: 55),
               child: Column(

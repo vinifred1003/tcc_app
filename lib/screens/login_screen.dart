@@ -17,7 +17,7 @@ final User u0 = User(id:dummyUser[0].id,username:dummyUser[0].username,password:
 void _selectHome(BuildContext context) {
   Navigator.of(context).push(
     MaterialPageRoute(builder: (_) {
-      return HomeScreen(userId: u0.id);
+      return HomeScreen(user: u0);
     }),
   );
 }
