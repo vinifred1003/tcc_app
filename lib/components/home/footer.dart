@@ -7,7 +7,7 @@ class Footer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 100, right: 40),
+      padding: const EdgeInsets.only(top: 60, right: 40),
       child: Column(
         children: [
           TextButton(

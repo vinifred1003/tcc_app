@@ -33,7 +33,6 @@ class _HomeScreenState extends State<HomeScreen> {
  @override
   void initState() {
     super.initState();
-    // Use widget.user to access the user property passed from the StatefulWidget
     u = widget.user;
   }
 

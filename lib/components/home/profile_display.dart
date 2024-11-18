@@ -39,7 +39,7 @@ class ProfileDisplay extends StatelessWidget {
           ),
         ),
          SizedBox(
-          width: 101,
+          width: 180,
           height: 20,
           child: Row(
             children: [
