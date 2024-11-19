@@ -11,7 +11,7 @@ class ProfileDisplay extends StatelessWidget {
     return Column(
       children: [
         Padding(
-          padding: EdgeInsets.only(top: 150, bottom: 20),
+          padding: const EdgeInsets.only(top: 150, bottom: 20),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(100),
             child: const SizedBox(
@@ -31,7 +31,7 @@ class ProfileDisplay extends StatelessWidget {
           height: 30,
           child: Text(
             name,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 25,
               fontWeight: FontWeight.bold,
               color: Colors.white,
@@ -45,12 +45,12 @@ class ProfileDisplay extends StatelessWidget {
             children: [
               Text(
                 jobPosition ??"Educando",
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 18,
                   color: Colors.white,
                 ),
               ),
-              Text(
+              const Text(
                 " - ",
                 style: TextStyle(
                   fontSize: 18,
@@ -59,7 +59,7 @@ class ProfileDisplay extends StatelessWidget {
               ),
               Text(
                 classOrInstitution,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 18,
                   color: Colors.white,
                 ),

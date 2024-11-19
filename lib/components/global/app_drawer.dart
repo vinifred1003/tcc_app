@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:tcc_app/screens/listScreens/people_records.dart';
+import 'package:tcc_app/screens/listScreens/user_records.dart';
 import '../../screens/listScreens/entry_record.dart';
 import '../../data/dummy_data.dart';
-import '';
+
 
 
 class AppDrawer extends StatelessWidget {

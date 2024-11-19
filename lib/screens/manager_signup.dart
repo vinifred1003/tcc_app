@@ -1,17 +1,33 @@
 import 'package:flutter/material.dart';
 
-class ManagerSignup extends StatelessWidget {
+class ManagerSignup extends StatefulWidget {
   const ManagerSignup({super.key});
 
+  @override
+  State<ManagerSignup> createState() => _ManagerSignupState();
+}
+
+class _ManagerSignupState extends State<ManagerSignup> {
+
+  final _formKey = GlobalKey<FormState>();
+
+    // Validator function
+  String? validateField(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Campo obrigatório';
+    }
+    return null;
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.secondary,
       appBar: AppBar(
-        title: Text("Novo Registro"),
+        title: const Text("Novo Registro"),
         backgroundColor: Theme.of(context).colorScheme.primary,
       ),
       body: Form(
+         key: _formKey,
         child: ListView(
           children: [
             Column(
@@ -40,10 +56,12 @@ class ManagerSignup extends StatelessWidget {
                 ),
               ],
             ),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-              child: TextField(
-                decoration: InputDecoration(
+             Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+              child: TextFormField(
+
+                validator: validateField,
+                decoration: const InputDecoration(
                   fillColor: Colors.white,
                   filled: true,
                   border: OutlineInputBorder(
@@ -53,10 +71,11 @@ class ManagerSignup extends StatelessWidget {
                 ),
               ),
             ),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-              child: TextField(
-                decoration: InputDecoration(
+             Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+              child: TextFormField(
+                 validator: validateField,
+                decoration: const InputDecoration(
                   fillColor: Colors.white,
                   filled: true,
                   border: OutlineInputBorder(
@@ -66,10 +85,11 @@ class ManagerSignup extends StatelessWidget {
                 ),
               ),
             ),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-              child: TextField(
-                decoration: InputDecoration(
+             Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+              child: TextFormField(
+                validator: validateField,
+                decoration: const InputDecoration(
                   fillColor: Colors.white,
                   filled: true,
                   border: OutlineInputBorder(
@@ -79,10 +99,11 @@ class ManagerSignup extends StatelessWidget {
                 ),
               ),
             ),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-              child: TextField(
-                decoration: InputDecoration(
+             Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+              child: TextFormField(
+                 validator: validateField,
+                decoration: const InputDecoration(
                   fillColor: Colors.white,
                   filled: true,
                   border: OutlineInputBorder(
@@ -95,7 +116,15 @@ class ManagerSignup extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(left: 100, right: 100, top: 25),
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                  // If the form is valid, display a snackbar. In the real world,
+                  // you'd often call a server or save the information in a database.
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Processing Data')),
+                  );
+                }
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor:
                       Theme.of(context).textTheme.labelLarge?.color,

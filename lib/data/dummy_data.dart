@@ -34,7 +34,7 @@ const dummyUser = [
   User(
       id: 'u1',
       email: 'viniciusfrederico1003@gmail.com',
-      username: 'vinicius Fedrigo Frederico',
+      username: 'Vinícius Fedrigo Frederico',
       password: '123456',
       jobPosition: 'Professor'),
   User(
