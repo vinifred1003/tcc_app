@@ -1,7 +1,8 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:tcc_app/screens/formScreens/student_signup.dart';
 import 'package:tcc_app/screens/login_screen.dart';
-import 'package:tcc_app/screens/manager_signup.dart';
+import 'package:tcc_app/screens/formScreens/manager_signup.dart';
 import 'package:tcc_app/screens/profileScreens/student_profile.dart';
 import 'package:flutter/material.dart';
 import '../../data/dummy_data.dart';
@@ -20,7 +21,7 @@ class MeproviApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final ThemeData tema = ThemeData();
     return MaterialApp(
-      home: ManagerSignup(),
+      home: LoginScreen(),
       theme: tema.copyWith(
         colorScheme: tema.colorScheme.copyWith(
           primary: Colors.lightBlue,

@@ -129,7 +129,7 @@ class _ManagerSignupState extends State<ManagerSignup> {
                   backgroundColor:
                       Theme.of(context).textTheme.labelLarge?.color,
                   foregroundColor: Theme.of(context).colorScheme.primary,
-                  minimumSize: Size(50, 75),
+                  minimumSize: const Size(50, 75),
                 ),
                 child: const Text(
                   "Cadastrar",

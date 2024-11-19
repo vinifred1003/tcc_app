@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../components/student_signup/qrcode_generator.dart';
+import '../../components/student_signup/qrcode_generator.dart';
 
 class StudentSignup extends StatefulWidget {
   const StudentSignup({super.key});
@@ -115,26 +115,26 @@ class _StudentSignupState extends State<StudentSignup> {
                     ),
                   ),
                 ),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-                  child: TextField(
-                    onSubmitted: (value) {
-                      setState(() {
-                        qrData = value;
-                        qrCodeGenerator.generateQRCode();
-                      });
-                    },
-                    decoration: const InputDecoration(
-                      fillColor: Colors.white,
-                      filled: true,
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(30))),
-                      hintText: '',
-                      labelText: 'N° Matricula',
-                    ),
-                  ),
-                ),
+                // Padding(
+                //   padding:
+                //       const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                //   child: TextField(
+                //     onSubmitted: (value) {
+                //       setState(() {
+                //         qrData = value;
+                //         qrCodeGenerator.generateQRCode();
+                //       });
+                //     },
+                //     decoration: const InputDecoration(
+                //       fillColor: Colors.white,
+                //       filled: true,
+                //       border: OutlineInputBorder(
+                //           borderRadius: BorderRadius.all(Radius.circular(30))),
+                //       hintText: '',
+                //       labelText: 'N° Matricula',
+                //     ),
+                //   ),
+                // ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
                   child: TextFormField(
@@ -180,16 +180,16 @@ class _StudentSignupState extends State<StudentSignup> {
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(30))),
                       hintText: '',
-                      labelText: 'Função',
+                      labelText: 'Cargo',
                     ),
                   ),
                 ),
-                QRCodeGenerator(qrDataStudent: qrData),
+                // QRCodeGenerator(qrDataStudent: qrData),
               ],
             ),
             Padding(
               padding:
-                  const EdgeInsets.symmetric(horizontal: 100, vertical: 16),
+                  const EdgeInsets.symmetric(horizontal: 100, vertical: 100),
               child: ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {

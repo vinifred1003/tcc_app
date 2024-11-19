@@ -4,46 +4,65 @@ import 'package:intl/intl.dart';
 import '../../components/global/base_app_bar.dart';
 import '../../components/global/app_drawer.dart';
 
-class EntryRecord extends StatelessWidget {
+class EntryRecord extends StatefulWidget {
   final List<StudentEntry> students;
   const EntryRecord(this.students, {Key? key}) : super(key: key);
 
   @override
+  State<EntryRecord> createState() => _EntryRecordState();
+}
+
+class _EntryRecordState extends State<EntryRecord> {
+  late List<StudentEntry> filteredStudents; // Filtered list of students
+  final TextEditingController _searchController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    filteredStudents = widget.students; // Initialize filtered list with all students
+    _searchController.addListener(_filterStudents);
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose(); // Clean up controller
+    super.dispose();
+  }
+
+  void _filterStudents() {
+    setState(() {
+      filteredStudents = widget.students
+          .where((student) => student.name
+              .toLowerCase()
+              .contains(_searchController.text.toLowerCase()))
+          .toList();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    bool isEmpty = students.isEmpty;
+    bool isEmpty = filteredStudents.isEmpty;
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.secondary,
-      appBar: const BaseAppBar(screen_title: Text("Registros de Entrada")),
+      appBar: const BaseAppBar(screen_title: Text("Registros de Entrada e Saídas")),
       drawer: AppDrawer(),
       body: Column(
         children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: SearchAnchor(
-              builder: (BuildContext context, SearchController controller) {
-                return SearchBar(
-                  controller: controller,
-                  padding: const WidgetStatePropertyAll<EdgeInsets>(
-                      EdgeInsets.symmetric(horizontal: 16.0)),
-                  onTap: () {},
-                  onChanged: (_) {},
-                  leading: const Icon(Icons.search),
-                );
-              },
-              suggestionsBuilder:
-                  (BuildContext context, SearchController controller) {
-                return List<ListTile>.generate(5, (int index) {
-                  final String item = 'item $index';
-                  return ListTile(
-                    title: Text(item),
-                    onTap: () {
-                      // Since this is StatelessWidget, you can't use setState.
-                      controller.closeView(item);
-                    },
-                  );
-                });
-              },
+            child: TextField(
+              controller: _searchController,
+              decoration: InputDecoration(
+                prefixIcon: const Icon(Icons.search),
+                hintText: 'Buscar...',
+                filled: true,
+                fillColor: Colors.white,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(30.0),
+                  borderSide: BorderSide.none,
+                ),
+              ),
             ),
           ),
           isEmpty
@@ -54,21 +73,13 @@ class EntryRecord extends StatelessWidget {
                       'Nenhuma Saida ou Entrada',
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
-                    const SizedBox(height: 20),
-                    SizedBox(
-                      height: 200,
-                      child: Image.asset(
-                        'assets/images/waiting.png',
-                        fit: BoxFit.cover,
-                      ),
-                    ),
                   ],
                 )
               : Expanded(
                   child: ListView.builder(
-                    itemCount: students.length,
+                    itemCount: filteredStudents.length,
                     itemBuilder: (ctx, index) {
-                      final tr = students[index];
+                      final tr = filteredStudents[index];
                       return Card(
                         elevation: 5,
                         margin: const EdgeInsets.symmetric(

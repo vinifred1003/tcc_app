@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tcc_app/components/login/footer_buttons.dart';
-import 'package:tcc_app/screens/manager_signup.dart';
+import 'package:tcc_app/screens/formScreens/manager_signup.dart';
 import '../components/global/base_app_bar.dart';
 import '../components/login/inputs.dart';
 import '../components/login/center_buttons.dart';

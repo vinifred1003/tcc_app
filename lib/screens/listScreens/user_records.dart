@@ -4,10 +4,10 @@ import 'package:tcc_app/models/user.dart';
 import '../../components/global/base_app_bar.dart';
 import '../../components/global/app_drawer.dart';
 
-class PeopleRecords extends StatelessWidget {
+class UserRecords extends StatelessWidget {
   final List<User>? users;
   final List<Student>? students;
-  const PeopleRecords(this.users, this.students ,{Key? key}) : super(key: key);
+  const UserRecords(this.users, this.students ,{Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

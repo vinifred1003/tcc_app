@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tcc_app/screens/listScreens/student_list.dart';
 import 'package:tcc_app/screens/listScreens/user_records.dart';
 import '../../screens/listScreens/entry_record.dart';
 import '../../data/dummy_data.dart';
@@ -17,14 +18,14 @@ class AppDrawer extends StatelessWidget {
   void _selectUserRecords(BuildContext context) {
     Navigator.of(context).push(
       MaterialPageRoute(builder: (_) {
-        return PeopleRecords(dummyUser, null);
+        return UserRecords(dummyUser, null);
       }),
     );
   }
   void _selectStudentRecords(BuildContext context) {
     Navigator.of(context).push(
       MaterialPageRoute(builder: (_) {
-        return PeopleRecords(null, dummyStudents);
+        return StudentList();
       }),
     );
   }

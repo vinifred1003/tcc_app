@@ -53,7 +53,7 @@ const dummyUser = [
 final dummyStudentEntry = [
   StudentEntry(
     name: 'Roberto Silva',
-    date: DateTime.now(),
+    date: DateTime.timestamp(),
     type: "Entrada",
   ),
   StudentEntry(
