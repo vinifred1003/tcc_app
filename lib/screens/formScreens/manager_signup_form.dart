@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class ManagerSignup extends StatefulWidget {
-  const ManagerSignup({super.key});
+class ManagerSignupForm extends StatefulWidget {
+  const ManagerSignupForm({super.key});
 
   @override
-  State<ManagerSignup> createState() => _ManagerSignupState();
+  State<ManagerSignupForm> createState() => _ManagerSignupFormState();
 }
 
-class _ManagerSignupState extends State<ManagerSignup> {
+class _ManagerSignupFormState extends State<ManagerSignupForm> {
 
   final _formKey = GlobalKey<FormState>();
 

@@ -1,25 +1,26 @@
 import 'package:flutter/material.dart';
 import '../../models/student_entry.dart';
 import 'package:intl/intl.dart';
-import '../../components/global/base_app_bar.dart';
-import '../../components/global/app_drawer.dart';
+import '../components/global/base_app_bar.dart';
+import '../components/global/app_drawer.dart';
 
-class EntryRecord extends StatefulWidget {
+class EntryAndExitList extends StatefulWidget {
   final List<StudentEntry> students;
-  const EntryRecord(this.students, {Key? key}) : super(key: key);
+  const EntryAndExitList(this.students, {Key? key}) : super(key: key);
 
   @override
-  State<EntryRecord> createState() => _EntryRecordState();
+  State<EntryAndExitList> createState() => _EntryAndExitListState();
 }
 
-class _EntryRecordState extends State<EntryRecord> {
+class _EntryAndExitListState extends State<EntryAndExitList> {
   late List<StudentEntry> filteredStudents; // Filtered list of students
   final TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    filteredStudents = widget.students; // Initialize filtered list with all students
+    filteredStudents =
+        widget.students; // Initialize filtered list with all students
     _searchController.addListener(_filterStudents);
   }
 
@@ -45,7 +46,8 @@ class _EntryRecordState extends State<EntryRecord> {
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.secondary,
-      appBar: const BaseAppBar(screen_title: Text("Registros de Entrada e Saídas")),
+      appBar:
+          const BaseAppBar(screen_title: Text("Registros de Entrada e Saídas")),
       drawer: AppDrawer(),
       body: Column(
         children: [
@@ -110,6 +112,12 @@ class _EntryRecordState extends State<EntryRecord> {
                 ),
         ],
       ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        onPressed: () {},
+        child: Icon(color: Theme.of(context).colorScheme.primary, Icons.add),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }

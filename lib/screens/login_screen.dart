@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:tcc_app/components/login/footer_buttons.dart';
-import 'package:tcc_app/screens/formScreens/manager_signup.dart';
-import '../components/global/base_app_bar.dart';
-import '../components/login/inputs.dart';
-import '../components/login/center_buttons.dart';
+import 'package:tcc_app/screens/components/login/footer_buttons.dart';
+import 'package:tcc_app/screens/formScreens/manager_signup_form.dart';
+import 'components/global/base_app_bar.dart';
+import 'components/login/inputs.dart';
+import 'components/login/center_buttons.dart';
 import 'home_screen.dart';
 import '../models/user.dart';
 import '../data/dummy_data.dart';
@@ -25,7 +25,7 @@ void _selectHome(BuildContext context) {
 void _selectRegister(BuildContext context) {
   Navigator.of(context).push(
     MaterialPageRoute(builder: (_) {
-      return ManagerSignup();
+      return ManagerSignupForm();
     }),
   );
 }

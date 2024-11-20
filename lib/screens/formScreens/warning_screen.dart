@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:tcc_app/screens/components/global/base_app_bar.dart';
 
 class WarningScreen extends StatefulWidget {
   const WarningScreen({super.key});
@@ -14,10 +15,7 @@ class _WarningScreenState extends State<WarningScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.secondary,
-      appBar: AppBar(
-        title: const Text("Advertência"),
-        backgroundColor: Theme.of(context).colorScheme.primary,
-      ),
+      appBar: BaseAppBar(screen_title: Text("Ocorrências")),
         body: Form(child: Column(
           
         )),

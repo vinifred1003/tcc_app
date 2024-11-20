@@ -1,20 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:tcc_app/screens/listScreens/student_list.dart';
 import 'package:tcc_app/screens/listScreens/user_records.dart';
-import '../../screens/listScreens/entry_record.dart';
-import '../../data/dummy_data.dart';
-
-
+import '../../listScreens/entry_and_exit_list.dart';
+import '../../../data/dummy_data.dart';
 
 class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key});
   void _selectEntryRecords(BuildContext context) {
     Navigator.of(context).push(
       MaterialPageRoute(builder: (_) {
-        return EntryRecord(dummyStudentEntry);
+        return EntryAndExitList(dummyStudentEntry);
       }),
     );
   }
+
   void _selectUserRecords(BuildContext context) {
     Navigator.of(context).push(
       MaterialPageRoute(builder: (_) {
@@ -22,6 +21,7 @@ class AppDrawer extends StatelessWidget {
       }),
     );
   }
+
   void _selectStudentRecords(BuildContext context) {
     Navigator.of(context).push(
       MaterialPageRoute(builder: (_) {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../../components/student_signup/qrcode_generator.dart';
+import 'package:tcc_app/screens/components/global/base_app_bar.dart';
+import '../components/student_signup/qrcode_generator.dart';
 
 class StudentSignup extends StatefulWidget {
   const StudentSignup({super.key});
@@ -65,10 +66,7 @@ class _StudentSignupState extends State<StudentSignup> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.secondary,
-      appBar: AppBar(
-        title: const Text("Dados do Educando"),
-        backgroundColor: Theme.of(context).colorScheme.primary,
-      ),
+      appBar: BaseAppBar(screen_title: Text("Registrar Estudante")),
       body: Form(
         key: _formKey,
         child: ListView(
@@ -115,26 +113,25 @@ class _StudentSignupState extends State<StudentSignup> {
                     ),
                   ),
                 ),
-                // Padding(
-                //   padding:
-                //       const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-                //   child: TextField(
-                //     onSubmitted: (value) {
-                //       setState(() {
-                //         qrData = value;
-                //         qrCodeGenerator.generateQRCode();
-                //       });
-                //     },
-                //     decoration: const InputDecoration(
-                //       fillColor: Colors.white,
-                //       filled: true,
-                //       border: OutlineInputBorder(
-                //           borderRadius: BorderRadius.all(Radius.circular(30))),
-                //       hintText: '',
-                //       labelText: 'N° Matricula',
-                //     ),
-                //   ),
-                // ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                  child: TextField(
+                    // onSubmitted: (value) {
+                    //   setState(() {
+                    //     qrData = value;
+                    //     qrCodeGenerator.generateQRCode();
+                    //   });
+                    // },
+                    decoration: InputDecoration(
+                      fillColor: Colors.white,
+                      filled: true,
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(30))),
+                      hintText: '',
+                      labelText: 'N° Matricula',
+                    ),
+                  ),
+                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
                   child: TextFormField(

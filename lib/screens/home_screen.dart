@@ -4,16 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter/services.dart';
 import 'package:tcc_app/screens/login_screen.dart';
-import '../components/global/app_drawer.dart';
-import '../components/global/base_app_bar.dart';
+import 'components/global/app_drawer.dart';
+import 'components/global/base_app_bar.dart';
 import '../models/user.dart';
 import '../data/dummy_data.dart';
 
 // import 'package:camera/camera.dart';
 // import './camera_screen.dart';
-import '../components/home/center_buttons.dart';
-import '../components/home/profile_display.dart';
-import '../components/home/footer.dart';
+import 'components/home/center_buttons.dart';
+import 'components/home/profile_display.dart';
+import 'components/home/footer.dart';
 
 class HomeScreen extends StatefulWidget {
   final User user;

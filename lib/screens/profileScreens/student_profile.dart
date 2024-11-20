@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../components/global/app_drawer.dart';
-import '../../components/global/base_app_bar.dart';
+import '../components/global/app_drawer.dart';
+import '../components/global/base_app_bar.dart';
 
 class StudentProfile extends StatelessWidget {
   const StudentProfile({super.key});
