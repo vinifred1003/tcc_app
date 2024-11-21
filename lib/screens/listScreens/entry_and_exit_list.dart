@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import '../../models/student_entry.dart';
+import 'package:tcc_app/models/attendance.dart';
 import 'package:intl/intl.dart';
 import '../components/global/base_app_bar.dart';
 import '../components/global/app_drawer.dart';
 
 class EntryAndExitList extends StatefulWidget {
-  final List<StudentEntry> students;
+  final List<Attendance> students;
   const EntryAndExitList(this.students, {Key? key}) : super(key: key);
 
   @override
@@ -13,7 +13,7 @@ class EntryAndExitList extends StatefulWidget {
 }
 
 class _EntryAndExitListState extends State<EntryAndExitList> {
-  late List<StudentEntry> filteredStudents; // Filtered list of students
+  late List<Attendance> filteredStudents; // Filtered list of students
   final TextEditingController _searchController = TextEditingController();
 
   @override

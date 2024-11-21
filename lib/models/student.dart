@@ -5,6 +5,7 @@ class Student {
   final String name;
   final String registrationNumber;
   final DateTime birthDate;
+  final List<String> guardians;
   final String? studentClass;
   final Uint8List? photo;
   final Uint8List qrCode;
@@ -14,6 +15,7 @@ class Student {
     required this.name,
     required this.registrationNumber,
     required this.birthDate,
+    required this.guardians,
     this.studentClass,
     this.photo,
     required this.qrCode,

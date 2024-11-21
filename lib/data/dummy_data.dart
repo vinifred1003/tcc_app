@@ -1,7 +1,7 @@
+import 'package:tcc_app/models/attendance.dart';
 import 'package:tcc_app/models/student.dart';
 
 import '../models/user.dart';
-import '../models/student_entry.dart';
 
 import 'dart:typed_data'; // For Uint8List
 import 'dart:io';
@@ -51,17 +51,17 @@ const dummyUser = [
       jobPosition: 'Diretor')
 ];
 final dummyStudentEntry = [
-  StudentEntry(
+  Attendance(
     name: 'Roberto Silva',
     date: DateTime.timestamp(),
     type: "Entrada",
   ),
-  StudentEntry(
+  Attendance(
     name: 'João Ribeiro',
     date: DateTime.now(),
     type: "Saída",
   ),
-  StudentEntry(
+  Attendance(
     name: 'Maria Joaquina dos Santos',
     date: DateTime.now(),
     type: "Entrada",
@@ -73,15 +73,19 @@ final dummyStudents = [
       name: "Roberto Silva",
       registrationNumber: "651",
       birthDate: DateTime(2016, 05, 15),
-      qrCode: qrRoberto),
+      qrCode: qrRoberto,
+      guardians: ["Valdecir", "Maria"]),
+      
   Student(
       name: "João Ribeiro",
       registrationNumber: "812",
       birthDate: DateTime(2018, 03, 10),
-      qrCode: qrJoao),
+      qrCode: qrJoao,
+      guardians: ["Joslei", "Joana"]),
   Student(
       name: 'Maria Joaquina dos Santos',
       registrationNumber: "512",
       birthDate: DateTime(2018, 08, 20),
-      qrCode: qrMaria),
+      qrCode: qrMaria,
+      guardians: ["Seu João", "Dona Rosinha"]),
 ];

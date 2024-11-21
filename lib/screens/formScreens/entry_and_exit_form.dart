@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:intl/intl.dart';
 class EntryAndExitForm extends StatefulWidget {
   const EntryAndExitForm({super.key});
 
@@ -11,8 +11,9 @@ class _EntryAndExitFormState extends State<EntryAndExitForm>
     with TickerProviderStateMixin {
   final _EntryFormKey = GlobalKey<FormState>();
   final _ExistFormKey = GlobalKey<FormState>();
+  final TextEditingController _controller = TextEditingController();
+  DateTime _selectedDate = DateTime.now();
 
-  DateTime? _selectedDateTime;
 
   // Validator function
   String? validateField(String? value) {
@@ -22,34 +23,38 @@ class _EntryAndExitFormState extends State<EntryAndExitForm>
     return null;
   }
 
-  Future<void> _pickDateTime() async {
-    DateTime? date = await showDatePicker(
+  DateTime currentDateAndTime() {
+    DateTime now = DateTime.now();
+    TimeOfDay currentTime = TimeOfDay.now();
+
+    // Combinar DateTime.now() com TimeOfDay.now()
+    DateTime combinedDateTime = DateTime(
+      now.year,
+      now.month,
+      now.day,
+      currentTime.hour,
+      currentTime.minute,
+    );
+    return combinedDateTime;
+  }
+
+  _showDatePicker() {
+    showDatePicker(
       context: context,
       initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2100),
-    );
-
-    if (!mounted || date == null) return; // User canceled the date picker
-
-    TimeOfDay? time = await showTimePicker(
-      context: context,
-      initialTime: TimeOfDay.now(),
-    );
-
-    if (!mounted || time == null) return; // User canceled the time picker
-
-    // Combine date and time
-    setState(() {
-      _selectedDateTime = DateTime(
-        date.year,
-        date.month,
-        date.day,
-        time.hour,
-        time.minute,
-      );
+      firstDate: DateTime(1924),
+      lastDate: DateTime.now(),
+    ).then((pickedDate) {
+      if (pickedDate == null) {
+        return;
+      }
+      setState(() {
+        _selectedDate = pickedDate;
+        _controller.text = '${DateFormat('dd/MM/y').format(_selectedDate)}';
+      });
     });
   }
+  Future<void> _pickHour() async {}
 
   @override
   Widget build(BuildContext context) {
@@ -109,6 +114,7 @@ class _EntryAndExitFormState extends State<EntryAndExitForm>
                     padding:
                         const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
                     child: TextFormField(
+                      controller: _controller,
                       validator: validateField,
                       decoration: InputDecoration(
                           fillColor: Colors.white,
@@ -116,9 +122,31 @@ class _EntryAndExitFormState extends State<EntryAndExitForm>
                           border: const OutlineInputBorder(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(30))),
-                          labelText: 'Hora e data da chegada',
+                          labelText: 'Data da chegada',
                           suffixIcon: IconButton(
-                              onPressed: _pickDateTime,
+                              onPressed: _showDatePicker,
+                              icon: const Icon(
+                                Icons.calendar_today,
+                                color: Colors.black,
+                                size: 30,
+                              ))),
+                    ),
+                  ),
+                  Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                    child: TextFormField(
+                      controller: _controller,
+                      validator: validateField,
+                      decoration: InputDecoration(
+                          fillColor: Colors.white,
+                          filled: true,
+                          border: const OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(30))),
+                          labelText: 'Hora da Chegada',
+                          suffixIcon: IconButton(
+                              onPressed: _showDatePicker,
                               icon: const Icon(
                                 Icons.calendar_today,
                                 color: Colors.black,

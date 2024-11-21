@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter/services.dart';
+import 'package:tcc_app/models/attendance.dart';
 import 'package:tcc_app/screens/login_screen.dart';
 import 'components/global/app_drawer.dart';
 import 'components/global/base_app_bar.dart';
@@ -37,13 +38,21 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> scanCode() async {
-    String barcodeScanRes;
+    String? barcodeScanRes;
     try {
       // Explicitly cast the stream to Stream<String>
       Stream<String>? barcodeStream =
           await FlutterBarcodeScanner.getBarcodeStreamReceiver(
               "#ff6666", "Cancel", true, ScanMode.QR) as Stream<String>?;
+
+
       if (barcodeStream != null) {
+
+        final newEntry = Attendance(
+          name: barcodeScanRes ?? "nenhum", // Nome vindo do QR Code
+          type: "Entrada", // Ajuste conforme necessário (Entrada/Saída)
+          date: DateTime.now(),
+        );
         barcodeStream.listen((barcode) {
           setState(() {
             scanResult = barcode;
