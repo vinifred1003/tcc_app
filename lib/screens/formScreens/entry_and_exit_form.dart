@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import '../components/entry_and_exit_form/entry_and_exit.dart';
 class EntryAndExitForm extends StatefulWidget {
   const EntryAndExitForm({super.key});
 
@@ -10,51 +11,9 @@ class EntryAndExitForm extends StatefulWidget {
 class _EntryAndExitFormState extends State<EntryAndExitForm>
     with TickerProviderStateMixin {
   final _EntryFormKey = GlobalKey<FormState>();
-  final _ExistFormKey = GlobalKey<FormState>();
-  final TextEditingController _controller = TextEditingController();
-  DateTime _selectedDate = DateTime.now();
+  final _ExitFormKey = GlobalKey<FormState>();
+ 
 
-
-  // Validator function
-  String? validateField(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Campo obrigatório';
-    }
-    return null;
-  }
-
-  DateTime currentDateAndTime() {
-    DateTime now = DateTime.now();
-    TimeOfDay currentTime = TimeOfDay.now();
-
-    // Combinar DateTime.now() com TimeOfDay.now()
-    DateTime combinedDateTime = DateTime(
-      now.year,
-      now.month,
-      now.day,
-      currentTime.hour,
-      currentTime.minute,
-    );
-    return combinedDateTime;
-  }
-
-  _showDatePicker() {
-    showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(1924),
-      lastDate: DateTime.now(),
-    ).then((pickedDate) {
-      if (pickedDate == null) {
-        return;
-      }
-      setState(() {
-        _selectedDate = pickedDate;
-        _controller.text = '${DateFormat('dd/MM/y').format(_selectedDate)}';
-      });
-    });
-  }
-  Future<void> _pickHour() async {}
 
   @override
   Widget build(BuildContext context) {
@@ -94,77 +53,19 @@ class _EntryAndExitFormState extends State<EntryAndExitForm>
               key: _EntryFormKey,
               child: Column(
                 children: [
-                  Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-                    child: TextFormField(
-                      validator: validateField,
-                      decoration: const InputDecoration(
-                        fillColor: Colors.white,
-                        filled: true,
-                        border: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(30))),
-                        hintText: '',
-                        labelText: 'N° Matricula',
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-                    child: TextFormField(
-                      controller: _controller,
-                      validator: validateField,
-                      decoration: InputDecoration(
-                          fillColor: Colors.white,
-                          filled: true,
-                          border: const OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(30))),
-                          labelText: 'Data da chegada',
-                          suffixIcon: IconButton(
-                              onPressed: _showDatePicker,
-                              icon: const Icon(
-                                Icons.calendar_today,
-                                color: Colors.black,
-                                size: 30,
-                              ))),
-                    ),
-                  ),
-                  Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-                    child: TextFormField(
-                      controller: _controller,
-                      validator: validateField,
-                      decoration: InputDecoration(
-                          fillColor: Colors.white,
-                          filled: true,
-                          border: const OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(30))),
-                          labelText: 'Hora da Chegada',
-                          suffixIcon: IconButton(
-                              onPressed: _showDatePicker,
-                              icon: const Icon(
-                                Icons.calendar_today,
-                                color: Colors.black,
-                                size: 30,
-                              ))),
-                    ),
-                  ),
+                  EntryAndExit()
                 ],
               ),
             ),
             Form(
-              key: _ExistFormKey,
-              child: const Column(
+              key: _ExitFormKey,
+              child: Column(
                 children: [],
               ),
             ),
           ],
-        ), //
+        ),
+       
       ),
     );
   }
