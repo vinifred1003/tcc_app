@@ -19,6 +19,7 @@
 // }
 
 import 'package:tcc_app/models/employee.dart';
+import 'package:tcc_app/models/guardian.dart';
 import 'package:tcc_app/models/user_role.dart';
 
 class User {
@@ -30,7 +31,8 @@ class User {
   DateTime createdAt;
   DateTime updatedAt;
   UserRole role;
-  Employee employee;
+  Employee? employee;
+  Guardian? guardian;
 
   User({
     required this.id,
@@ -41,7 +43,8 @@ class User {
     required this.createdAt,
     required this.updatedAt,
     required this.role,
-    required this.employee,
+    this.employee,
+    this.guardian,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -56,6 +59,7 @@ class User {
       updatedAt: DateTime.parse(json['updated_at']),
       role: UserRole.fromJson(json['role']),
       employee: Employee.fromJson(json['employee']),
+      guardian: Guardian.fromJson(json['guardian']),
     );
   }
 }

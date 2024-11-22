@@ -1,5 +1,5 @@
 import 'package:tcc_app/models/occupation.dart';
-// import 'package:tcc_app/models/student_warning.dart';
+import 'package:tcc_app/models/student_warning.dart';
 import 'package:tcc_app/models/user.dart';
 
 class Employee {
@@ -9,11 +9,11 @@ class Employee {
   DateTime admissionDate;
   int occupationId;
   List<int>? photo;
-  DateTime createdAt;
-  DateTime updatedAt;
-  User user;
-  Occupation occupation;
-  // List<StudentWarning>? warnings;
+  DateTime? createdAt;
+  DateTime? updatedAt;
+  User? user;
+  Occupation? occupation;
+  List<StudentWarning>? warnings;
 
   Employee({
     required this.id,
@@ -21,12 +21,12 @@ class Employee {
     this.userId,
     required this.admissionDate,
     required this.occupationId,
-    required this.photo,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.user,
-    required this.occupation,
-    // required this.warnings,
+    this.photo,
+    this.createdAt,
+    this.updatedAt,
+    this.user,
+    this.occupation,
+    this.warnings,
   });
 
   factory Employee.fromJson(Map<String, dynamic> json) {
@@ -41,9 +41,9 @@ class Employee {
       updatedAt: DateTime.parse(json['updated_at']),
       user: User.fromJson(json['user']),
       occupation: Occupation.fromJson(json['occupation']),
-      // warnings: (json['warnings'] as List)
-      //     .map((i) => StudentWarning.fromJson(i))
-      //     .toList(),
+      warnings: (json['warnings'] as List)
+          .map((i) => StudentWarning.fromJson(i))
+          .toList(),
     );
   }
 }

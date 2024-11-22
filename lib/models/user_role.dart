@@ -11,13 +11,13 @@ class UserRole {
   UserRolesEnum id;
   String name;
   bool isAdmin;
-  List<User> users;
+  List<User>? users;
 
   UserRole({
     required this.id,
     required this.name,
     required this.isAdmin,
-    required this.users,
+    this.users,
   });
 
   factory UserRole.fromJson(Map<String, dynamic> json) {

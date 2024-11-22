@@ -32,9 +32,9 @@ class Student {
     required this.updatedAt,
     required this.studentClass,
     required this.guardians,
-    required this.warnings,
-    required this.entries,
-    required this.exits,
+    this.warnings,
+    this.entries,
+    this.exits,
   });
 
   factory Student.fromJson(Map<String, dynamic> json) {

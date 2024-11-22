@@ -12,6 +12,7 @@
 // }
 
 import 'package:tcc_app/models/student.dart';
+import 'package:tcc_app/models/user.dart';
 
 class Guardian {
   int id;
@@ -24,8 +25,9 @@ class Guardian {
   List<int> photo;
   DateTime createdAt;
   DateTime updatedAt;
-  List<Student> students;
-  List<Guardian> exits;
+  List<Student>? students;
+  List<Guardian>? exits;
+  User? user;
 
   Guardian({
     required this.id,
@@ -38,8 +40,9 @@ class Guardian {
     required this.photo,
     required this.createdAt,
     required this.updatedAt,
-    required this.students,
-    required this.exits,
+    this.students,
+    this.exits,
+    this.user,
   });
 
   factory Guardian.fromJson(Map<String, dynamic> json) {

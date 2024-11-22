@@ -3,16 +3,16 @@ import 'package:tcc_app/models/student.dart';
 class Class {
   int id;
   String name;
-  DateTime createdAt;
-  DateTime updatedAt;
+  DateTime? createdAt;
+  DateTime? updatedAt;
   List<Student>? students;
 
   Class({
     required this.id,
     required this.name,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.students,
+    this.createdAt,
+    this.updatedAt,
+    this.students,
   });
 
   factory Class.fromJson(Map<String, dynamic> json) {
