@@ -19,6 +19,8 @@ class _EntryAndExitState extends State<EntryAndExit> {
 
   TimeOfDay _selectedHour = TimeOfDay.now();
 
+    
+
   // Validator function
   String? validateField(String? value) {
     if (value == null || value.isEmpty) {
@@ -90,10 +92,14 @@ class _EntryAndExitState extends State<EntryAndExit> {
 
   @override
   Widget build(BuildContext context) {
-    return ListBody(
+    final double horizontalPadding = MediaQuery.of(context).size.width * 0.02;
+    final double verticalPadding = MediaQuery.of(context).size.height * 0.02;
+
+    return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+          padding: EdgeInsets.symmetric(
+              horizontal: horizontalPadding, vertical: verticalPadding),
           child: TextFormField(
             validator: validateField,
             decoration: const InputDecoration(
@@ -107,7 +113,8 @@ class _EntryAndExitState extends State<EntryAndExit> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+          padding: EdgeInsets.symmetric(
+              horizontal: horizontalPadding, vertical: verticalPadding),
           child: TextFormField(
             controller: _controllerDate,
             validator: validateField,
@@ -127,7 +134,8 @@ class _EntryAndExitState extends State<EntryAndExit> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+          padding: EdgeInsets.symmetric(
+              horizontal: horizontalPadding, vertical: verticalPadding),
           child: TextFormField(
             controller: _controllerHour,
             validator: validateField,

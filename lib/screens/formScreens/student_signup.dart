@@ -52,7 +52,7 @@ class _StudentSignupState extends State<StudentSignup> {
       }
       setState(() {
         _selectedDate = pickedDate;
-        _controller.text = '${DateFormat('dd/MM/y').format(_selectedDate)}';
+        _controller.text = DateFormat('dd/MM/y').format(_selectedDate);
       });
     });
   }
@@ -62,11 +62,28 @@ class _StudentSignupState extends State<StudentSignup> {
       }
       return null;
     }
+
+final TextEditingController _guardiansController = TextEditingController();
+  final List<String> _items = []; // The array to store user inputs
+
+  void _addItem() {
+    if (_guardiansController.text.isNotEmpty) {
+      setState(() {
+        _items.add(_guardiansController.text); // Add the input to the array
+        _guardiansController.clear(); // Clear the input field
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final double horizontalPadding = MediaQuery.of(context).size.width * 0.02;
+    final double verticalPadding = MediaQuery.of(context).size.height * 0.02;
+    final double horizontalButton = MediaQuery.of(context).size.width * 0.25;
+    
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.secondary,
-      appBar: BaseAppBar(screen_title: Text("Registrar Estudante")),
+      appBar: const BaseAppBar(screen_title: Text("Registrar Estudante")),
       body: Form(
         key: _formKey,
         child: ListView(
@@ -100,7 +117,8 @@ class _StudentSignupState extends State<StudentSignup> {
             Column(
               children: [
                  Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: horizontalPadding, vertical: verticalPadding),
                   child: TextFormField(
                     validator:validateField,
                     decoration: const InputDecoration(
@@ -113,9 +131,10 @@ class _StudentSignupState extends State<StudentSignup> {
                     ),
                   ),
                 ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-                  child: TextField(
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: horizontalPadding, vertical: verticalPadding),
+                  child: const TextField(
                     // onSubmitted: (value) {
                     //   setState(() {
                     //     qrData = value;
@@ -133,7 +152,8 @@ class _StudentSignupState extends State<StudentSignup> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: horizontalPadding, vertical: verticalPadding),
                   child: TextFormField(
                     validator:validateField,
                     controller: _controller,
@@ -154,7 +174,8 @@ class _StudentSignupState extends State<StudentSignup> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: horizontalPadding, vertical: verticalPadding),
                   child: TextFormField(
                     validator:validateField,
                     decoration: const InputDecoration(
@@ -168,25 +189,59 @@ class _StudentSignupState extends State<StudentSignup> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-                  child: TextFormField(
-                    validator:validateField,
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: TextField(
+                              controller: _guardiansController,
                     decoration: const InputDecoration(
-                      fillColor: Colors.white,
-                      filled: true,
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(30))),
-                      hintText: '',
-                      labelText: 'Cargo',
-                    ),
+                                labelText: 'Enter a value',
+                                border: OutlineInputBorder(),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          ElevatedButton(
+                            onPressed: _addItem,
+                            child: const Text("Add"),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      // Exibir a lista de itens
+                      ListView.builder(
+                        shrinkWrap:
+                            true, // Permite que a ListView ocupe apenas o espaço necessário
+                        physics:
+                            const NeverScrollableScrollPhysics(), // Desabilita o scroll
+                        itemCount: _items.length,
+                        itemBuilder: (context, index) {
+                          return ListTile(
+                            title: Text(_items[index]),
+                            trailing: IconButton(
+                              icon: const Icon(Icons.delete),
+                              onPressed: () {
+                                setState(() {
+                                  _items.removeAt(
+                                      index); // Remove o item da lista
+                                });
+                              },
+                            ),
+                          );
+                        },
+                      ),
+                    ],
                   ),
                 ),
-                // QRCodeGenerator(qrDataStudent: qrData),
               ],
             ),
             Padding(
               padding:
-                  const EdgeInsets.symmetric(horizontal: 100, vertical: 100),
+                  EdgeInsets.symmetric(
+                  horizontal: horizontalButton, vertical: verticalPadding),
               child: ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
