@@ -7,12 +7,10 @@ import '../components/global/app_drawer.dart';
 class UserRecords extends StatelessWidget {
   final List<User>? users;
   final List<Student>? students;
-  const UserRecords(this.users, this.students ,{Key? key}) : super(key: key);
+  const UserRecords(this.users, this.students, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-   
-
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.secondary,
       appBar: const BaseAppBar(screen_title: Text("Registros de Usuários")),
@@ -47,36 +45,38 @@ class UserRecords extends StatelessWidget {
               },
             ),
           ),
-           Expanded(
-                  child: ListView.builder(
-                    itemCount: users?.length ?? students?.length,
-                    itemBuilder: (ctx, index) {
-                      final user = users?[index];
-                      final student = students?[index];
-                      return Card(
-                        elevation: 5,
-                        margin: const EdgeInsets.symmetric(
-                          vertical: 8,
-                          horizontal: 5,
-                        ),
-                        child: ListTile(
-                          leading: const CircleAvatar(
-                            radius: 30,
-                            child: Padding(
-                              padding: EdgeInsets.all(6.0),
-                              child: FittedBox(child: Text('foto')),
-                            ),
-                          ),
-                          title: Text(
-                            user?.username ?? student?.name ?? "Fail",
-                            style: Theme.of(context).textTheme.titleLarge,
-                          ),
-                          subtitle: Text(user?.jobPosition ?? student?.studentClass ?? "Fail"),
-                        ),
-                      );
-                    },
+          Expanded(
+            child: ListView.builder(
+              itemCount: users?.length ?? students?.length,
+              itemBuilder: (ctx, index) {
+                final user = users?[index];
+                final student = students?[index];
+                return Card(
+                  elevation: 5,
+                  margin: const EdgeInsets.symmetric(
+                    vertical: 8,
+                    horizontal: 5,
                   ),
-                ),
+                  child: ListTile(
+                    leading: const CircleAvatar(
+                      radius: 30,
+                      child: Padding(
+                        padding: EdgeInsets.all(6.0),
+                        child: FittedBox(child: Text('foto')),
+                      ),
+                    ),
+                    title: Text(
+                      user?.name ?? student?.name ?? "Fail",
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
+                    subtitle: Text(user?.employee?.occupation?.name ??
+                        student?.studentClass.name ??
+                        "Fail"),
+                  ),
+                );
+              },
+            ),
+          ),
         ],
       ),
     );

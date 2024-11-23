@@ -1,36 +1,22 @@
-// import 'package:tcc_app/models/attendance.dart';
+import 'package:tcc_app/models/attendance.dart';
 import 'package:tcc_app/models/guardian.dart';
 import 'package:tcc_app/models/student.dart';
 
-// class StudentExit extends Attendance {
-//   final String guardians;
-
-//   const StudentExit({
-//     required super.name,
-//     required super.date,
-//     required super.type,
-//     required this.guardians,
-//   });
-// }
-
-class StudentExit {
-  int id;
-  int studentId;
+class StudentExit extends Attendance {
   int guardianId;
   DateTime exitAt;
   DateTime createdAt;
   DateTime updatedAt;
-  Student student;
   Guardian guardian;
 
   StudentExit({
-    required this.id,
-    required this.studentId,
+    required super.id,
+    required super.studentId,
+    required super.student,
     required this.guardianId,
     required this.exitAt,
     required this.createdAt,
     required this.updatedAt,
-    required this.student,
     required this.guardian,
   });
 

@@ -1,20 +1,18 @@
+import 'package:tcc_app/models/attendance.dart';
 import 'package:tcc_app/models/student.dart';
 
-class StudentEntry {
-  int id;
-  int studentId;
+class StudentEntry extends Attendance {
   DateTime entryAt;
   DateTime createdAt;
   DateTime updatedAt;
-  Student student;
 
   StudentEntry({
-    required this.id,
-    required this.studentId,
+    required super.id,
+    required super.studentId,
+    required super.student,
     required this.entryAt,
     required this.createdAt,
     required this.updatedAt,
-    required this.student,
   });
 
   factory StudentEntry.fromJson(Map<String, dynamic> json) {

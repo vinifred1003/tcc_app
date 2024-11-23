@@ -1,37 +1,36 @@
-import 'dart:math';
 import 'dart:async';
+import 'dart:math';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:tcc_app/models/attendance.dart';
 import 'package:tcc_app/screens/login_screen.dart';
+
+import '../models/user.dart';
 import 'components/global/app_drawer.dart';
 import 'components/global/base_app_bar.dart';
-import '../models/user.dart';
-import '../data/dummy_data.dart';
-
 // import 'package:camera/camera.dart';
 // import './camera_screen.dart';
 import 'components/home/center_buttons.dart';
-import 'components/home/profile_display.dart';
 import 'components/home/footer.dart';
+import 'components/home/profile_display.dart';
 
 class HomeScreen extends StatefulWidget {
   final User user;
-  
-  HomeScreen({super.key , required this.user});
-  
+
+  HomeScreen({super.key, required this.user});
+
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-
 class _HomeScreenState extends State<HomeScreen> {
-   late User u;
+  late User u;
 
   String scanResult = "";
-  
- @override
+
+  @override
   void initState() {
     super.initState();
     u = widget.user;
@@ -45,9 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
           await FlutterBarcodeScanner.getBarcodeStreamReceiver(
               "#ff6666", "Cancel", true, ScanMode.QR) as Stream<String>?;
 
-
       if (barcodeStream != null) {
-
         final newEntry = Attendance(
           name: barcodeScanRes ?? "nenhum", // Nome vindo do QR Code
           type: "Entrada", // Ajuste conforme necessário (Entrada/Saída)
@@ -74,15 +71,17 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.secondary,
       appBar: const BaseAppBar(screen_title: Text("Home")),
       drawer: AppDrawer(),
       body: Center(
         child: Column(
-          children: [  
-            ProfileDisplay(name:u.username, classOrInstitution:u.jobPosition),
+          children: [
+            ProfileDisplay(
+                name: u.name,
+                classOrInstitution:
+                    u.employee?.occupation?.name ?? 'Não informado'),
             Padding(
               padding: const EdgeInsets.only(top: 50, left: 55),
               child: Column(
