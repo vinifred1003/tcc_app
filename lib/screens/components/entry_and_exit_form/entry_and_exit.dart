@@ -15,7 +15,6 @@ class _EntryAndExitState extends State<EntryAndExit> {
 
   DateTime _selectedDate = DateTime.now();
 
-  FormFieldValidator<String>? _validateField;
 
   TimeOfDay _selectedHour = TimeOfDay.now();
 
@@ -56,7 +55,7 @@ class _EntryAndExitState extends State<EntryAndExit> {
       }
       setState(() {
         _selectedDate = pickedDate;
-        _controllerDate.text = '${DateFormat('dd/MM/y').format(_selectedDate)}';
+        _controllerDate.text = DateFormat('dd/MM/y').format(_selectedDate);
       });
     });
   }

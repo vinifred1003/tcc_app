@@ -1,25 +1,26 @@
 import 'package:flutter/foundation.dart';
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
+
 import 'package:tcc_app/screens/components/global/app_drawer.dart';
 import 'package:tcc_app/screens/components/global/base_app_bar.dart';
 
 const Duration fakeAPIDuration = Duration(seconds: 1);
 
-class WarningScreen extends StatefulWidget {
-  const WarningScreen({super.key});
+class WarningForm extends StatefulWidget {
+  const WarningForm({super.key});
 
   @override
-  State<WarningScreen> createState() => _WarningScreenState();
+  State<WarningForm> createState() => _WarningFormState();
 }
 
-class _WarningScreenState extends State<WarningScreen> {
+class _WarningFormState extends State<WarningForm> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _studentsController = TextEditingController();
+  final TextEditingController _controllerDate = TextEditingController();
   final List<String> _studentsSelected = [];
   String? _searchingWithQuery;
   late Iterable<Widget> _lastOptions = <Widget>[];
-  late Color _transparent = Colors.black;
+  DateTime _selectedDate = DateTime.now();
   String? validateField(String? value) {
     if (value == null || value.isEmpty) {
       return 'Campo obrigatório';
@@ -27,10 +28,21 @@ class _WarningScreenState extends State<WarningScreen> {
     return null;
   }
 
-  @override
-  Color changeColor() {
-    _transparent = Color(0x00000000);
-    return _transparent;
+  _showDatePicker() {
+    showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(1924),
+      lastDate: DateTime.now(),
+    ).then((pickedDate) {
+      if (pickedDate == null) {
+        return;
+      }
+      setState(() {
+        _selectedDate = pickedDate;
+        _controllerDate.text = DateFormat('dd/MM/y').format(_selectedDate);
+      });
+    });
   }
 
   @override
@@ -64,6 +76,27 @@ class _WarningScreenState extends State<WarningScreen> {
             Padding(
               padding: EdgeInsets.symmetric(
                   horizontal: horizontalPadding, vertical: verticalPadding),
+              child: TextFormField(
+                controller: _controllerDate,
+                validator: validateField,
+                decoration: InputDecoration(
+                    fillColor: Colors.white,
+                    filled: true,
+                    border: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(30))),
+                    labelText: 'Data da chegada',
+                    suffixIcon: IconButton(
+                        onPressed: _showDatePicker,
+                        icon: const Icon(
+                          Icons.calendar_today,
+                          color: Colors.black,
+                          size: 30,
+                        ))),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(
+                  horizontal: horizontalPadding, vertical: verticalPadding),
               child: Row(
                 children: [
                   SearchAnchor(
@@ -78,7 +111,6 @@ class _WarningScreenState extends State<WarningScreen> {
                           icon: const Icon(Icons.add),
                           onPressed: () {
                             controller.openView();
-                            changeColor;
                           },
                         ),
                       );
@@ -121,10 +153,11 @@ class _WarningScreenState extends State<WarningScreen> {
                           return SizedBox(
                             child: Container(
                               width: 80,
-                              margin: EdgeInsets.all(8.0),
+                              margin: EdgeInsets.all(horizontalPadding),
                               child: Card(
                                 child: Padding(
-                                  padding: EdgeInsets.only(left: 6.0),
+                                  padding:
+                                      EdgeInsets.only(left: horizontalPadding),
                                   child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
@@ -134,8 +167,11 @@ class _WarningScreenState extends State<WarningScreen> {
                                           _studentsSelected[index][0]
                                               .toUpperCase(),
                                           overflow: TextOverflow.ellipsis,
-                                          style: const TextStyle(
+                                          style: TextStyle(
                                             fontSize: 30,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .primary,
                                           ),
                                         ),
                                       ),
@@ -159,7 +195,6 @@ class _WarningScreenState extends State<WarningScreen> {
                       ),
                     ),
                   ),
-                  
                 ],
               ),
             ),
