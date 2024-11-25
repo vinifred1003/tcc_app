@@ -1,11 +1,13 @@
-class Attendance {
-  final String name;
-  final DateTime date;
-  final String type;
+import 'package:tcc_app/models/student.dart';
 
-  const Attendance({
-    required this.name,
-    required this.date,
-    required this.type,
+abstract class Attendance {
+  int id;
+  int studentId;
+  Student student;
+
+  Attendance({
+    required this.id,
+    required this.studentId,
+    required this.student,
   });
 }

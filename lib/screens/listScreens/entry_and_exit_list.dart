@@ -33,7 +33,7 @@ class _EntryAndExitListState extends State<EntryAndExitList> {
   void _filterStudents() {
     setState(() {
       filteredStudents = widget.students
-          .where((student) => student.name
+          .where((attendance) => attendance.student.name
               .toLowerCase()
               .contains(_searchController.text.toLowerCase()))
           .toList();
@@ -97,13 +97,11 @@ class _EntryAndExitListState extends State<EntryAndExitList> {
                             ),
                           ),
                           title: Text(
-                            tr.name,
+                            tr.student.name,
                             style: Theme.of(context).textTheme.titleLarge,
                           ),
                           subtitle: Text(
-                            tr.type +
-                                " " +
-                                DateFormat('d MMM y').format(tr.date),
+                            tr.type + " " + DateFormat('d MMM y').format(tr.en),
                           ),
                         ),
                       );
