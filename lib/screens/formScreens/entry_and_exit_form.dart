@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:tcc_app/screens/components/global/app_drawer.dart';
 import '../components/entry_and_exit_form/entry_and_exit.dart';
 class EntryAndExitForm extends StatefulWidget {
   const EntryAndExitForm({super.key});
@@ -25,6 +26,7 @@ class _EntryAndExitFormState extends State<EntryAndExitForm>
       length: 2,
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.secondary,
+        drawer: AppDrawer(),
         appBar: AppBar(
           title: const Text("Novo Registro"),
           backgroundColor: Theme.of(context).colorScheme.primary,

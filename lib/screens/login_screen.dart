@@ -33,32 +33,35 @@ void _selectRegister(BuildContext context) {
 class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.secondary,
-      appBar: const BaseAppBar(screen_title: Text("Bem vindo")),
-      body: SizedBox(
-        height: 1000,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const SizedBox(
-              height: 200,
-              width: 350,
-              child: Image(
-                image: AssetImage(
-                  'assets/images/convivencia.png',
+
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.secondary,
+        appBar: const BaseAppBar(screen_title: Text("Bem vindo")),
+        body: SizedBox(
+          height: 1000,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              const SizedBox(
+                height: 200,
+                width: 350,
+                child: Image(
+                  image: AssetImage(
+                    'assets/images/convivencia.png',
+                  ),
+                  fit: BoxFit.cover,
                 ),
-                fit: BoxFit.cover,
               ),
-            ),
-            Inputs(),
-            CenterButtons(
-              selectedHome: () => _selectHome(context),
-            ),
-            FooterButtons(
-              selectedRegister: () => _selectRegister(context),
-            ),
-          ],
+              Inputs(),
+              CenterButtons(
+                selectedHome: () => _selectHome(context),
+              ),
+              FooterButtons(
+                selectedRegister: () => _selectRegister(context),
+              ),
+            ],
+          ),
         ),
       ),
     );

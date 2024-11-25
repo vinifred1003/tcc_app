@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:tcc_app/screens/components/global/app_drawer.dart';
+import 'package:tcc_app/screens/components/global/base_app_bar.dart';
 
 class ManagerSignupForm extends StatefulWidget {
   const ManagerSignupForm({super.key});
@@ -28,10 +30,8 @@ class _ManagerSignupFormState extends State<ManagerSignupForm> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.secondary,
-        appBar: AppBar(
-          title: const Text("Novo Registro"),
-          backgroundColor: Theme.of(context).colorScheme.primary,
-        ),
+        appBar: BaseAppBar(screen_title: Text("Novo Usuário")),
+        drawer: AppDrawer(),
         body: Padding(
           padding: EdgeInsets.only(top: screenHeight),
           child: Form(

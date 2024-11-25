@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:tcc_app/screens/components/global/app_drawer.dart';
 import 'package:tcc_app/screens/components/global/base_app_bar.dart';
 import '../components/student_signup/qrcode_generator.dart';
 
@@ -84,6 +85,7 @@ final TextEditingController _guardiansController = TextEditingController();
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.secondary,
       appBar: const BaseAppBar(screen_title: Text("Registrar Estudante")),
+      drawer: AppDrawer(),
       body: Form(
         key: _formKey,
         child: ListView(
@@ -116,7 +118,7 @@ final TextEditingController _guardiansController = TextEditingController();
             ),
             Column(
               children: [
-                 Padding(
+                Padding(
                   padding: EdgeInsets.symmetric(
                       horizontal: horizontalPadding, vertical: verticalPadding),
                   child: TextFormField(

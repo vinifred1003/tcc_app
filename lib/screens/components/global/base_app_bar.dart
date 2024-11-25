@@ -16,12 +16,15 @@ class BaseAppBar extends StatelessWidget implements PreferredSizeWidget {
         color: Theme.of(context).colorScheme.inversePrimary,
       ),
       actions: <Widget>[
-        CircleAvatar(
-          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          radius: 20,
-          child: Padding(
-            padding: EdgeInsets.all(4.0),
-            child: Icon(Icons.question_mark),
+        Padding(
+          padding: const EdgeInsets.only(right: 5),
+          child: CircleAvatar(
+            backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+            radius: 20,
+            child: IconButton(
+              icon: const Icon(Icons.question_mark),
+              onPressed: () {},
+            ),
           ),
         ),
       ],

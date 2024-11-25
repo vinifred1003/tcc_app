@@ -92,6 +92,7 @@ class _EntryAndExitState extends State<EntryAndExit> {
 
   @override
   Widget build(BuildContext context) {
+   
     final double horizontalPadding = MediaQuery.of(context).size.width * 0.02;
     final double verticalPadding = MediaQuery.of(context).size.height * 0.02;
 
