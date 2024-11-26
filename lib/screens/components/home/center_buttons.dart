@@ -6,93 +6,101 @@ class CenterButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(10),
-              child: ElevatedButton(
-                onPressed: selectedScanQRCode,
-                child: Text(
-                  "Chegada",
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
+    final double horizontalPadding = MediaQuery.of(context).size.width * 0.02;
+    final double verticalPadding = MediaQuery.of(context).size.height * 0.02;
+    return SafeArea(
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Padding(
+                padding: EdgeInsets.symmetric(
+                    horizontal: horizontalPadding, vertical: verticalPadding),
+                child: ElevatedButton(
+                  onPressed: selectedScanQRCode,
+                  child: Text(
+                    "Chegada",
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor:
+                        Theme.of(context).textTheme.labelLarge?.color,
+                    foregroundColor: Theme.of(context).colorScheme.primary,
+                    minimumSize: Size(130, 70),
                   ),
                 ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor:
-                      Theme.of(context).textTheme.labelLarge?.color,
-                  foregroundColor: Theme.of(context).colorScheme.primary,
-                  minimumSize: Size(130, 70),
-                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(10),
-              child: ElevatedButton(
-                onPressed: () {},
-                child: Text(
-                  "Saída",
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
+              Padding(
+                padding: EdgeInsets.symmetric(
+                    horizontal: horizontalPadding, vertical: verticalPadding),
+                child: ElevatedButton(
+                  onPressed: () {},
+                  child: Text(
+                    "Saída",
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor:
+                        Theme.of(context).textTheme.labelLarge?.color,
+                    foregroundColor: Theme.of(context).colorScheme.primary,
+                    minimumSize: Size(130, 70),
                   ),
                 ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor:
-                      Theme.of(context).textTheme.labelLarge?.color,
-                  foregroundColor: Theme.of(context).colorScheme.primary,
-                  minimumSize: Size(130, 70),
-                ),
-              ),
-            )
-          ],
-        ),
-        Row(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(10),
-              child: ElevatedButton(
-                onPressed: () {},
-                child: Text(
-                  "Advertência",
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
+              )
+            ],
+          ),
+          Row(
+            children: [
+              Padding(
+                padding: EdgeInsets.symmetric(
+                    horizontal: horizontalPadding, vertical: verticalPadding),
+                child: ElevatedButton(
+                  onPressed: () {},
+                  child: Text(
+                    "Advertência",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor:
+                        Theme.of(context).textTheme.labelLarge?.color,
+                    foregroundColor: Theme.of(context).colorScheme.primary,
+                    minimumSize: Size(125, 70),
                   ),
                 ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor:
-                      Theme.of(context).textTheme.labelLarge?.color,
-                  foregroundColor: Theme.of(context).colorScheme.primary,
-                  minimumSize: Size(130, 70),
-                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(10),
-              child: ElevatedButton(
-                onPressed: () {},
-                child: Text(
-                  "Ficha",
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
+              Padding(
+                padding: EdgeInsets.symmetric(
+                    horizontal: horizontalPadding, vertical: verticalPadding),
+                child: ElevatedButton(
+                  onPressed: () {},
+                  child: Text(
+                    "Ficha",
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor:
+                        Theme.of(context).textTheme.labelLarge?.color,
+                    foregroundColor: Theme.of(context).colorScheme.primary,
+                    minimumSize: Size(125, 70),
                   ),
                 ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor:
-                      Theme.of(context).textTheme.labelLarge?.color,
-                  foregroundColor: Theme.of(context).colorScheme.primary,
-                  minimumSize: Size(130, 70),
-                ),
-              ),
-            )
-          ],
-        ),
-      ],
+              )
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

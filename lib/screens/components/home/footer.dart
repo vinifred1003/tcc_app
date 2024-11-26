@@ -6,36 +6,34 @@ class Footer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 60, right: 40),
-      child: Column(
-        children: [
-          TextButton(
-            onPressed: selectedLoginScreen,
-            child: const Text(
-              "Logar em outra conta",
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                decoration: TextDecoration.underline,
-              ),
+    return Column(
+      children: [
+        
+        TextButton(
+          onPressed: selectedLoginScreen,
+          child: const Text(
+            "Logar em outra conta",
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              decoration: TextDecoration.underline,
             ),
           ),
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: const Text(
-              "Sair",
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                decoration: TextDecoration.underline,
-              ),
+        ),
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: const Text(
+            "Sair",
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              decoration: TextDecoration.underline,
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

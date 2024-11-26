@@ -1,23 +1,38 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter/material.dart';
+
 class ProfileDisplay extends StatelessWidget {
   final String name;
   final String classOrInstitution;
   final String? jobPosition;
-  const ProfileDisplay({super.key, required this.name, required this.classOrInstitution,  this.jobPosition});
+  
+  const ProfileDisplay(
+      {super.key,
+      required this.name,
+      required this.classOrInstitution,
+      this.jobPosition});
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(top: 150, bottom: 20),
-          child: ClipRRect(
+    final mediaQuery = MediaQuery.of(context);
+    final screenWidth = mediaQuery.size.width;
+
+    return ConstrainedBox(
+      constraints: BoxConstraints(
+        maxWidth: screenWidth * 0.8, // Limit width to 80% of screen width
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          ClipRRect(
             borderRadius: BorderRadius.circular(100),
-            child: const SizedBox(
-              height: 150,
+            child: Container(
               width: 150,
-              child: Opacity(
+              height: 150,
+              color: Colors.white10, // Added background to ensure visibility
+              child: const Opacity(
                 opacity: 0.85,
                 child: Image(
                   image: AssetImage('assets/images/foto_perfil.png'),
@@ -26,48 +41,55 @@ class ProfileDisplay extends StatelessWidget {
               ),
             ),
           ),
-        ),
-         SizedBox(
-          height: 30,
-          child: Text(
-            name,
-            style: const TextStyle(
-              fontSize: 25,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
+          const SizedBox(height: 16), // Added spacing
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              name,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 25,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
           ),
-        ),
-         SizedBox(
-          width: 180,
-          height: 20,
-          child: Row(
-            children: [
-              Text(
-                jobPosition ??"Educando",
-                style: const TextStyle(
-                  fontSize: 18,
-                  color: Colors.white,
-                ),
+          const SizedBox(height: 8), // Added spacing
+          Center(
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    jobPosition ?? "Educando",
+                    style: const TextStyle(
+                      fontSize: 18,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const Text(
+                    " - ",
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.white,
+                    ),
+                  ),
+                  Text(
+                    classOrInstitution,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
               ),
-              const Text(
-                " - ",
-                style: TextStyle(
-                  fontSize: 18,
-                  color: Colors.white,
-                ),
-              ),
-              Text(
-                classOrInstitution,
-                style: const TextStyle(
-                  fontSize: 18,
-                  color: Colors.white,
-                ),
-              ),
-            ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

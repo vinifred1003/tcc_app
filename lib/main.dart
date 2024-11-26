@@ -1,12 +1,16 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:tcc_app/models/user.dart';
+import 'package:tcc_app/screens/components/home/profile_display.dart';
 import 'package:tcc_app/screens/formScreens/entry_and_exit_form.dart';
 import 'package:tcc_app/screens/formScreens/student_signup.dart';
 import 'package:tcc_app/screens/formScreens/warning_form.dart';
+import 'package:tcc_app/screens/home_screen.dart';
 import 'package:tcc_app/screens/login_screen.dart';
 import 'package:tcc_app/screens/formScreens/manager_signup_form.dart';
 import 'package:tcc_app/screens/profileScreens/student_profile.dart';
 import 'package:flutter/material.dart';
+import 'package:tcc_app/screens/profileScreens/user_profile.dart';
 import '../../data/dummy_data.dart';
 // import 'package:camera/camera.dart'; // Certifique-se de importar a biblioteca da câmera se ainda não o fez
 
@@ -23,7 +27,7 @@ class MeproviApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final ThemeData tema = ThemeData();
     return MaterialApp(
-      home: WarningForm(),
+      home: UserProfile(dummyUser[0]),
       theme: tema.copyWith(
         colorScheme: tema.colorScheme.copyWith(
           primary: Colors.lightBlue,

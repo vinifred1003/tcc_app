@@ -10,8 +10,6 @@ import 'package:tcc_app/screens/login_screen.dart';
 import '../models/user.dart';
 import 'components/global/app_drawer.dart';
 import 'components/global/base_app_bar.dart';
-// import 'package:camera/camera.dart';
-// import './camera_screen.dart';
 import 'components/home/center_buttons.dart';
 import 'components/home/footer.dart';
 import 'components/home/profile_display.dart';
@@ -19,7 +17,7 @@ import 'components/home/profile_display.dart';
 class HomeScreen extends StatefulWidget {
   final User user;
 
-  HomeScreen({super.key, required this.user});
+  const HomeScreen({super.key, required this.user});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -36,31 +34,6 @@ class _HomeScreenState extends State<HomeScreen> {
     u = widget.user;
   }
 
-  // Future<void> scanCode() async {
-  //   String? barcodeScanRes;
-  //   try {
-  //     // Explicitly cast the stream to Stream<String>
-  //     Stream<String>? barcodeStream =
-  //         await FlutterBarcodeScanner.getBarcodeStreamReceiver(
-  //             "#ff6666", "Cancel", true, ScanMode.QR) as Stream<String>?;
-
-  //     if (barcodeStream != null) {
-  //       final newEntry = Attendance(
-  //         name: barcodeScanRes ?? "nenhum", // Nome vindo do QR Code
-  //         type: "Entrada", // Ajuste conforme necessário (Entrada/Saída)
-  //         date: DateTime.now(),
-  //       );
-  //       barcodeStream.listen((barcode) {
-  //         setState(() {
-  //           scanResult = barcode;
-  //         });
-  //       });
-  //     }
-  //   } on PlatformException {
-  //     barcodeScanRes = "Failed to scan: $e";
-  //   }
-  // }
-
   void _selectLoginScreen(BuildContext context) {
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(builder: (_) {
@@ -71,31 +44,71 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.secondary,
-      appBar: const BaseAppBar(screen_title: Text("Home")),
-      drawer: AppDrawer(),
-      body: Center(
-        child: Column(
-          children: [
-            ProfileDisplay(
-                name: u.name,
-                classOrInstitution:
-                    u.employee?.occupation?.name ?? 'Não informado'),
-            Padding(
-              padding: const EdgeInsets.only(top: 50, left: 55),
+    // Use MediaQuery with constraints to make the layout more responsive
+    final mediaQuery = MediaQuery.of(context);
+    final screenWidth = mediaQuery.size.width;
+    final screenHeight = mediaQuery.size.height;
+
+    // Calculate paddings as a percentage of screen size with minimum values
+    final horizontalPadding = max(screenWidth * 0.1, 20.0);
+    final verticalPadding = max(screenHeight * 0.1, 20.0);
+    final topPaddingFooter = max(screenHeight * 0.05, 15.0);
+    final bottomPaddingFooter = max(screenHeight * 0.02, 10.0);
+
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.secondary,
+        appBar: const BaseAppBar(screen_title: Text("Home")),
+        drawer: AppDrawer(),
+        body: SingleChildScrollView(
+          child: Center(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                maxWidth: screenWidth > 600 ? 500 : screenWidth * 0.9,
+              ),
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  CenterButtons(
-                    selectedScanQRCode: () {},
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: horizontalPadding,
+                      vertical: verticalPadding,
+                    ),
+                    child: ProfileDisplay(
+                      name: u.name,
+                      classOrInstitution: 
+                          u.employee?.occupation?.name ?? 'Não informado',
+                    ),
                   ),
-                  Footer(
-                    selectedLoginScreen: () => _selectLoginScreen(context),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: Center(
+                        child: SizedBox(
+                          width: 300,
+                          child: CenterButtons(
+                            selectedScanQRCode: () {},
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(
+                      top: topPaddingFooter,
+                      left: horizontalPadding,
+                      right: horizontalPadding,
+                      bottom: bottomPaddingFooter,
+                    ),
+                    child: Footer(
+                      selectedLoginScreen: () => _selectLoginScreen(context),
+                    ),
                   ),
                 ],
               ),
             ),
-          ],
+          ),
         ),
       ),
     );
