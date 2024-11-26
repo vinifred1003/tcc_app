@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-class EntryAndExitList extends StatelessWidget {
+class EntryAndExitListComponent extends StatelessWidget {
   final List filteredStudents;
-  const EntryAndExitList(this.filteredStudents, {super.key});
+  const EntryAndExitListComponent(this.filteredStudents, {super.key});
 
   @override
   Widget build(BuildContext context) {

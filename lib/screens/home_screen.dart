@@ -36,30 +36,30 @@ class _HomeScreenState extends State<HomeScreen> {
     u = widget.user;
   }
 
-  Future<void> scanCode() async {
-    String? barcodeScanRes;
-    try {
-      // Explicitly cast the stream to Stream<String>
-      Stream<String>? barcodeStream =
-          await FlutterBarcodeScanner.getBarcodeStreamReceiver(
-              "#ff6666", "Cancel", true, ScanMode.QR) as Stream<String>?;
+  // Future<void> scanCode() async {
+  //   String? barcodeScanRes;
+  //   try {
+  //     // Explicitly cast the stream to Stream<String>
+  //     Stream<String>? barcodeStream =
+  //         await FlutterBarcodeScanner.getBarcodeStreamReceiver(
+  //             "#ff6666", "Cancel", true, ScanMode.QR) as Stream<String>?;
 
-      if (barcodeStream != null) {
-        final newEntry = Attendance(
-          name: barcodeScanRes ?? "nenhum", // Nome vindo do QR Code
-          type: "Entrada", // Ajuste conforme necessário (Entrada/Saída)
-          date: DateTime.now(),
-        );
-        barcodeStream.listen((barcode) {
-          setState(() {
-            scanResult = barcode;
-          });
-        });
-      }
-    } on PlatformException {
-      barcodeScanRes = "Failed to scan: $e";
-    }
-  }
+  //     if (barcodeStream != null) {
+  //       final newEntry = Attendance(
+  //         name: barcodeScanRes ?? "nenhum", // Nome vindo do QR Code
+  //         type: "Entrada", // Ajuste conforme necessário (Entrada/Saída)
+  //         date: DateTime.now(),
+  //       );
+  //       barcodeStream.listen((barcode) {
+  //         setState(() {
+  //           scanResult = barcode;
+  //         });
+  //       });
+  //     }
+  //   } on PlatformException {
+  //     barcodeScanRes = "Failed to scan: $e";
+  //   }
+  // }
 
   void _selectLoginScreen(BuildContext context) {
     Navigator.of(context).pushReplacement(
@@ -87,7 +87,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Column(
                 children: [
                   CenterButtons(
-                    selectedScanQRCode: () => scanCode(),
+                    selectedScanQRCode: () {},
                   ),
                   Footer(
                     selectedLoginScreen: () => _selectLoginScreen(context),
