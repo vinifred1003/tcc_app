@@ -6,6 +6,7 @@ import '../../../data/dummy_data.dart';
 
 class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key});
+
   void _selectEntryRecords(BuildContext context) {
     Navigator.of(context).push(
       MaterialPageRoute(builder: (_) {

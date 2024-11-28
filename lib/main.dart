@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:tcc_app/models/student.dart';
 import 'package:tcc_app/models/user.dart';
 import 'package:tcc_app/screens/components/home/profile_display.dart';
 import 'package:tcc_app/screens/formScreens/entry_and_exit_form.dart';
@@ -13,10 +14,9 @@ import 'package:flutter/material.dart';
 import 'package:tcc_app/screens/profileScreens/user_profile.dart';
 import '../../data/dummy_data.dart';
 // import 'package:camera/camera.dart'; // Certifique-se de importar a biblioteca da câmera se ainda não o fez
-
+late final Student student = dummyStudents[0];
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   runApp(MeproviApp());
 }
 
@@ -27,7 +27,7 @@ class MeproviApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final ThemeData tema = ThemeData();
     return MaterialApp(
-      home: UserProfile(dummyUser[0]),
+      home: StudentProfile(/*student*/),
       theme: tema.copyWith(
         colorScheme: tema.colorScheme.copyWith(
           primary: Colors.lightBlue,
