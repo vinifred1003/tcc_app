@@ -73,7 +73,12 @@ class StudentProfile extends StatelessWidget {
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: verticalPaddingText),
                 child: Container(
-                  decoration: BoxDecoration(),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.blue, // Cor da borda
+                      width: 2, // Largura da borda
+                    ),
+                  ),
                   width: 500,
                   child: Padding(
                     padding:
