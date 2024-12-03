@@ -14,7 +14,13 @@ class StudentProfile extends StatelessWidget {
   final dataNascimento = "10/03/2018";
   final photo = File(
       "C:/Users/needd/OneDrive/Desktop/Programacao/TCC_APP/tcc_app/lib/data/images/boy.jpg");
-  final guardians = ["Luciana", "Seu Zé", "Maria Teresa"];
+  final guardians = [
+    "Luciana",
+    "Seu Zé",
+    "Maria Teresa",
+    "Seu Juscelino",
+    "Mariazinha"
+  ];
   @override
   Widget build(BuildContext context) {
     final double horizontalPadding = MediaQuery.of(context).size.width * 0.1;
@@ -69,36 +75,40 @@ class StudentProfile extends StatelessWidget {
                 ),
               ),
             ),
+            Container(
+              color: Colors.white,
+              width: 500,
+              child: Padding(
+                padding:
+                    EdgeInsets.symmetric(horizontal: horizontalPaddingText),
+                child: Text(
+                  "Responsaveis: ",
+                  
+                ),
+              ),
+            ),
             Expanded(
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: verticalPaddingText),
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.blue, // Cor da borda
-                      width: 2, // Largura da borda
-                    ),
-                  ),
-                  width: 500,
-                  child: Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: horizontalPaddingText),
+                child: Padding(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: horizontalPaddingText),
+                  child: Scrollbar(
+                    thumbVisibility: true,
                     child: ListView.builder(
                         itemCount: guardians.length,
                         itemBuilder: (ctx, index) {
-                          return Padding(
-                            padding: const EdgeInsets.all(2.0),
+                          return Container(
+                            color: Colors.white,
                             child: ListTile(
                               onTap: () {},
-                              textColor:
-                                  Theme.of(context).colorScheme.secondary,
-                              tileColor: Colors.white,
+                              
                               title: Text(
                                 guardians[index],
+                                style: TextStyle(),
                               ),
                             ),
                           );
-                          
                         }),
                   ),
                 ),
