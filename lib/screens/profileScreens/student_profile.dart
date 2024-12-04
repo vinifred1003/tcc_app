@@ -21,6 +21,14 @@ class StudentProfile extends StatelessWidget {
     "Seu Juscelino",
     "Mariazinha"
   ];
+  final entrysAndExists = [
+    "Entrada: 14/11/2024 14:15",
+    "Saida: 14/11/2024 17:00",
+    "Entrada: 15/11/2024 14:00",
+    "Saida: 15/11/2024 17:21",
+    "Entrada: 16/11/2024 15:00",
+    "Saida: 16/11/2024 17:05"
+  ];
   @override
   Widget build(BuildContext context) {
     final double horizontalPadding = MediaQuery.of(context).size.width * 0.1;
@@ -35,100 +43,152 @@ class StudentProfile extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.secondary,
         appBar: const BaseAppBar(screen_title: Text("Student")),
         drawer: AppDrawer(),
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            SizedBox(
-              width: 500,
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                    horizontal: horizontalPadding, vertical: verticalPadding),
-                child: ProfileDisplay(
-                    name: "Joãozinho", classOrInstitution: "Borboleta"),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: verticalPaddingText),
-              child: SizedBox(
-                width: 500,
-                child: Padding(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: horizontalPaddingText),
-                  child: Text(
-                    'Matricula: ${matricula}',
-                    style: TextStyle(color: Colors.white, fontSize: 18),
+        body: DraggableScrollableSheet(
+          initialChildSize: 1,
+          minChildSize: 1,
+          maxChildSize: 1,
+          builder: (context, ScrollController) {
+            return SingleChildScrollView(
+              controller: ScrollController,
+              child: Column(
+                children: [
+                  SizedBox(
+                    width: 500,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                          
+                          vertical: verticalPadding),
+                      child: ProfileDisplay(
+                          name: "Joãozinho", classOrInstitution: "Borboleta"),
+                    ),
                   ),
-                ),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: verticalPaddingText),
-              child: SizedBox(
-                width: 500,
-                child: Padding(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: horizontalPaddingText),
-                  child: Text(
-                    'Data de Nascimento: ${dataNascimento}',
-                    style: TextStyle(color: Colors.white, fontSize: 18),
-                  ),
-                ),
-              ),
-            ),
-            Container(
-              color: Colors.white,
-              width: 500,
-              child: Padding(
-                padding:
-                    EdgeInsets.symmetric(horizontal: horizontalPaddingText),
-                child: Text(
-                  "Responsaveis: ",
                   
-                ),
-              ),
-            ),
-            Expanded(
-              child: Padding(
-                padding: EdgeInsets.symmetric(vertical: verticalPaddingText),
-                child: Padding(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: horizontalPaddingText),
-                  child: Scrollbar(
-                    thumbVisibility: true,
-                    child: ListView.builder(
-                        itemCount: guardians.length,
-                        itemBuilder: (ctx, index) {
-                          return Container(
-                            color: Colors.white,
-                            child: ListTile(
-                              onTap: () {},
-                              
-                              title: Text(
-                                guardians[index],
-                                style: TextStyle(),
+                  Container(
+                    width: 350,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius:
+                          BorderRadius.circular(15), // Bordas arredondadas
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.2), // Cor da sombra
+                          spreadRadius: 2, // Distância de expansão da sombra
+                          blurRadius: 8, // Nível de desfoque
+                          offset: Offset(
+                              4, 6), // Deslocamento horizontal e vertical
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                              vertical: verticalPaddingText),
+                          child: SizedBox(
+                            width: 500,
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: horizontalPaddingText),
+                              child: Text(
+                                'Matricula: ${matricula}',
+                                style: TextStyle(
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                    fontSize: 18),
                               ),
                             ),
-                          );
-                        }),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                              vertical: verticalPaddingText),
+                          child: SizedBox(
+                            width: 500,
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: horizontalPaddingText),
+                              child: Text(
+                                'Data de Nascimento: ${dataNascimento}',
+                                style: TextStyle(
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                    fontSize: 18),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Container(
+                       
+                          width: 500,
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: horizontalPaddingText),
+                            child: Text(
+                              "Responsaveis: ",
+                              style: TextStyle(
+                                  color: Theme.of(context).colorScheme.primary,
+                                  fontSize: 18),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                              vertical: verticalPaddingText),
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: horizontalPaddingText),
+                            child: SizedBox(
+                              height: 200,
+                              child: Scrollbar(
+                                thumbVisibility: true,
+                                child: ListView.builder(
+                                    itemCount: guardians.length,
+                                    itemBuilder: (ctx, index) {
+                                      return Container(
+                                      
+                                        child: ListTile(
+                                          onTap: () {},
+                                          title: Text(
+                                            guardians[index],
+                                            style: TextStyle(
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .primary),
+                                          ),
+                                        ),
+                                      );
+                                    }),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                              vertical: verticalPaddingText),
+                          child: SizedBox(
+                            width: 500,
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: horizontalPaddingText),
+                              child: Text(
+                                'Matricula: ${matricula}',
+                                style: TextStyle(
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                    fontSize: 18),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
+                ],
               ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: verticalPaddingText),
-              child: SizedBox(
-                width: 500,
-                child: Padding(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: horizontalPaddingText),
-                  child: Text(
-                    'Matricula: ${matricula}',
-                    style: TextStyle(color: Colors.white, fontSize: 18),
-                  ),
-                ),
-              ),
-            ),
-          ],
+            );
+          },        
         ),
       ),
     );
