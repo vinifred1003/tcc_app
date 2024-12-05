@@ -14,6 +14,7 @@ class LoginScreen extends StatefulWidget {
   @override
   State<LoginScreen> createState() => _LoginScreenState();
 }
+bool isChecked = false;
 
 final User u0 = dummyUser[0];
 void _selectHome(BuildContext context) {
@@ -22,6 +23,12 @@ void _selectHome(BuildContext context) {
       return HomeScreen(user: u0);
     }),
   );
+}
+
+void rememberLoginAndPassword(bool? value) {
+  setState(() {
+    isChecked = value ?? false;
+  });
 }
 
 void _selectRegister(BuildContext context) {
@@ -33,6 +40,7 @@ void _selectRegister(BuildContext context) {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  bool isChecked = false;
   @override
   Widget build(BuildContext context) {
 

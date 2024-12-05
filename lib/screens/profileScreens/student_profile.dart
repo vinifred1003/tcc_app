@@ -32,7 +32,7 @@ class StudentProfile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final double horizontalPadding = MediaQuery.of(context).size.width * 0.1;
-    final double verticalPadding = MediaQuery.of(context).size.height * 0.09;
+    final double verticalPadding = MediaQuery.of(context).size.height * 0.05;
 
     final double horizontalPaddingText =
         MediaQuery.of(context).size.width * 0.1;
