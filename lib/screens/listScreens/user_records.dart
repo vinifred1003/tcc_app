@@ -6,8 +6,7 @@ import '../components/global/app_drawer.dart';
 
 class UserRecords extends StatelessWidget {
   final List<User>? users;
-  final List<Student>? students;
-  const UserRecords(this.users, this.students, {Key? key}) : super(key: key);
+  const UserRecords(this.users, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -47,10 +46,10 @@ class UserRecords extends StatelessWidget {
           ),
           Expanded(
             child: ListView.builder(
-              itemCount: users?.length ?? students?.length,
+              itemCount: users?.length,
               itemBuilder: (ctx, index) {
                 final user = users?[index];
-                final student = students?[index];
+                
                 return Card(
                   elevation: 5,
                   margin: const EdgeInsets.symmetric(
@@ -66,12 +65,10 @@ class UserRecords extends StatelessWidget {
                       ),
                     ),
                     title: Text(
-                      user?.name ?? student?.name ?? "Fail",
+                      user?.name ?? "Fail",
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
-                    subtitle: Text(user?.employee?.occupation?.name ??
-                        student?.studentClass.name ??
-                        "Fail"),
+                    subtitle: Text(user?.employee?.occupation?.name ?? "Fail"),
                   ),
                 );
               },

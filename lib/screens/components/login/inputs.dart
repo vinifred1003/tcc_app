@@ -1,16 +1,15 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 
-class Inputs extends StatefulWidget {
-  Inputs({super.key});
+class Inputs extends StatelessWidget {
+  final bool isChecked;
+  final void Function(bool?) checkboxFunction;
 
-  @override
-  State<Inputs> createState() => _InputsState();
-}
-
-class _InputsState extends State<Inputs> {
+  Inputs({super.key, required this.checkboxFunction, required this.isChecked});
   @override
   Widget build(BuildContext context) {
-    bool isChecked = false;
+    
     return Padding(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -40,11 +39,7 @@ class _InputsState extends State<Inputs> {
                     Checkbox(
                       checkColor: Theme.of(context).colorScheme.inversePrimary,
                       value: isChecked,
-                      onChanged: (bool? value) {
-                        setState(() {
-                          isChecked = value!;
-                        });
-                      },
+                        onChanged: checkboxFunction
                     ),
                     Text(
                       'Lembrar-se de mim',
