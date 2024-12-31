@@ -12,7 +12,9 @@ import '../components/student_signup/qrcode_generator.dart';
 import 'package:http_parser/http_parser.dart';
 
 class StudentSignup extends StatefulWidget {
-  const StudentSignup({super.key});
+  final int? studentId;
+
+  const StudentSignup({super.key, this.studentId});
 
   @override
   State<StudentSignup> createState() => _StudentSignupState();
@@ -40,8 +42,8 @@ class _StudentSignupState extends State<StudentSignup> {
     super.initState();
     qrCodeGenerator = QRCodeGenerator(qrDataStudent: qrData);
     _fetchClassIds();
-    if (_photoFilename != null) {
-      _fetchImage();
+    if (widget.studentId != null) {
+      _fetchStudentData(widget.studentId!);
     }
   }
 
@@ -55,6 +57,28 @@ class _StudentSignupState extends State<StudentSignup> {
       });
     } else {
       throw Exception('Failed to load class IDs');
+    }
+  }
+
+  Future<void> _fetchStudentData(int studentId) async {
+    final response = await http
+        .get(Uri.parse('http://172.31.38.224:3070/student/$studentId'));
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      setState(() {
+        _nameController.text = data['name'];
+        _registrationNumberController.text = data['registrationNumber'];
+        _birthDateController.text =
+            DateFormat('dd/MM/yyyy').format(DateTime.parse(data['birthDate']));
+        _classIdController.text = data['classId'].toString();
+        _photoFilename = data['photo'];
+        _guardians.addAll(List<Map<String, dynamic>>.from(data['guardians']));
+        if (_photoFilename != null) {
+          _fetchImage();
+        }
+      });
+    } else {
+      throw Exception('Failed to load student data');
     }
   }
 
@@ -185,24 +209,35 @@ class _StudentSignupState extends State<StudentSignup> {
       'guardians': _guardians,
     };
 
-    final response = await http.post(
-      Uri.parse('http://172.31.38.224:3070/student'),
-      headers: {'Content-Type': 'application/json'},
-      body: json.encode(studentData),
-    );
+    final response = widget.studentId == null
+        ? await http.post(
+            Uri.parse('http://172.31.38.224:3070/student'),
+            headers: {'Content-Type': 'application/json'},
+            body: json.encode(studentData),
+          )
+        : await http.put(
+            Uri.parse('http://172.31.38.224:3070/student/${widget.studentId}'),
+            headers: {'Content-Type': 'application/json'},
+            body: json.encode(studentData),
+          );
 
     setState(() {
       _isLoading = false;
     });
 
-    if (response.statusCode == 201) {
+    if (response.statusCode == 201 || response.statusCode == 200) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Estudante cadastrado com sucesso!')),
+        SnackBar(
+          content: Text(widget.studentId == null
+              ? 'Estudante cadastrado com sucesso!'
+              : 'Estudante atualizado com sucesso!'),
+        ),
       );
       Navigator.pop(context); // Return to the previous screen
     } else {
+      final message = json.decode(response.body)['message'];
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Falha ao cadastrar estudante.')),
+        SnackBar(content: Text(message ?? 'Falha ao salvar estudante.')),
       );
     }
   }
@@ -350,7 +385,9 @@ class _StudentSignupState extends State<StudentSignup> {
                   padding: EdgeInsets.symmetric(
                       horizontal: horizontalPadding, vertical: verticalPadding),
                   child: DropdownButtonFormField<int>(
-                    value: null,
+                    value: _classIds.isNotEmpty
+                        ? int.tryParse(_classIdController.text)
+                        : null,
                     onChanged: (int? newValue) {
                       setState(() {
                         _classIdController.text = newValue.toString();
@@ -505,9 +542,9 @@ class _StudentSignupState extends State<StudentSignup> {
                 ),
                 child: _isLoading
                     ? const CircularProgressIndicator()
-                    : const Text(
-                        "Cadastrar",
-                        style: TextStyle(fontSize: 25),
+                    : Text(
+                        widget.studentId == null ? "Cadastrar" : "Atualizar",
+                        style: const TextStyle(fontSize: 25),
                       ),
               ),
             ),

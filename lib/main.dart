@@ -13,10 +13,10 @@ import 'package:tcc_app/screens/formScreens/manager_signup_form.dart';
 import 'package:tcc_app/screens/profileScreens/student_profile.dart';
 import 'package:flutter/material.dart';
 import 'package:tcc_app/screens/profileScreens/user_profile.dart';
-import '../../data/dummy_data.dart';
+// import '../../data/dummy_data.dart';
 
 // import 'package:camera/camera.dart'; // Certifique-se de importar a biblioteca da câmera se ainda não o fez
-late final Student student = dummyStudents[0];
+// late final Student student = dummyStudents[0];
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(MeproviApp());

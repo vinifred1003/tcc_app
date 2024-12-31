@@ -31,7 +31,7 @@ class _GuardianFormState extends State<GuardianForm> {
       _phoneController.text = widget.initialData!['phone'];
       _emailController.text = widget.initialData!['email'];
       _type = GuardianType.values
-          .firstWhere((e) => e.key == widget.initialData!['type']);
+          .firstWhere((e) => e.displayName == widget.initialData!['type']);
     }
   }
 
@@ -157,14 +157,18 @@ class _GuardianFormState extends State<GuardianForm> {
             ElevatedButton(
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
-                  widget.onSave({
+                  final guardianData = {
                     'name': _nameController.text,
                     'cpf': _cpfController.text,
                     'phone': _phoneController.text,
                     'email': _emailController.text,
-                    'type':
-                        _type!.displayName, // Use displayName instead of key
-                  });
+                    'type': _type!.displayName,
+                  };
+                  if (widget.initialData != null &&
+                      widget.initialData!.containsKey('id')) {
+                    guardianData['id'] = widget.initialData!['id'].toString();
+                  }
+                  widget.onSave(guardianData);
                 }
               },
               child: const Text('Salvar'),

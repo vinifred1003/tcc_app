@@ -229,7 +229,16 @@ class _StudentListState extends State<StudentList> {
                                     IconButton(
                                       icon: const Icon(Icons.edit),
                                       onPressed: () {
-                                        // Add your edit logic here
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => StudentSignup(
+                                              studentId: student.id,
+                                            ),
+                                          ),
+                                        ).then((_) {
+                                          fetchStudents(selectedClass);
+                                        });
                                       },
                                     ),
                                     IconButton(
@@ -252,7 +261,9 @@ class _StudentListState extends State<StudentList> {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const StudentSignup()),
-          );
+          ).then((_) {
+            fetchStudents(selectedClass);
+          });
         },
         backgroundColor: Colors.white,
         child: const Icon(
