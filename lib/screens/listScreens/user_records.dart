@@ -68,7 +68,9 @@ class UserRecords extends StatelessWidget {
                       user?.name ?? "Fail",
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
-                    subtitle: Text(user?.employee?.occupation?.name ?? "Fail"),
+                    subtitle: Text(user?.employee?.occupation?.name ??
+                        student?.studentClass.name ??
+                        "Fail"),
                   ),
                 );
               },

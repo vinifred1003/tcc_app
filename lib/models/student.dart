@@ -10,11 +10,11 @@ class Student {
   String registrationNumber;
   DateTime birthDate;
   int classId;
-  List<int> qrCode;
-  List<int> photo;
+  String? qrCode;
+  String? photo;
   DateTime createdAt;
   DateTime updatedAt;
-  Class studentClass;
+  Class? studentClass;
   List<Guardian> guardians;
   List<StudentWarning>? warnings;
   List<StudentEntry>? entries;
@@ -26,12 +26,12 @@ class Student {
     required this.registrationNumber,
     required this.birthDate,
     required this.classId,
-    required this.qrCode,
-    required this.photo,
     required this.createdAt,
     required this.updatedAt,
-    required this.studentClass,
     required this.guardians,
+    this.photo,
+    this.qrCode,
+    this.studentClass,
     this.warnings,
     this.entries,
     this.exits,
@@ -39,26 +39,41 @@ class Student {
 
   factory Student.fromJson(Map<String, dynamic> json) {
     return Student(
-      id: json['id'],
-      name: json['name'],
-      registrationNumber: json['registration_number'],
-      birthDate: DateTime.parse(json['birth_date']),
-      classId: json['class_id'],
-      qrCode: List<int>.from(json['qr_code']),
-      photo: List<int>.from(json['photo']),
-      createdAt: DateTime.parse(json['created_at']),
-      updatedAt: DateTime.parse(json['updated_at']),
-      studentClass: Class.fromJson(json['class']),
-      guardians:
-          (json['guardians'] as List).map((i) => Guardian.fromJson(i)).toList(),
-      warnings: (json['warnings'] as List)
-          .map((i) => StudentWarning.fromJson(i))
-          .toList(),
-      entries: (json['entries'] as List)
-          .map((i) => StudentEntry.fromJson(i))
-          .toList(),
-      exits:
-          (json['exits'] as List).map((i) => StudentExit.fromJson(i)).toList(),
+      id: json['id'] ?? 0,
+      name: json['name'] ?? '',
+      registrationNumber: json['registrationNumber'] ?? '',
+      birthDate: json['birthDate'] != null
+          ? DateTime.parse(json['birthDate'])
+          : DateTime.now(),
+      classId: json['classId'] ?? 0,
+      qrCode: json['qrCode'],
+      photo: json['photo'],
+      createdAt: json['createdAt'] != null
+          ? DateTime.parse(json['createdAt'])
+          : DateTime.now(),
+      updatedAt: json['updatedAt'] != null
+          ? DateTime.parse(json['updatedAt'])
+          : DateTime.now(),
+      studentClass:
+          json['class'] != null ? Class.fromJson(json['class']) : null,
+      guardians: json['guardians'] != null
+          ? (json['guardians'] as List)
+              .map((i) => Guardian.fromJson(i))
+              .toList()
+          : [],
+      warnings: json['warnings'] != null
+          ? (json['warnings'] as List)
+              .map((i) => StudentWarning.fromJson(i))
+              .toList()
+          : [],
+      entries: json['entries'] != null
+          ? (json['entries'] as List)
+              .map((i) => StudentEntry.fromJson(i))
+              .toList()
+          : [],
+      exits: json['exits'] != null
+          ? (json['exits'] as List).map((i) => StudentExit.fromJson(i)).toList()
+          : [],
     );
   }
 }

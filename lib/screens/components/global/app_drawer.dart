@@ -26,7 +26,7 @@ class AppDrawer extends StatelessWidget {
   void _selectStudentRecords(BuildContext context) {
     Navigator.of(context).push(
       MaterialPageRoute(builder: (_) {
-        return StudentList();
+        return const StudentList();
       }),
     );
   }
