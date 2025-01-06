@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:tcc_app/models/student.dart';
-import 'package:tcc_app/models/user.dart';
+import 'package:tcc_app/models/student_warning.dart';
 import '../components/global/base_app_bar.dart';
 import '../components/global/app_drawer.dart';
 
-class UserRecords extends StatelessWidget {
-  final List<User>? users;
-  const UserRecords(this.users, {Key? key}) : super(key: key);
+class WarningList extends StatelessWidget {
+  final List<StudentWarning>? warnings;
+  const WarningList(this.warnings, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.secondary,
-      appBar: const BaseAppBar(screen_title: Text("Registros de Usuários")),
+      appBar: const BaseAppBar(screen_title: Text("Registros de Advertências")),
       drawer: const AppDrawer(),
       body: Column(
         children: [
@@ -46,10 +45,10 @@ class UserRecords extends StatelessWidget {
           ),
           Expanded(
             child: ListView.builder(
-              itemCount: users?.length,
+              itemCount: warnings?.length,
               itemBuilder: (ctx, index) {
-                final user = users?[index];
-                
+                final warning = warnings?[index];
+
                 return Card(
                   elevation: 5,
                   margin: const EdgeInsets.symmetric(
@@ -65,10 +64,10 @@ class UserRecords extends StatelessWidget {
                       ),
                     ),
                     title: Text(
-                      user?.name ?? "Fail",
+                      warning?.createdAt as String ?? "Fail",
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
-                    subtitle: Text(user?.employee?.occupation?.name ?? "Fail"),
+                    subtitle: Text(warning?.student as String ?? "Fail"),
                   ),
                 );
               },

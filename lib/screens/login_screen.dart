@@ -27,9 +27,9 @@ void _selectHome(BuildContext context) {
 }
 
 void rememberLoginAndPassword(bool? value) {
-  setState(() {
-    isChecked = value ?? false;
-  });
+  // setState(() {
+  //   isChecked = value ?? false;
+  // });
 }
 
 void _selectRegister(BuildContext context) {

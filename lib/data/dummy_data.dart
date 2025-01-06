@@ -5,6 +5,7 @@ import 'package:tcc_app/models/student_entry.dart';
 import 'package:tcc_app/models/student.dart';
 import 'package:tcc_app/models/user.dart';
 import 'package:tcc_app/models/user_role.dart';
+import '../models/student_warning.dart';
 
 import 'dart:typed_data'; // For Uint8List
 import 'dart:io';
@@ -350,4 +351,71 @@ final dummyStudents = [
     entries: [],
     exits: [],
   ),
+];
+
+final List<StudentWarning> dummyWarnings = [
+  StudentWarning(
+    id: 1,
+    studentId: dummyStudents[0].id,
+    issuedBy: dummyEmployee[0].id,
+    issuedAt: DateTime.now().subtract(const Duration(days: 2)),
+    reason: 'Uso inadequado de celular em sala de aula.',
+    severity: 'MEDIUM',
+    createdAt: DateTime.now().subtract(const Duration(days: 2)),
+    updatedAt: DateTime.now().subtract(const Duration(days: 1)),
+    student: dummyStudents[0],
+    issuedByEmployee: dummyEmployee[0],
+  ),
+  StudentWarning(
+    id: 2,
+    studentId: dummyStudents[1].id,
+    issuedBy: dummyEmployee[1].id,
+    issuedAt: DateTime.now().subtract(const Duration(days: 7)),
+    reason: 'Falta injustificada.',
+    severity: 'HIGH',
+    createdAt: DateTime.now().subtract(const Duration(days: 7)),
+    updatedAt: DateTime.now().subtract(const Duration(days: 6)),
+    student: dummyStudents[1],
+    issuedByEmployee: dummyEmployee[1],
+  ),
+  StudentWarning(
+    id: 3,
+    studentId: dummyStudents[0].id,
+    issuedBy: dummyEmployee[1].id,
+    issuedAt: DateTime.now().subtract(const Duration(days: 15)),
+    reason: 'Agressão verbal a colega.',
+    severity: 'CRITICAL',
+    createdAt: DateTime.now().subtract(const Duration(days: 15)),
+    updatedAt: DateTime.now().subtract(const Duration(days: 14)),
+    student: dummyStudents[0],
+    issuedByEmployee: dummyEmployee[1],
+  ),
+];
+
+final List<Employee> dummyEmployee = [
+// Dados falsos para funcionários
+  Employee(
+    id: 1,
+    name: 'Ana Santos',
+    userId: dummyUser[0].id,
+    admissionDate: DateTime.now().subtract(const Duration(days: 1500)),
+    occupationId: 1,
+    photo: [255, 216, 200], // Dados simulados de foto
+    createdAt: DateTime.now().subtract(const Duration(days: 1500)),
+    updatedAt: DateTime.now().subtract(const Duration(days: 5)),
+    user: dummyUser[0],
+    warnings: [dummyWarnings[0]],
+  ),
+  Employee(
+    id: 2,
+    name: 'Marcos Silva',
+    userId: dummyUser[1].id,
+    admissionDate: DateTime.now().subtract(const Duration(days: 1200)),
+    occupationId: 2,
+    photo: [255, 100, 150], // Dados simulados de foto
+    createdAt: DateTime.now().subtract(const Duration(days: 1200)),
+    updatedAt: DateTime.now().subtract(const Duration(days: 3)),
+    user: dummyUser[1],
+    warnings: [dummyWarnings[1]],
+  )
 ];

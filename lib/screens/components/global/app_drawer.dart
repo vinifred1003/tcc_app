@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tcc_app/screens/listScreens/student_list.dart';
 import 'package:tcc_app/screens/listScreens/user_records.dart';
+import 'package:tcc_app/screens/listScreens/warning_list.dart';
 import '../../listScreens/entry_list.dart';
 import '../../../data/dummy_data.dart';
 
@@ -27,6 +28,13 @@ class AppDrawer extends StatelessWidget {
     Navigator.of(context).push(
       MaterialPageRoute(builder: (_) {
         return const StudentList();
+      }),
+    );
+  }
+  void _selectWarningRecords(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) {
+        return WarningList(dummyWarnings);
       }),
     );
   }
@@ -65,7 +73,7 @@ class AppDrawer extends StatelessWidget {
             ),
             ListTile(
               title: const Text('Advertencias'),
-              onTap: () {},
+              onTap: () => _selectWarningRecords(context),
             ),
             // ListTile(
             //   title: const Text('QRCode'),
