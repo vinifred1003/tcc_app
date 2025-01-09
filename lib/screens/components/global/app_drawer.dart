@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:tcc_app/screens/home_screen.dart';
 import 'package:tcc_app/screens/listScreens/student_list.dart';
 import 'package:tcc_app/screens/listScreens/user_records.dart';
 import 'package:tcc_app/screens/listScreens/warning_list.dart';
+import 'package:tcc_app/screens/login_screen.dart';
 import '../../listScreens/entry_list.dart';
 import '../../../data/dummy_data.dart';
 
@@ -11,7 +13,7 @@ class AppDrawer extends StatelessWidget {
   void _selectEntryRecords(BuildContext context) {
     Navigator.of(context).push(
       MaterialPageRoute(builder: (_) {
-        return EntryList(dummyStudentEntry);
+        return EntryList(dummyStudentEntry, dummyExits);
       }),
     );
   }
@@ -38,6 +40,20 @@ class AppDrawer extends StatelessWidget {
       }),
     );
   }
+  void _selectHome(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) {
+        return HomeScreen(user: dummyUser[0]);
+      }),
+    );
+  }
+
+  void _selectLogin(BuildContext context) {
+    Navigator.of(context).pushNamedAndRemoveUntil(
+      '/login', // Replace with your login route name
+      (Route<dynamic> route) => false, // This will remove all routes
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +74,8 @@ class AppDrawer extends StatelessWidget {
                     fontSize: 40),
               ),
             ),
-            ListTile(title: const Text('Home'), onTap: () {}),
+            ListTile(
+                title: const Text('Home'), onTap: () => _selectHome(context)),
             ListTile(
               title: Text('Educandos'),
               onTap: () => _selectStudentRecords(context),
@@ -81,7 +98,7 @@ class AppDrawer extends StatelessWidget {
             // ),
             ListTile(
               title: const Text('Sair'),
-              onTap: () {},
+              onTap: () => _selectLogin(context),
             ),
           ],
         ),

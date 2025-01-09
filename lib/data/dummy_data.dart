@@ -1,8 +1,10 @@
 import 'package:tcc_app/models/class.dart';
 import 'package:tcc_app/models/employee.dart';
 import 'package:tcc_app/models/guardian.dart';
+import 'package:tcc_app/models/occupation.dart';
 import 'package:tcc_app/models/student_entry.dart';
 import 'package:tcc_app/models/student.dart';
+import 'package:tcc_app/models/student_exit.dart';
 import 'package:tcc_app/models/user.dart';
 import 'package:tcc_app/models/user_role.dart';
 import '../models/student_warning.dart';
@@ -364,7 +366,7 @@ final List<StudentWarning> dummyWarnings = [
     createdAt: DateTime.now().subtract(const Duration(days: 2)),
     updatedAt: DateTime.now().subtract(const Duration(days: 1)),
     student: dummyStudents[0],
-    issuedByEmployee: dummyEmployee[0],
+    issuedByEmployee: null,
   ),
   StudentWarning(
     id: 2,
@@ -376,7 +378,7 @@ final List<StudentWarning> dummyWarnings = [
     createdAt: DateTime.now().subtract(const Duration(days: 7)),
     updatedAt: DateTime.now().subtract(const Duration(days: 6)),
     student: dummyStudents[1],
-    issuedByEmployee: dummyEmployee[1],
+    issuedByEmployee: null,
   ),
   StudentWarning(
     id: 3,
@@ -388,7 +390,7 @@ final List<StudentWarning> dummyWarnings = [
     createdAt: DateTime.now().subtract(const Duration(days: 15)),
     updatedAt: DateTime.now().subtract(const Duration(days: 14)),
     student: dummyStudents[0],
-    issuedByEmployee: dummyEmployee[1],
+    issuedByEmployee: null,
   ),
 ];
 
@@ -404,7 +406,7 @@ final List<Employee> dummyEmployee = [
     createdAt: DateTime.now().subtract(const Duration(days: 1500)),
     updatedAt: DateTime.now().subtract(const Duration(days: 5)),
     user: dummyUser[0],
-    warnings: [dummyWarnings[0]],
+    warnings: [],
   ),
   Employee(
     id: 2,
@@ -416,6 +418,41 @@ final List<Employee> dummyEmployee = [
     createdAt: DateTime.now().subtract(const Duration(days: 1200)),
     updatedAt: DateTime.now().subtract(const Duration(days: 3)),
     user: dummyUser[1],
-    warnings: [dummyWarnings[1]],
+    warnings: [],
+  )
+];
+
+final List<Occupation> dummyOccupations = [
+  Occupation(
+    id: 1,
+    name: "Project Manager",
+    createdAt: DateTime(2022, 5, 25),
+    updatedAt: DateTime(2023, 7, 30),
+    employees: null,
+  )
+];
+
+final List<StudentExit> dummyExits = [
+  StudentExit(
+    id: 1,
+    studentId: dummyStudents[1].id,
+    student: dummyStudents[1],
+    guardianId: 5,
+    exitAt: DateTime.now(),
+    createdAt: DateTime(2023, 12, 31),
+    updatedAt: DateTime(2024, 1, 1),
+    guardian: Guardian(
+      id: 5,
+      name: 'Seu João',
+      cpf: '12345678904',
+      phone: '123456789',
+      email: 'seujoao@example.com',
+      type: GuardianType.FATHER,
+      photo: [],
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+      students: [],
+      exits: [],
+    ),
   )
 ];

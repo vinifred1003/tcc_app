@@ -19,7 +19,7 @@ class StudentWarning {
   DateTime createdAt;
   DateTime updatedAt;
   Student student;
-  Employee issuedByEmployee;
+  Employee? issuedByEmployee;
 
   StudentWarning({
     required this.id,

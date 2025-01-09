@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tcc_app/models/student_warning.dart';
 import '../components/global/base_app_bar.dart';
 import '../components/global/app_drawer.dart';
-
+import 'package:intl/intl.dart';
 class WarningList extends StatelessWidget {
   final List<StudentWarning>? warnings;
   const WarningList(this.warnings, {Key? key}) : super(key: key);
@@ -56,18 +56,15 @@ class WarningList extends StatelessWidget {
                     horizontal: 5,
                   ),
                   child: ListTile(
-                    leading: const CircleAvatar(
-                      radius: 30,
-                      child: Padding(
-                        padding: EdgeInsets.all(6.0),
-                        child: FittedBox(child: Text('foto')),
-                      ),
-                    ),
+                    
                     title: Text(
-                      warning?.createdAt as String ?? "Fail",
+                      warning != null
+                          ? DateFormat('dd/MM/yyyy HH:mm')
+                              .format(warning.createdAt!)
+                          : 'Data indisponível',
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
-                    subtitle: Text(warning?.student as String ?? "Fail"),
+                    subtitle: Text(warning?.reason ?? "Fail"),
                   ),
                 );
               },

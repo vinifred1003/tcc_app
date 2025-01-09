@@ -29,6 +29,9 @@ class MeproviApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final ThemeData tema = ThemeData();
     return MaterialApp(
+      routes: {
+        '/login': (context) => LoginScreen(),
+      },
       home: LoginScreen(),
       theme: tema.copyWith(
         colorScheme: tema.colorScheme.copyWith(
