@@ -4,7 +4,13 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:tcc_app/data/dummy_data.dart';
 import 'package:tcc_app/models/attendance.dart';
+import 'package:tcc_app/models/class.dart';
+import 'package:tcc_app/models/guardian.dart';
+import 'package:tcc_app/models/student.dart';
+import 'package:tcc_app/models/student_entry.dart';
+import 'package:tcc_app/models/student_exit.dart';
 import 'package:tcc_app/screens/login_screen.dart';
 
 import '../models/user.dart';
@@ -25,9 +31,10 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late User u;
-
+  late List<String> _guardiansOptions = [];
+  String? _selectedOption;
   String scanResult = "";
-
+  Set<String> _recentlyScanned = {};
   @override
   void initState() {
     super.initState();
@@ -41,6 +48,210 @@ class _HomeScreenState extends State<HomeScreen> {
       }),
     );
   }
+
+  void addExit(Student student, Guardian guardian) {
+    if (student != null) {
+      dummyExits.add(StudentExit(
+          id: dummyStudents.length + 1,
+          studentId: student.id,
+          student: student,
+          guardianId: guardian.id,
+          exitAt: DateTime.now(),
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+          guardian: guardian));
+    }
+    Navigator.pop(context, 'OK');
+  }
+
+  Future<void> exitScan() async {
+    String barcodeScanRes;
+    try {
+      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
+          '#ff6666', 'Cancel', true, ScanMode.QR);
+
+      if (!mounted) return;
+
+      setState(() {
+        scanResult = barcodeScanRes;
+      });
+
+      if (barcodeScanRes != '-1') {
+        // Busca o primeiro estudante com o registrationNumber igual a '812'
+        final student = dummyStudents.firstWhere(
+          (student) => student.registrationNumber == barcodeScanRes,
+          orElse: () => Student(
+            id: 0,
+            name: 'Não encontrado',
+            registrationNumber: '',
+            birthDate: DateTime.now(),
+            classId: 0,
+            qrCode: '',
+            photo: '',
+            createdAt: DateTime.now(),
+            updatedAt: DateTime.now(),
+            studentClass: Class(id: 0, name: 'Sem classe'),
+            guardians: [],
+            warnings: [],
+            entries: [],
+            exits: [],
+          ),
+        );
+        _guardiansOptions =
+            student.guardians.map((guardian) => guardian.name).toList();
+        showDialog<String>(
+          context: context,
+          builder: (BuildContext context) => AlertDialog(
+            title: const Text('QR Scan Result'),
+            content: Text('Scanned content: $barcodeScanRes'),
+            actions: <Widget>[
+              DropdownButtonFormField<String>(
+                decoration: InputDecoration(
+                  labelText: "Selecione o Responsável",
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  filled: true,
+                  fillColor: Colors.white,
+                ),
+                value: _selectedOption,
+                icon: const Icon(Icons.arrow_drop_down),
+                items: _guardiansOptions.map((String option) {
+                  return DropdownMenuItem<String>(
+                    value: option,
+                    child: Text(option),
+                  );
+                }).toList(),
+                onChanged: (String? newValue) {
+                  setState(() {
+                    _selectedOption = newValue;
+                  });
+                },
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Selecione uma opção';
+                  }
+                  return null;
+                },
+              ),
+              TextButton(
+                onPressed: () => Navigator.pop(context, 'Cancel'),
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () {
+                  final selectedGuardian = student.guardians.firstWhere(
+                      (guardian) => guardian.name == _selectedOption);
+
+                  // Chama o método addExit
+                  addExit(student, selectedGuardian);
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
+    } on PlatformException {
+      barcodeScanRes = 'Failed to scan QR code';
+    }
+  }
+
+  void addEntry(String studentRegistration) {
+    // Busca o estudante pelo código de registro
+    final student = dummyStudents.firstWhere(
+      (student) => student.registrationNumber == studentRegistration,
+      orElse: () => Student(
+        id: 0,
+        name: 'Não encontrado',
+        registrationNumber: '',
+        birthDate: DateTime.now(),
+        classId: 0,
+        qrCode: '',
+        photo: '',
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+        studentClass: Class(id: 0, name: 'Sem classe'),
+        guardians: [],
+        warnings: [],
+        entries: [],
+        exits: [],
+      ),
+    );
+    // Adiciona entrada à lista de entradas
+    dummyStudentEntry.add(StudentEntry(
+      id: dummyStudentEntry.length + 1,
+      studentId: student.id,
+      student: student,
+      entryAt: DateTime.now(),
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+    ));
+    // Exibe mensagem informando que a entrada foi registrada
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          student.id != 0
+              ? 'Entrada registrada para o estudante ${student.name}!'
+              : 'Estudante não encontrado!',
+        ),
+        duration: Duration(seconds: 2),
+      ),
+    );
+  }
+
+  Future<void> entryScan() async {
+    String barcodeScanRes;
+    try {
+      // Inicia o fluxo de leitura do QR code
+      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
+          '#ff6666', 'Cancelar', true, ScanMode.QR);
+      if (!mounted) return;
+
+      if (barcodeScanRes != '-1') {
+        // Chama a função de adicionar entrada
+        addEntry(barcodeScanRes);
+      }
+    } on PlatformException {
+      print('Erro ao tentar acessar a câmera para leitura do QR code.');
+    }
+  }
+
+  Future<void> warningScan() async {
+    String barcodeScanRes;
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
+          '#ff6666', 'Cancel', true, ScanMode.QR);
+      print(barcodeScanRes);
+    } on PlatformException {
+      barcodeScanRes = 'Failed to get platform version.';
+    }
+
+    if (!mounted) return;
+
+    setState(() {
+      scanResult = barcodeScanRes;
+    });
+  }
+
+  Future<void> profileScan() async {
+    String barcodeScanRes;
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
+          '#ff6666', 'Cancel', true, ScanMode.QR);
+      print(barcodeScanRes);
+    } on PlatformException {
+      barcodeScanRes = 'Failed to get platform version.';
+    }
+    if (!mounted) return;
+
+    setState(() {
+      scanResult = barcodeScanRes;
+    });
+  }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -88,7 +299,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: SizedBox(
                           width: 300,
                           child: CenterButtons(
-                            selectedScanQRCode: () {},
+                            exitScan: exitScan,
+                            entryScan: entryScan,
+                            profileScan: profileScan,
                           ),
                         ),
                       ),

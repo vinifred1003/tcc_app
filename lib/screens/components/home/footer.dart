@@ -2,6 +2,13 @@ import 'package:flutter/material.dart';
 
 class Footer extends StatelessWidget {
   void Function() selectedLoginScreen;
+
+  void _selectLogin(BuildContext context) {
+    Navigator.of(context).pushNamedAndRemoveUntil(
+      '/login', // Replace with your login route name
+      (Route<dynamic> route) => false, // This will remove all routes
+    );
+  }
   Footer({super.key, required this.selectedLoginScreen});
 
   @override
@@ -21,9 +28,7 @@ class Footer extends StatelessWidget {
           ),
         ),
         TextButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
+          onPressed: () => _selectLogin(context),
           child: const Text(
             "Sair",
             style: TextStyle(

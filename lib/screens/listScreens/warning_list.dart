@@ -1,11 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:tcc_app/models/student_warning.dart';
+import 'package:tcc_app/screens/formScreens/warning_form.dart';
 import '../components/global/base_app_bar.dart';
 import '../components/global/app_drawer.dart';
 import 'package:intl/intl.dart';
 class WarningList extends StatelessWidget {
   final List<StudentWarning>? warnings;
   const WarningList(this.warnings, {Key? key}) : super(key: key);
+
+  void _selectWarningForm(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) {
+        return WarningForm();
+      }),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,6 +81,13 @@ class WarningList extends StatelessWidget {
           ),
         ],
       ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        onPressed: () => _selectWarningForm(context),
+        child: Icon(color: Theme.of(context).colorScheme.primary, Icons.add),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      
     );
   }
 }

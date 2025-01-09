@@ -4,7 +4,7 @@ import 'package:tcc_app/screens/listScreens/student_list.dart';
 import 'package:tcc_app/screens/listScreens/user_records.dart';
 import 'package:tcc_app/screens/listScreens/warning_list.dart';
 import 'package:tcc_app/screens/login_screen.dart';
-import '../../listScreens/entry_list.dart';
+import '../../listScreens/entry_and_exit_list.dart';
 import '../../../data/dummy_data.dart';
 
 class AppDrawer extends StatelessWidget {

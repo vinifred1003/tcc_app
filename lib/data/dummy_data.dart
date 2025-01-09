@@ -140,7 +140,7 @@ final dummyStudentEntry = [
     student: Student(
       id: 2,
       name: 'João Ribeiro',
-      registrationNumber: '812',
+      registrationNumber: 'joao',
       birthDate: DateTime(2018, 03, 10),
       classId: 2,
       qrCode: 'qrJoao',
@@ -274,7 +274,7 @@ final dummyStudents = [
   Student(
     id: 2,
     name: 'João Ribeiro',
-    registrationNumber: '812',
+    registrationNumber: 'Joao',
     birthDate: DateTime(2018, 03, 10),
     classId: 2,
     qrCode: '',

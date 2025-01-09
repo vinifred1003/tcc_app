@@ -1,9 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:tcc_app/screens/formScreens/warning_form.dart';
 
 class CenterButtons extends StatelessWidget {
-  void Function() selectedScanQRCode;
-  CenterButtons({super.key, required this.selectedScanQRCode});
+  final VoidCallback exitScan;
+  final VoidCallback entryScan;
+  final VoidCallback profileScan;
 
+  const CenterButtons(
+      {super.key,
+      required this.exitScan,
+      required this.entryScan,
+      required this.profileScan});
+
+  void _selectWarningForm(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) {
+        return WarningForm();
+      }),
+    );
+  }
   @override
   Widget build(BuildContext context) {
     final double horizontalPadding = MediaQuery.of(context).size.width * 0.02;
@@ -17,7 +32,7 @@ class CenterButtons extends StatelessWidget {
                 padding: EdgeInsets.symmetric(
                     horizontal: horizontalPadding, vertical: verticalPadding),
                 child: ElevatedButton(
-                  onPressed: selectedScanQRCode,
+                  onPressed: entryScan,
                   child: Text(
                     "Chegada",
                     style: TextStyle(
@@ -37,7 +52,7 @@ class CenterButtons extends StatelessWidget {
                 padding: EdgeInsets.symmetric(
                     horizontal: horizontalPadding, vertical: verticalPadding),
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: exitScan,
                   child: Text(
                     "Saída",
                     style: TextStyle(
@@ -61,7 +76,7 @@ class CenterButtons extends StatelessWidget {
                 padding: EdgeInsets.symmetric(
                     horizontal: horizontalPadding, vertical: verticalPadding),
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () => _selectWarningForm(context),
                   child: Text(
                     "Advertência",
                     style: TextStyle(
@@ -81,7 +96,7 @@ class CenterButtons extends StatelessWidget {
                 padding: EdgeInsets.symmetric(
                     horizontal: horizontalPadding, vertical: verticalPadding),
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: profileScan,
                   child: Text(
                     "Ficha",
                     style: TextStyle(

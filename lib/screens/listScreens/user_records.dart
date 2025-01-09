@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tcc_app/models/student.dart';
 import 'package:tcc_app/models/user.dart';
+import 'package:tcc_app/screens/formScreens/manager_signup_form.dart';
 import '../components/global/base_app_bar.dart';
 import '../components/global/app_drawer.dart';
 
@@ -8,6 +9,14 @@ class UserRecords extends StatelessWidget {
   final List<User>? users;
   const UserRecords(this.users, {Key? key}) : super(key: key);
 
+
+void _selectManagerSignupForm(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) {
+        return ManagerSignupForm();
+      }),
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,6 +85,12 @@ class UserRecords extends StatelessWidget {
           ),
         ],
       ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        onPressed: () => _selectManagerSignupForm(context),
+        child: Icon(color: Theme.of(context).colorScheme.primary, Icons.add),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }

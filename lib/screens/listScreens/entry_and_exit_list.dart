@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tcc_app/screens/formScreens/entry_and_exit_form.dart';
 import '../../models/student_entry.dart';
 import '../../models/student_exit.dart';
 import 'package:intl/intl.dart';
@@ -60,6 +61,14 @@ class _EntryListState extends State<EntryList> {
     });
   }
 
+  void _selectEntryAndExitForm(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) {
+        return EntryAndExitForm();
+      }),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     bool entryIsEmpty = filteredStudentsEntrys.isEmpty;
@@ -72,6 +81,9 @@ class _EntryListState extends State<EntryList> {
         backgroundColor: Theme.of(context).colorScheme.secondary,
         appBar: AppBar(
           title: const Text("Registro de Entradas e Saidas"),
+          iconTheme: IconThemeData(
+            color: Theme.of(context).colorScheme.inversePrimary,
+          ),
           backgroundColor: Theme.of(context).colorScheme.primary,
           bottom: TabBar(
             tabs: <Widget>[
@@ -228,7 +240,7 @@ class _EntryListState extends State<EntryList> {
         ),
         floatingActionButton: FloatingActionButton(
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          onPressed: () {},
+          onPressed: () => _selectEntryAndExitForm(context),
           child: Icon(color: Theme.of(context).colorScheme.primary, Icons.add),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
