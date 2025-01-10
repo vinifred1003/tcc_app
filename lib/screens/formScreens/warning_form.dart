@@ -1,8 +1,14 @@
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
-
+import 'package:tcc_app/data/dummy_data.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:tcc_app/models/class.dart';
+import 'package:tcc_app/models/employee.dart';
+import 'package:tcc_app/models/student.dart';
+import 'package:tcc_app/models/student_warning.dart';
 import 'package:tcc_app/screens/components/global/app_drawer.dart';
 import 'package:tcc_app/screens/components/global/base_app_bar.dart';
+import 'package:flutter/services.dart';
 
 const Duration fakeAPIDuration = Duration(seconds: 1);
 
@@ -16,15 +22,73 @@ class WarningForm extends StatefulWidget {
 class _WarningFormState extends State<WarningForm> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _controllerDate = TextEditingController();
+  final TextEditingController _controllerEmissor = TextEditingController();
+  final TextEditingController _controllerDescricao = TextEditingController();
   final List<String> _studentsSelected = [];
+  final List<Student> _studentsEnvolved = [];
   String? _searchingWithQuery;
   late Iterable<Widget> _lastOptions = <Widget>[];
+  final List<String> studentsName =
+      dummyStudents.map((student) => student.name).toList().cast<String>();
   DateTime _selectedDate = DateTime.now();
   String? validateField(String? value) {
     if (value == null || value.isEmpty) {
       return 'Campo obrigatório';
     }
     return null;
+  }
+
+  Future<void> warningScan() async {
+    String barcodeScanRes;
+    try {
+      // Inicia o fluxo de leitura do QR code
+      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
+          '#ff6666', 'Cancelar', true, ScanMode.QR);
+      if (!mounted) return;
+
+      if (barcodeScanRes != '-1') {
+        final student = dummyStudents.firstWhere(
+          (student) => student.registrationNumber == barcodeScanRes,
+          orElse: () => Student(
+            id: 0,
+            name: 'Não encontrado',
+            registrationNumber: '',
+            birthDate: DateTime.now(),
+            classId: 0,
+            qrCode: '',
+            photo: '',
+            createdAt: DateTime.now(),
+            updatedAt: DateTime.now(),
+            studentClass: Class(id: 0, name: 'Sem classe'),
+            guardians: [],
+            warnings: [],
+            entries: [],
+            exits: [],
+          ),
+        );
+        _studentsEnvolved.add(student);
+        setState(() {
+          _studentsSelected.add(student.name);
+        });
+      }
+    } on PlatformException {
+      print('Erro ao tentar acessar a câmera para leitura do QR code.');
+    }
+  }
+
+  int getEmployeeIdByName(String name) {
+    final employee = dummyEmployee.firstWhere(
+      (employee) => employee.name.toLowerCase() == name.toLowerCase(),
+    );
+    print(employee.name);
+    return employee.id;
+  }
+
+  Employee getEmployeeByName(String name) {
+    final employee = dummyEmployee.firstWhere(
+      (employee) => employee.name.toLowerCase() == name.toLowerCase(),
+    );
+    return employee;
   }
 
   _showDatePicker() {
@@ -68,7 +132,7 @@ class _WarningFormState extends State<WarningForm> {
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(30))),
                   hintText: '',
-                  labelText: 'Emissor da Ocorrência',
+                  labelText: ' Nome Completo do Emissor da Ocorrência',
                 ),
               ),
             ),
@@ -83,7 +147,7 @@ class _WarningFormState extends State<WarningForm> {
                     filled: true,
                     border: const OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(30))),
-                    labelText: 'Data da chegada',
+                    labelText: 'Data do Ocorrido',
                     suffixIcon: IconButton(
                         onPressed: _showDatePicker,
                         icon: const Icon(
@@ -102,32 +166,43 @@ class _WarningFormState extends State<WarningForm> {
                     isFullScreen: false,
                     builder:
                         (BuildContext context, SearchController controller) {
-                      return CircleAvatar(
-                        backgroundColor:
-                            Theme.of(context).colorScheme.inversePrimary,
-                        radius: 20,
-                        child: IconButton(
-                          icon: const Icon(Icons.add),
-                          onPressed: () {
-                            controller.openView();
-                          },
-                        ),
+                      return Column(
+                        children: [
+                          CircleAvatar(
+                            backgroundColor:
+                                Theme.of(context).colorScheme.inversePrimary,
+                            radius: 20,
+                            child: IconButton(
+                              icon: const Icon(Icons.add),
+                              onPressed: () {
+                                controller.openView();
+                              },
+                            ),
+                          ),
+                          CircleAvatar(
+                            backgroundColor:
+                                Theme.of(context).colorScheme.inversePrimary,
+                            radius: 20,
+                            child: IconButton(
+                              icon: const Icon(Icons.qr_code),
+                              onPressed: () => warningScan(),
+                            ),
+                          ),
+                        ],
                       );
                     },
                     suggestionsBuilder: (BuildContext context,
                         SearchController controller) async {
                       _searchingWithQuery = controller.text;
-                      final List<String> options =
-                          (await _FakeAPI.search(_searchingWithQuery!))
-                              .toList();
-
+                      
                       if (_searchingWithQuery != controller.text) {
                         return _lastOptions;
                       }
 
                       _lastOptions =
-                          List<ListTile>.generate(options.length, (int index) {
-                        final String item = options[index];
+                          List<ListTile>.generate(
+                          studentsName.length, (int index) {
+                        final String item = studentsName[index];
                         return ListTile(
                           title: Text(item),
                           onTap: () {
@@ -222,7 +297,22 @@ class _WarningFormState extends State<WarningForm> {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Processing Data')),
                     );
+                    final DateTime issuedAtDate =
+                        DateFormat('dd/MM/y').parse(_controllerDate.text);
+                    dummyWarnings.add(StudentWarning(
+                        id: dummyWarnings.length + 1,
+                        studentId: _studentsEnvolved[0].id,
+                        issuedBy: getEmployeeIdByName(_controllerEmissor.text),
+                        issuedAt: issuedAtDate,
+                        reason: _controllerDescricao.text,
+                        severity: "Grave",
+                        createdAt: DateTime.now(),
+                        updatedAt: DateTime.now(),
+                        student: _studentsEnvolved[0],
+                        issuedByEmployee:
+                            getEmployeeByName(_controllerEmissor.text)));
                   }
+
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor:
@@ -243,20 +333,4 @@ class _WarningFormState extends State<WarningForm> {
   }
 }
 
-class _FakeAPI {
-  static const List<String> _kOptions = <String>[
-    'aardvark',
-    'bobcat',
-    'chameleon',
-  ];
 
-  static Future<Iterable<String>> search(String query) async {
-    await Future<void>.delayed(fakeAPIDuration);
-    if (query == '') {
-      return const Iterable<String>.empty();
-    }
-    return _kOptions.where((String option) {
-      return option.contains(query.toLowerCase());
-    });
-  }
-}

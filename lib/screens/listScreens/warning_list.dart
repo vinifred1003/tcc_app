@@ -73,7 +73,29 @@ class WarningList extends StatelessWidget {
                           : 'Data indisponível',
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
-                    subtitle: Text(warning?.reason ?? "Fail"),
+                    subtitle: Text(warning?.reason ?? "Motivo não informado"),
+                    trailing: PopupMenuButton<String>(
+                      onSelected: (value) {
+                        if (value == 'edit') {
+                          // Ação para Editar
+                          print('Editar item $index');
+                        } else if (value == 'delete') {
+                          // Ação para Deletar
+                          print('Deletar item $index');
+                        }
+                      },
+                      itemBuilder: (BuildContext context) => [
+                        const PopupMenuItem(
+                          value: 'edit',
+                          child: Text('Editar'),
+                        ),
+                        const PopupMenuItem(
+                          value: 'delete',
+                          child: Text('Deletar'),
+                        ),
+                      ],
+                      icon: const Icon(Icons.menu),
+                    ),
                   ),
                 );
               },

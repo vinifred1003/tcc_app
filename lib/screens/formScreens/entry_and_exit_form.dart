@@ -29,6 +29,9 @@ class _EntryAndExitFormState extends State<EntryAndExitForm>
         drawer: AppDrawer(),
         appBar: AppBar(
           title: const Text("Novo Registro"),
+          iconTheme: IconThemeData(
+            color: Theme.of(context).colorScheme.inversePrimary,
+          ),
           backgroundColor: Theme.of(context).colorScheme.primary,
           bottom: TabBar(
             tabs: <Widget>[

@@ -77,7 +77,30 @@ void _selectManagerSignupForm(BuildContext context) {
                       user?.name ?? "Fail",
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
-                    subtitle: Text(user?.employee?.occupation?.name ?? "Fail"),
+                    subtitle: Text(user?.employee?.occupation?.name ??
+                        "Cargo não informado"),
+                    trailing: PopupMenuButton<String>(
+                      onSelected: (value) {
+                        if (value == 'edit') {
+                          // Ação para Editar
+                          print('Editar item $index');
+                        } else if (value == 'delete') {
+                          // Ação para Deletar
+                          print('Deletar item $index');
+                        }
+                      },
+                      itemBuilder: (BuildContext context) => [
+                        const PopupMenuItem(
+                          value: 'edit',
+                          child: Text('Editar'),
+                        ),
+                        const PopupMenuItem(
+                          value: 'delete',
+                          child: Text('Deletar'),
+                        ),
+                      ],
+                      icon: const Icon(Icons.menu),
+                    ),
                   ),
                 );
               },

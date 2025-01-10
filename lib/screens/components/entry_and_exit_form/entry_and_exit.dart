@@ -123,7 +123,7 @@ class _EntryAndExitState extends State<EntryAndExit> {
                 filled: true,
                 border: const OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(30))),
-                labelText: 'Data da chegada',
+                labelText: 'Data do Ocorrido',
                 suffixIcon: IconButton(
                     onPressed: _showDatePicker,
                     icon: const Icon(
@@ -144,7 +144,7 @@ class _EntryAndExitState extends State<EntryAndExit> {
               filled: true,
               border: const OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(30))),
-              labelText: 'Hora da Chegada',
+              labelText: 'Hora do Ocorrido',
               suffixIcon: IconButton(
                 onPressed: _showTimePicker,
                 icon: const Icon(

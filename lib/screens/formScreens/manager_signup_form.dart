@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tcc_app/data/dummy_data.dart';
 import 'package:tcc_app/screens/components/global/app_drawer.dart';
 import 'package:tcc_app/screens/components/global/base_app_bar.dart';
 
@@ -12,7 +13,11 @@ class ManagerSignupForm extends StatefulWidget {
 class _ManagerSignupFormState extends State<ManagerSignupForm> {
 
   final _formKey = GlobalKey<FormState>();
-
+  final List<String> rolesName = dummyOccupations
+      .map((occupation) => occupation.name)
+      .toList()
+      .cast<String>();
+  String? _selectedOption;    
     // Validator function
   String? validateField(String? value) {
     if (value == null || value.isEmpty) {
@@ -93,6 +98,39 @@ class _ManagerSignupFormState extends State<ManagerSignupForm> {
                       hintText: '',
                       labelText: 'Email',
                     ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: horizontalPadding, vertical: verticalPadding),
+                  child: DropdownButtonFormField<String>(
+                    decoration: InputDecoration(
+                      labelText: "Selecione o Cargo",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      filled: true,
+                      fillColor: Colors.white,
+                    ),
+                    value: _selectedOption,
+                    icon: const Icon(Icons.arrow_drop_down),
+                    items: rolesName.map((String option) {
+                      return DropdownMenuItem<String>(
+                        value: option,
+                        child: Text(option),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        _selectedOption = newValue;
+                      });
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Selecione uma opção';
+                      }
+                      return null;
+                    },
                   ),
                 ),
                 Padding(
