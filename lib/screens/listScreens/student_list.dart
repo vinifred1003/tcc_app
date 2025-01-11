@@ -5,6 +5,7 @@ import 'package:tcc_app/models/student.dart';
 import 'package:tcc_app/screens/components/global/app_drawer.dart';
 import 'package:tcc_app/screens/components/global/base_app_bar.dart';
 import 'package:tcc_app/screens/formScreens/student_signup.dart';
+import 'package:tcc_app/screens/profileScreens/student_profile.dart';
 
 class StudentList extends StatefulWidget {
   const StudentList({super.key});
@@ -131,6 +132,14 @@ class _StudentListState extends State<StudentList> {
           ),
         ],
       ),
+    );
+  }
+
+  void _selectStudentProfile(BuildContext context, Student studentSelected) {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) {
+        return StudentProfile(studentSelected);
+      }),
     );
   }
 

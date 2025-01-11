@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:tcc_app/data/dummy_data.dart';
 import 'package:tcc_app/models/student.dart';
 import 'package:tcc_app/models/user.dart';
 import 'package:tcc_app/screens/components/home/profile_display.dart';
@@ -29,6 +30,7 @@ class MeproviApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final ThemeData tema = ThemeData();
     return MaterialApp(
+      debugShowCheckedModeBanner: false, // Desativa a faixa de debug
       routes: {
         '/login': (context) => LoginScreen(),
       },
