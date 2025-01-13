@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:tcc_app/data/dummy_data.dart';
+import 'package:tcc_app/models/student.dart';
+import 'package:tcc_app/models/student_entry.dart';
 import 'package:tcc_app/screens/components/global/app_drawer.dart';
+import 'package:tcc_app/screens/editScreens/edit_entry.dart';
 import '../components/entry_and_exit_form/entry_and_exit.dart';
 class EntryAndExitForm extends StatefulWidget {
   const EntryAndExitForm({super.key});
@@ -16,6 +20,30 @@ class _EntryAndExitFormState extends State<EntryAndExitForm>
   String? _selectedOption;
  
   final List<String> _options = ['Opção 1', 'Opção 2', 'Opção 3', 'Opção 4'];
+
+_addStudentEntry(
+      /*String title, double value, DateTime date, int id, Student student*/) {
+    // final newEntry = StudentEntry(
+    //     id: id,
+    //     studentId: id,
+    //     student: student,
+    //     entryAt: date,
+    //     createdAt: date,
+    //     updatedAt: date);
+
+    // setState(() {
+    //   dummyStudentEntry.add(newEntry);
+    // });
+  }
+
+  _openEditEntryForm(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (_) {
+        return EditEntry(_addStudentEntry);
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
