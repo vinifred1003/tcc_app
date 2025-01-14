@@ -78,8 +78,10 @@ class _EntryListState extends State<EntryList> {
   _editStudentEntry(StudentEntry entryChanged) {
     int index =
         dummyStudentEntry.indexWhere((entry) => entry.id == entryChanged.id);
-
-    dummyStudentEntry[index] = entryChanged;
+    setState(() {
+      dummyStudentEntry[index] = entryChanged;
+    });
+    
   }
 
   _openEditEntryForm(BuildContext context, studentEntrySelected) {
@@ -93,8 +95,10 @@ class _EntryListState extends State<EntryList> {
 
   _editStudentExit(StudentExit exitChanged) {
     int index = dummyExits.indexWhere((exit) => exit.id == exitChanged.id);
-
-    dummyExits[index] = exitChanged;
+    setState(() {
+      dummyExits[index] = exitChanged;
+    });
+    
   }
 
   _openEditExitForm(BuildContext context, studentExitSelected) {
@@ -283,8 +287,8 @@ class _EntryListState extends State<EntryList> {
                                   style: Theme.of(context).textTheme.titleLarge,
                                 ),
                                 subtitle: Text(
-                                  "Saída " +
-                                      DateFormat('d MMM y')
+                                  "Saída: " +
+                                      DateFormat('d MMM y HH:mm')
                                           .format(tr.exitAt),
                                 ),
                                 trailing: PopupMenuButton<String>(

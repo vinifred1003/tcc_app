@@ -441,18 +441,6 @@ final List<StudentExit> dummyExits = [
     exitAt: DateTime.now(),
     createdAt: DateTime(2023, 12, 31),
     updatedAt: DateTime(2024, 1, 1),
-    guardian: Guardian(
-      id: 5,
-      name: 'Seu João',
-      cpf: '12345678904',
-      phone: '123456789',
-      email: 'seujoao@example.com',
-      type: GuardianType.FATHER,
-      photo: [],
-      createdAt: DateTime.now(),
-      updatedAt: DateTime.now(),
-      students: [],
-      exits: [],
-    ),
+      guardian: dummyStudents[1].guardians[1]
   )
 ];

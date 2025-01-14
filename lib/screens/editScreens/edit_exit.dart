@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:tcc_app/data/dummy_data.dart';
 import 'package:tcc_app/models/class.dart';
+import 'package:tcc_app/models/guardian.dart';
 import 'package:tcc_app/models/student.dart';
 import 'package:tcc_app/models/student_exit.dart';
 
@@ -17,7 +18,7 @@ class EditExit extends StatefulWidget {
 class _EditExitState extends State<EditExit> {
   late TextEditingController _rNController;
   late TextEditingController _guardianController;
-  String? _selectedGuardian;
+  late Guardian? _selectedGuardian;
   final _controllerHour = TextEditingController();
 
   late DateTime _selectedDate;
@@ -26,14 +27,14 @@ class _EditExitState extends State<EditExit> {
   @override
   void initState() {
     super.initState();
-    // Inicializa o controlador com o valor recebido
+    
     _rNController = TextEditingController(
         text: widget.studentExit.student.registrationNumber);
 
     _guardianController =
         TextEditingController(text: widget.studentExit.guardian.name);
 
-    _selectedGuardian = widget.studentExit.guardian.name;
+    _selectedGuardian = widget.studentExit.guardian;
 
     _selectedDate = DateTime(
       widget.studentExit.exitAt.year,
@@ -89,16 +90,15 @@ class _EditExitState extends State<EditExit> {
       _selectedHour.hour,
       _selectedHour.minute,
     );
-    final selectedGuardian = student.guardians
-        .firstWhere((guardian) => guardian.name == _selectedGuardian);
+    
 
     final StudentExit newStudentExit = StudentExit(
         id: exitSelected.id,
         studentId: student.id,
         student: student,
         exitAt: combinedDateTime,
-        guardianId: selectedGuardian.id,
-        guardian: selectedGuardian,
+        guardianId: _selectedGuardian!.id,
+        guardian: _selectedGuardian!,
         createdAt: exitSelected.createdAt,
         updatedAt: DateTime.now());
     widget.onSubmit(newStudentExit);
@@ -153,7 +153,7 @@ class _EditExitState extends State<EditExit> {
   @override
   Widget build(BuildContext context) {
     final guardiansOptions = widget.studentExit.student.guardians
-        .map((guardian) => guardian.name)
+        
         .toList();
     return Card(
       elevation: 5,
@@ -217,30 +217,22 @@ class _EditExitState extends State<EditExit> {
                 ],
               ),
             ),
-            DropdownButtonFormField<String>(
-              decoration: InputDecoration(
-                labelText: "Selecione o Responsável",
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                filled: true,
-                fillColor: Colors.white,
-              ),
+            DropdownButtonFormField<Guardian>(
               value: _selectedGuardian,
               icon: const Icon(Icons.arrow_drop_down),
-              items: guardiansOptions.map((String option) {
-                return DropdownMenuItem<String>(
+              items: guardiansOptions.map((Guardian option) {
+                return DropdownMenuItem<Guardian>(
                   value: option,
-                  child: Text(option),
+                  child: Text(option.name),
                 );
               }).toList(),
-              onChanged: (String? newValue) {
+              onChanged: (Guardian? newValue) {
                 setState(() {
                   _selectedGuardian = newValue;
                 });
               },
               validator: (value) {
-                if (value == null || value.isEmpty) {
+                if (value == null) {
                   return 'Selecione uma opção';
                 }
                 return null;
