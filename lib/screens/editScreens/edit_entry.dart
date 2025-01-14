@@ -1,30 +1,98 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:tcc_app/data/dummy_data.dart';
+import 'package:tcc_app/models/class.dart';
 import 'package:tcc_app/models/student.dart';
+import 'package:tcc_app/models/student_entry.dart';
 
 class EditEntry extends StatefulWidget {
-  final void Function(/*title, _selectedDate, _selectedHour*/) onSubmit;
-
-  const EditEntry(this.onSubmit, {Key? key}) : super(key: key);
+  final void Function(StudentEntry) onSubmit;
+  final StudentEntry studentEntry;
+  const EditEntry(this.onSubmit, this.studentEntry, {Key? key})
+      : super(key: key);
 
   @override
   State<EditEntry> createState() => _EditEntryState();
 }
 
 class _EditEntryState extends State<EditEntry> {
-  final _rGController = TextEditingController();
+  late TextEditingController _rNController;
   final _controllerHour = TextEditingController();
 
-  DateTime _selectedDate = DateTime.now();
-  TimeOfDay _selectedHour = TimeOfDay.now();
+  late DateTime _selectedDate;
+  late TimeOfDay _selectedHour;
+
+  @override
+  void initState() {
+    super.initState();
+    // Inicializa o controlador com o valor recebido
+    _rNController = TextEditingController(
+        text: widget.studentEntry.student.registrationNumber);
+
+    _selectedDate = DateTime(
+      widget.studentEntry.entryAt.year,
+      widget.studentEntry.entryAt.month,
+      widget.studentEntry.entryAt.day,
+    );
+    _selectedHour = TimeOfDay(
+      hour: widget.studentEntry.entryAt.hour,
+      minute: widget.studentEntry.entryAt.minute,
+    );
+  }
 
   _submitForm() {
-    final title = _rGController.text;
-    if (title.isEmpty) {
+
+    final registrationNumber = _rNController.text;
+    if (registrationNumber.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('O número de matrícula não pode estar vazio.')),
+      );
       return;
     }
+    
+    final StudentEntry entrySelected = widget.studentEntry;
 
-    widget.onSubmit(/*title, _selectedDate, _selectedHour*/);
+    final student = dummyStudents.firstWhere(
+      (student) => student.registrationNumber == registrationNumber,
+      orElse: () => Student(
+        id: 0,
+        name: 'Não encontrado',
+        registrationNumber: '',
+        birthDate: DateTime.now(),
+        classId: 0,
+        qrCode: '',
+        photo: '',
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+        studentClass: Class(id: 0, name: 'Sem classe'),
+        guardians: [],
+        warnings: [],
+        entries: [],
+        exits: [],
+      ),
+    );
+    if (student.id == 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Estudante não encontrado.')),
+      );
+      return;
+    }
+    DateTime combinedDateTime = DateTime(
+      _selectedDate.year,
+      _selectedDate.month,
+      _selectedDate.day,
+      _selectedHour.hour,
+      _selectedHour.minute,
+    );
+    final StudentEntry newStudentEntry = StudentEntry(
+        id: entrySelected.id,
+        studentId: student.id,
+        student: student,
+        entryAt: combinedDateTime,
+        createdAt: entrySelected.createdAt,
+        updatedAt: DateTime.now());
+    widget.onSubmit(newStudentEntry);
+    Navigator.of(context).pop();
   }
 
   _showTimePicker() {
@@ -81,7 +149,7 @@ class _EditEntryState extends State<EditEntry> {
         child: Column(
           children: [
             TextField(
-              controller: _rGController,
+              controller: _rNController,
               onSubmitted: (_) => _submitForm(),
               decoration: const InputDecoration(
                 labelText: 'N° Matricula',

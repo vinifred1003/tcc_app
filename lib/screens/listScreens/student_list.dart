@@ -208,6 +208,7 @@ class _StudentListState extends State<StudentList> {
                           itemCount: filteredStudents.length,
                           itemBuilder: (ctx, index) {
                             final student = filteredStudents[index];
+                            
                             return Card(
                               elevation: 5,
                               margin: const EdgeInsets.symmetric(
@@ -258,6 +259,8 @@ class _StudentListState extends State<StudentList> {
                                     ),
                                   ],
                                 ),
+                                onTap: () =>
+                                    _selectStudentProfile(context, student),
                               ),
                             );
                           },

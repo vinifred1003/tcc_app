@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:tcc_app/data/dummy_data.dart';
+import 'package:tcc_app/models/class.dart';
+import 'package:tcc_app/models/student.dart';
+import 'package:tcc_app/screens/editScreens/edit_entry.dart';
+import 'package:tcc_app/screens/editScreens/edit_exit.dart';
 import 'package:tcc_app/screens/formScreens/entry_and_exit_form.dart';
 import '../../models/student_entry.dart';
 import '../../models/student_exit.dart';
@@ -22,6 +27,7 @@ class _EntryListState extends State<EntryList> {
   late List<StudentExit> filteredStudentsExit; // Filtered list of students
   final TextEditingController _searchControllerEntrys = TextEditingController();
   final TextEditingController _searchControllerExits = TextEditingController();
+  
 
   @override
   void initState() {
@@ -66,6 +72,37 @@ class _EntryListState extends State<EntryList> {
       MaterialPageRoute(builder: (_) {
         return EntryAndExitForm();
       }),
+    );
+  }
+
+  _editStudentEntry(StudentEntry entryChanged) {
+    int index =
+        dummyStudentEntry.indexWhere((entry) => entry.id == entryChanged.id);
+
+    dummyStudentEntry[index] = entryChanged;
+  }
+
+  _openEditEntryForm(BuildContext context, studentEntrySelected) {
+    showModalBottomSheet(
+      context: context,
+      builder: (_) {
+        return EditEntry(_editStudentEntry, studentEntrySelected);
+      },
+    );
+  }
+
+  _editStudentExit(StudentExit exitChanged) {
+    int index = dummyExits.indexWhere((exit) => exit.id == exitChanged.id);
+
+    dummyExits[index] = exitChanged;
+  }
+
+  _openEditExitForm(BuildContext context, studentExitSelected) {
+    showModalBottomSheet(
+      context: context,
+      builder: (_) {
+        return EditExit(_editStudentExit, studentExitSelected);
+      },
     );
   }
 
@@ -162,15 +199,14 @@ class _EntryListState extends State<EntryList> {
                                   style: Theme.of(context).textTheme.titleLarge,
                                 ),
                                 subtitle: Text(
-                                  "Entrada " +
-                                      DateFormat('d MMM y')
-                                          .format(tr.createdAt),
+                                  "Entrada: " +
+                                      DateFormat('d MMM y HH:mm')
+                                          .format(tr.entryAt),
                                 ),
                                 trailing: PopupMenuButton<String>(
                                   onSelected: (value) {
                                     if (value == 'edit') {
-                                      // Ação para Editar
-                                      print('Editar item $index');
+                                      _openEditEntryForm(context, tr);
                                     } else if (value == 'delete') {
                                       // Ação para Deletar
                                       print('Deletar item $index');
@@ -249,13 +285,12 @@ class _EntryListState extends State<EntryList> {
                                 subtitle: Text(
                                   "Saída " +
                                       DateFormat('d MMM y')
-                                          .format(tr.createdAt),
+                                          .format(tr.exitAt),
                                 ),
                                 trailing: PopupMenuButton<String>(
                                   onSelected: (value) {
                                     if (value == 'edit') {
-                                      // Ação para Editar
-                                      print('Editar item $index');
+                                      _openEditExitForm(context, tr);
                                     } else if (value == 'delete') {
                                       // Ação para Deletar
                                       print('Deletar item $index');

@@ -21,29 +21,6 @@ class _EntryAndExitFormState extends State<EntryAndExitForm>
  
   final List<String> _options = ['Opção 1', 'Opção 2', 'Opção 3', 'Opção 4'];
 
-_addStudentEntry(
-      /*String title, double value, DateTime date, int id, Student student*/) {
-    // final newEntry = StudentEntry(
-    //     id: id,
-    //     studentId: id,
-    //     student: student,
-    //     entryAt: date,
-    //     createdAt: date,
-    //     updatedAt: date);
-
-    // setState(() {
-    //   dummyStudentEntry.add(newEntry);
-    // });
-  }
-
-  _openEditEntryForm(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      builder: (_) {
-        return EditEntry(_addStudentEntry);
-      },
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
