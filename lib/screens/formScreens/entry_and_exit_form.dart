@@ -67,53 +67,11 @@ class _EntryAndExitFormState extends State<EntryAndExitForm>
               child: Column(
                 children: [
                   EntryAndExit(),
-                ],
-              ),
-            ),
-            Form(
-              key: _ExitFormKey,
-              child: Column(
-                children: [
-                  EntryAndExit(),
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: horizontalPadding,
-                        vertical: verticalPadding),
-                    child: DropdownButtonFormField<String>(
-                      decoration: InputDecoration(
-                        labelText: "Selecione o Responsável",
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        filled: true,
-                        fillColor: Colors.white,
-                      ),
-                      value: _selectedOption,
-                      icon: const Icon(Icons.arrow_drop_down),
-                      items: _options.map((String option) {
-                        return DropdownMenuItem<String>(
-                          value: option,
-                          child: Text(option),
-                        );
-                      }).toList(),
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          _selectedOption = newValue;
-                        });
-                      },
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Selecione uma opção';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
                   Padding(
                     padding: EdgeInsets.symmetric(vertical: verticalPadding),
                     child: ElevatedButton(
                       onPressed: () {
-                        if (_ExitFormKey.currentState!.validate()) {
+                        if (_EntryFormKey.currentState!.validate()) {
                           // If the form is valid, display a snackbar. In the real world,
                           // you'd often call a server or save the information in a database.
                           ScaffoldMessenger.of(context).showSnackBar(
@@ -134,6 +92,75 @@ class _EntryAndExitFormState extends State<EntryAndExitForm>
                     ),
                   ),
                 ],
+              ),
+            ),
+            Form(
+              key: _ExitFormKey,
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    EntryAndExit(),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: horizontalPadding,
+                          vertical: verticalPadding),
+                      child: DropdownButtonFormField<String>(
+                        decoration: InputDecoration(
+                          labelText: "Selecione o Responsável",
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          filled: true,
+                          fillColor: Colors.white,
+                        ),
+                        value: _selectedOption,
+                        icon: const Icon(Icons.arrow_drop_down),
+                        items: _options.map((String option) {
+                          return DropdownMenuItem<String>(
+                            value: option,
+                            child: Text(option),
+                          );
+                        }).toList(),
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            _selectedOption = newValue;
+                          });
+                        },
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Selecione uma opção';
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: verticalPadding),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          if (_ExitFormKey.currentState!.validate()) {
+                            // If the form is valid, display a snackbar. In the real world,
+                            // you'd often call a server or save the information in a database.
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('Processing Data')),
+                            );
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor:
+                              Theme.of(context).textTheme.labelLarge?.color,
+                          foregroundColor:
+                              Theme.of(context).colorScheme.primary,
+                          minimumSize: const Size(50, 75),
+                        ),
+                        child: const Text(
+                          "Cadastrar",
+                          style: TextStyle(fontSize: 25),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],

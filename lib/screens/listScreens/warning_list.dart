@@ -1,18 +1,42 @@
 import 'package:flutter/material.dart';
+import 'package:tcc_app/data/dummy_data.dart';
 import 'package:tcc_app/models/student_warning.dart';
+import 'package:tcc_app/screens/editScreens/edit_warning.dart';
 import 'package:tcc_app/screens/formScreens/warning_form.dart';
 import '../components/global/base_app_bar.dart';
 import '../components/global/app_drawer.dart';
 import 'package:intl/intl.dart';
-class WarningList extends StatelessWidget {
+class WarningList extends StatefulWidget {
   final List<StudentWarning>? warnings;
   const WarningList(this.warnings, {Key? key}) : super(key: key);
 
+  @override
+  State<WarningList> createState() => _WarningListState();
+}
+
+class _WarningListState extends State<WarningList> {
   void _selectWarningForm(BuildContext context) {
     Navigator.of(context).push(
       MaterialPageRoute(builder: (_) {
         return WarningForm();
       }),
+    );
+  }
+
+  _editWarning(StudentWarning warningChanged) {
+    int index =
+        dummyWarnings.indexWhere((warn) => warn.id == warningChanged.id);
+    setState(() {
+      dummyWarnings[index] = warningChanged;
+    });
+  }
+
+  _openEditWarningForm(BuildContext context, studentWarningSelected) {
+    showModalBottomSheet(
+      context: context,
+      builder: (_) {
+        return EditWarning(_editWarning, studentWarningSelected);
+      },
     );
   }
 
@@ -54,9 +78,9 @@ class WarningList extends StatelessWidget {
           ),
           Expanded(
             child: ListView.builder(
-              itemCount: warnings?.length,
+              itemCount: widget.warnings?.length,
               itemBuilder: (ctx, index) {
-                final warning = warnings?[index];
+                final warning = widget.warnings?[index];
 
                 return Card(
                   elevation: 5,
@@ -68,8 +92,7 @@ class WarningList extends StatelessWidget {
                     
                     title: Text(
                       warning != null
-                          ? DateFormat('dd/MM/yyyy HH:mm')
-                              .format(warning.createdAt!)
+                          ? DateFormat('dd/MM/yyyy').format(warning.issuedAt)
                           : 'Data indisponível',
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
@@ -77,8 +100,7 @@ class WarningList extends StatelessWidget {
                     trailing: PopupMenuButton<String>(
                       onSelected: (value) {
                         if (value == 'edit') {
-                          // Ação para Editar
-                          print('Editar item $index');
+                          _openEditWarningForm(context, warning);
                         } else if (value == 'delete') {
                           // Ação para Deletar
                           print('Deletar item $index');

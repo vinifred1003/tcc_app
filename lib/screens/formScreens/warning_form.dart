@@ -119,214 +119,216 @@ class _WarningFormState extends State<WarningForm> {
       drawer: AppDrawer(),
       body: Form(
         key: _formKey,
-        child: Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: horizontalPadding, vertical: verticalPadding),
-              child: TextFormField(
-                validator: validateField,
-                decoration: const InputDecoration(
-                  fillColor: Colors.white,
-                  filled: true,
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(30))),
-                  hintText: '',
-                  labelText: ' Nome Completo do Emissor da Ocorrência',
-                ),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: horizontalPadding, vertical: verticalPadding),
-              child: TextFormField(
-                controller: _controllerDate,
-                validator: validateField,
-                decoration: InputDecoration(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Padding(
+                padding: EdgeInsets.symmetric(
+                    horizontal: horizontalPadding, vertical: verticalPadding),
+                child: TextFormField(
+                  validator: validateField,
+                  decoration: const InputDecoration(
                     fillColor: Colors.white,
                     filled: true,
-                    border: const OutlineInputBorder(
+                    border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(30))),
-                    labelText: 'Data do Ocorrido',
-                    suffixIcon: IconButton(
-                        onPressed: _showDatePicker,
-                        icon: const Icon(
-                          Icons.calendar_today,
-                          color: Colors.black,
-                          size: 30,
-                        ))),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: horizontalPadding, vertical: verticalPadding),
-              child: Row(
-                children: [
-                  SearchAnchor(
-                    isFullScreen: false,
-                    builder:
-                        (BuildContext context, SearchController controller) {
-                      return Column(
-                        children: [
-                          CircleAvatar(
-                            backgroundColor:
-                                Theme.of(context).colorScheme.inversePrimary,
-                            radius: 20,
-                            child: IconButton(
-                              icon: const Icon(Icons.add),
-                              onPressed: () {
-                                controller.openView();
-                              },
-                            ),
-                          ),
-                          CircleAvatar(
-                            backgroundColor:
-                                Theme.of(context).colorScheme.inversePrimary,
-                            radius: 20,
-                            child: IconButton(
-                              icon: const Icon(Icons.qr_code),
-                              onPressed: () => warningScan(),
-                            ),
-                          ),
-                        ],
-                      );
-                    },
-                    suggestionsBuilder: (BuildContext context,
-                        SearchController controller) async {
-                      _searchingWithQuery = controller.text;
-                      
-                      if (_searchingWithQuery != controller.text) {
-                        return _lastOptions;
-                      }
-
-                      _lastOptions =
-                          List<ListTile>.generate(
-                          studentsName.length, (int index) {
-                        final String item = studentsName[index];
-                        return ListTile(
-                          title: Text(item),
-                          onTap: () {
-                            setState(() {
-                              _studentsSelected.add(item);
-                            });
-                            controller.closeView(null);
-                          },
-                        );
-                      });
-
-                      return _lastOptions;
-                    },
+                    hintText: '',
+                    labelText: ' Nome Completo do Emissor da Ocorrência',
                   ),
-                  Expanded(
-                    child: SizedBox(
-                      height: 80,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: _studentsSelected.length,
-                        itemBuilder: (ctx, index) {
-                          return SizedBox(
-                            child: Container(
-                              width: 80,
-                              margin: EdgeInsets.all(horizontalPadding),
-                              child: Card(
-                                child: Padding(
-                                  padding:
-                                      EdgeInsets.only(left: horizontalPadding),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Expanded(
-                                        child: Text(
-                                          _studentsSelected[index][0]
-                                              .toUpperCase(),
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                            fontSize: 30,
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .primary,
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(
+                    horizontal: horizontalPadding, vertical: verticalPadding),
+                child: TextFormField(
+                  controller: _controllerDate,
+                  validator: validateField,
+                  decoration: InputDecoration(
+                      fillColor: Colors.white,
+                      filled: true,
+                      border: const OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(30))),
+                      labelText: 'Data do Ocorrido',
+                      suffixIcon: IconButton(
+                          onPressed: _showDatePicker,
+                          icon: const Icon(
+                            Icons.calendar_today,
+                            color: Colors.black,
+                            size: 30,
+                          ))),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(
+                    horizontal: horizontalPadding, vertical: verticalPadding),
+                child: Row(
+                  children: [
+                    SearchAnchor(
+                      isFullScreen: false,
+                      builder:
+                          (BuildContext context, SearchController controller) {
+                        return Column(
+                          children: [
+                            CircleAvatar(
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.inversePrimary,
+                              radius: 20,
+                              child: IconButton(
+                                icon: const Icon(Icons.add),
+                                onPressed: () {
+                                  controller.openView();
+                                },
+                              ),
+                            ),
+                            CircleAvatar(
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.inversePrimary,
+                              radius: 20,
+                              child: IconButton(
+                                icon: const Icon(Icons.qr_code),
+                                onPressed: () => warningScan(),
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                      suggestionsBuilder: (BuildContext context,
+                          SearchController controller) async {
+                        _searchingWithQuery = controller.text;
+
+                        if (_searchingWithQuery != controller.text) {
+                          return _lastOptions;
+                        }
+
+                        _lastOptions = List<ListTile>.generate(
+                            studentsName.length, (int index) {
+                          final String item = studentsName[index];
+                          return ListTile(
+                            title: Text(item),
+                            onTap: () {
+                              setState(() {
+                                _studentsSelected.add(item);
+                              });
+                              controller.closeView(null);
+                            },
+                          );
+                        });
+
+                        return _lastOptions;
+                      },
+                    ),
+                    Expanded(
+                      child: SizedBox(
+                        height: 80,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: _studentsSelected.length,
+                          itemBuilder: (ctx, index) {
+                            return SizedBox(
+                              child: Container(
+                                width: 80,
+                                margin: EdgeInsets.all(horizontalPadding),
+                                child: Card(
+                                  child: Padding(
+                                    padding: EdgeInsets.only(
+                                        left: horizontalPadding),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Expanded(
+                                          child: Text(
+                                            _studentsSelected[index][0]
+                                                .toUpperCase(),
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                              fontSize: 30,
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .primary,
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                      IconButton(
-                                        onPressed: () {
-                                          setState(() {
-                                            _studentsSelected.removeAt(index);
-                                          });
-                                        },
-                                        color:
-                                            Theme.of(context).colorScheme.error,
-                                        icon: const Icon(Icons.delete),
-                                      ),
-                                    ],
+                                        IconButton(
+                                          onPressed: () {
+                                            setState(() {
+                                              _studentsSelected.removeAt(index);
+                                            });
+                                          },
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .error,
+                                          icon: const Icon(Icons.delete),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          );
-                        },
+                            );
+                          },
+                        ),
                       ),
                     ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(
+                    horizontal: horizontalPadding, vertical: verticalPadding),
+                child: TextFormField(
+                  validator: validateField,
+                  keyboardType: TextInputType.multiline,
+                  maxLines: 5,
+                  decoration: const InputDecoration(
+                    fillColor: Colors.white,
+                    filled: true,
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(30))),
+                    hintText: '',
+                    labelText: 'Descrição',
                   ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: horizontalPadding, vertical: verticalPadding),
-              child: TextFormField(
-                validator: validateField,
-                keyboardType: TextInputType.multiline,
-                maxLines: 5,
-                decoration: const InputDecoration(
-                  fillColor: Colors.white,
-                  filled: true,
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(30))),
-                  hintText: '',
-                  labelText: 'Descrição',
                 ),
               ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: verticalPadding),
-              child: ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Processing Data')),
-                    );
-                    final DateTime issuedAtDate =
-                        DateFormat('dd/MM/y').parse(_controllerDate.text);
-                    dummyWarnings.add(StudentWarning(
-                        id: dummyWarnings.length + 1,
-                        studentId: _studentsEnvolved[0].id,
-                        issuedBy: getEmployeeIdByName(_controllerEmissor.text),
-                        issuedAt: issuedAtDate,
-                        reason: _controllerDescricao.text,
-                        severity: "Grave",
-                        createdAt: DateTime.now(),
-                        updatedAt: DateTime.now(),
-                        student: _studentsEnvolved[0],
-                        issuedByEmployee:
-                            getEmployeeByName(_controllerEmissor.text)));
-                  }
-
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor:
-                      Theme.of(context).textTheme.labelLarge?.color,
-                  foregroundColor: Theme.of(context).colorScheme.primary,
-                  minimumSize: const Size(50, 75),
-                ),
-                child: const Text(
-                  "Cadastrar",
-                  style: TextStyle(fontSize: 25),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: verticalPadding),
+                child: ElevatedButton(
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Processing Data')),
+                      );
+                      final DateTime issuedAtDate =
+                          DateFormat('dd/MM/y').parse(_controllerDate.text);
+                      dummyWarnings.add(StudentWarning(
+                          id: dummyWarnings.length + 1,
+                          studentId: _studentsEnvolved[0].id,
+                          issuedBy:
+                              getEmployeeIdByName(_controllerEmissor.text),
+                          issuedAt: issuedAtDate,
+                          reason: _controllerDescricao.text,
+                          severity: "Grave",
+                          createdAt: DateTime.now(),
+                          updatedAt: DateTime.now(),
+                          student: _studentsEnvolved[0],
+                          issuedByEmployee:
+                              getEmployeeByName(_controllerEmissor.text)));
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor:
+                        Theme.of(context).textTheme.labelLarge?.color,
+                    foregroundColor: Theme.of(context).colorScheme.primary,
+                    minimumSize: const Size(50, 75),
+                  ),
+                  child: const Text(
+                    "Cadastrar",
+                    style: TextStyle(fontSize: 25),
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
