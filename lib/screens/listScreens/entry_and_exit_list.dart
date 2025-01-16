@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:tcc_app/data/dummy_data.dart';
-import 'package:tcc_app/models/class.dart';
-import 'package:tcc_app/models/student.dart';
 import 'package:tcc_app/screens/editScreens/edit_entry.dart';
 import 'package:tcc_app/screens/editScreens/edit_exit.dart';
 import 'package:tcc_app/screens/formScreens/entry_and_exit_form.dart';
 import '../../models/student_entry.dart';
 import '../../models/student_exit.dart';
 import 'package:intl/intl.dart';
-import '../components/global/base_app_bar.dart';
 import '../components/global/app_drawer.dart';
-import '../components/entry_and_exit_list/entry_and_exit_list.dart';
+
 
 class EntryList extends StatefulWidget {
   final List<StudentEntry> entrys;
@@ -74,6 +71,8 @@ class _EntryListState extends State<EntryList> {
       }),
     );
   }
+
+  
 
   _editStudentEntry(StudentEntry entryChanged) {
     int index =

@@ -12,25 +12,6 @@ import 'package:share_plus/share_plus.dart';
 class StudentProfile extends StatelessWidget {
   final Student student;
   StudentProfile(this.student, {super.key});
-  // final matricula = "2022154865";
-  // final dataNascimento = "10/03/2018";
-  // final photo = File(
-  //     "C:/Users/needd/OneDrive/Desktop/Programacao/TCC_APP/tcc_app/lib/data/images/boy.jpg");
-  // final guardians = [
-  //   "Luciana",
-  //   "Seu Zé",
-  //   "Maria Teresa",
-  //   "Seu Juscelino",
-  //   "Mariazinha"
-  // ];
-  // final entrysAndExists = [
-  //   "Entrada: 14/11/2024 14:15",
-  //   "Saida: 14/11/2024 17:00",
-  //   "Entrada: 15/11/2024 14:00",
-  //   "Saida: 15/11/2024 17:21",
-  //   "Entrada: 16/11/2024 15:00",
-  //   "Saida: 16/11/2024 17:05"
-  // ];
 
   void generatingQrCodeAndSaving() {
     final qrcode = PrettyQrView.data(
@@ -42,13 +23,7 @@ class StudentProfile extends StatelessWidget {
         ),
       ),
     );
-//     final qrImage = QrImage(qrcode);
-//     final qrImageBytes = await qrImage.toImageAsBytes(
-//       size: 512,
-//       format: ImageByteFormat.png,
-//       decoration: const PrettyQrDecoration(),
-// );
-    // return qrcode;
+    ;
   }
   @override
   Widget build(BuildContext context) {
