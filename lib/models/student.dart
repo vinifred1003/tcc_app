@@ -54,8 +54,9 @@ class Student {
       updatedAt: json['updatedAt'] != null
           ? DateTime.parse(json['updatedAt'])
           : DateTime.now(),
-      studentClass:
-          json['class'] != null ? Class.fromJson(json['class']) : null,
+      studentClass: json['studentClass'] != null
+          ? Class.fromJson(json['studentClass'])
+          : null,
       guardians: json['guardians'] != null
           ? (json['guardians'] as List)
               .map((i) => Guardian.fromJson(i))

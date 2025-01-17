@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:tcc_app/config.dart';
 import 'package:tcc_app/screens/components/global/app_drawer.dart';
 import 'package:tcc_app/screens/components/global/base_app_bar.dart';
 import 'package:tcc_app/screens/formScreens/guardian_form.dart';
@@ -48,8 +49,7 @@ class _StudentSignupState extends State<StudentSignup> {
   }
 
   Future<void> _fetchClassIds() async {
-    final response =
-        await http.get(Uri.parse('http://172.31.38.224:3070/class'));
+    final response = await http.get(Uri.parse('${AppConfig.baseUrl}/class'));
     if (response.statusCode == 200) {
       final List<dynamic> data = json.decode(response.body);
       setState(() {
@@ -61,8 +61,8 @@ class _StudentSignupState extends State<StudentSignup> {
   }
 
   Future<void> _fetchStudentData(int studentId) async {
-    final response = await http
-        .get(Uri.parse('http://172.31.38.224:3070/student/$studentId'));
+    final response =
+        await http.get(Uri.parse('${AppConfig.baseUrl}/student/$studentId'));
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
       setState(() {
@@ -86,7 +86,7 @@ class _StudentSignupState extends State<StudentSignup> {
     if (_photoFilename == null) return;
 
     final response = await http
-        .get(Uri.parse('http://172.31.38.224:3070/upload/$_photoFilename'));
+        .get(Uri.parse('${AppConfig.baseUrl}/upload/$_photoFilename'));
     if (response.statusCode == 200) {
       setState(() {
         _imageData = response.bodyBytes;
@@ -124,7 +124,7 @@ class _StudentSignupState extends State<StudentSignup> {
       final bytes = await image.readAsBytes();
       final request = http.MultipartRequest(
         'POST',
-        Uri.parse('http://172.31.38.224:3070/upload/image'),
+        Uri.parse('${AppConfig.baseUrl}/upload/image'),
       );
       request.files.add(http.MultipartFile.fromBytes(
         'file',
@@ -211,12 +211,12 @@ class _StudentSignupState extends State<StudentSignup> {
 
     final response = widget.studentId == null
         ? await http.post(
-            Uri.parse('http://172.31.38.224:3070/student'),
+            Uri.parse('${AppConfig.baseUrl}/student'),
             headers: {'Content-Type': 'application/json'},
             body: json.encode(studentData),
           )
         : await http.put(
-            Uri.parse('http://172.31.38.224:3070/student/${widget.studentId}'),
+            Uri.parse('${AppConfig.baseUrl}/student/${widget.studentId}'),
             headers: {'Content-Type': 'application/json'},
             body: json.encode(studentData),
           );
@@ -337,7 +337,7 @@ class _StudentSignupState extends State<StudentSignup> {
                       filled: true,
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(30))),
-                      labelText: 'N° Matricula',
+                      labelText: 'N° Matrícula',
                     ),
                   ),
                 ),

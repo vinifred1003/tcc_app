@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
-
-import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 
 class ProfileDisplay extends StatelessWidget {
   final String name;
   final String classOrInstitution;
   final String? jobPosition;
-  
-  const ProfileDisplay(
-      {super.key,
-      required this.name,
-      required this.classOrInstitution,
-      this.jobPosition});
+  final Response? photoResponse;
+
+  const ProfileDisplay({
+    super.key,
+    required this.name,
+    required this.classOrInstitution,
+    this.jobPosition,
+    this.photoResponse,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -32,13 +34,18 @@ class ProfileDisplay extends StatelessWidget {
               width: 150,
               height: 150,
               color: Colors.white10, // Added background to ensure visibility
-              child: const Opacity(
-                opacity: 0.85,
-                child: Image(
-                  image: AssetImage('assets/images/foto_perfil.png'),
-                  fit: BoxFit.cover,
-                ),
-              ),
+              child: photoResponse != null && photoResponse!.statusCode == 200
+                  ? CircleAvatar(
+                      radius: 30,
+                      backgroundImage: MemoryImage(photoResponse!.bodyBytes),
+                    )
+                  : const Opacity(
+                      opacity: 0.85,
+                      child: Image(
+                        image: AssetImage('assets/images/foto_perfil.png'),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
             ),
           ),
           const SizedBox(height: 16), // Added spacing
