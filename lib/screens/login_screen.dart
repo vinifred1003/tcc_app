@@ -57,30 +57,32 @@ class _LoginScreenState extends State<LoginScreen> {
         appBar: const BaseAppBar(screen_title: Text("Bem vindo")),
         body: SizedBox(
           height: 1000,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              const SizedBox(
-                height: 200,
-                width: 350,
-                child: Image(
-                  image: AssetImage(
-                    'assets/images/convivencia.png',
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                const SizedBox(
+                  height: 200,
+                  width: 350,
+                  child: Image(
+                    image: AssetImage(
+                      'assets/images/convivencia.png',
+                    ),
+                    fit: BoxFit.cover,
                   ),
-                  fit: BoxFit.cover,
                 ),
-              ),
-              Inputs(
-                checkboxFunction: rememberLoginAndPassword,
-                isChecked: isChecked,
-              ),
-              CenterButtons(
-                selectedHome: () => _selectHome(context),
-              ),
-              FooterButtons(
-                selectedRegister: () => _selectRegister(context),
-              ),
-            ],
+                Inputs(
+                  checkboxFunction: rememberLoginAndPassword,
+                  isChecked: isChecked,
+                ),
+                CenterButtons(
+                  selectedHome: () => _selectHome(context),
+                ),
+                FooterButtons(
+                  selectedRegister: () => _selectRegister(context),
+                ),
+              ],
+            ),
           ),
         ),
       ),

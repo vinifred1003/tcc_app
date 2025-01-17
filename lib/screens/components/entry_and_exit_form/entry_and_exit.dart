@@ -1,23 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+
 class EntryAndExit extends StatefulWidget {
-  const EntryAndExit({super.key});
+final TextEditingController selectedDateController;
+  final TextEditingController selectedHourController;
+  
+  EntryAndExit(this.selectedDateController, this.selectedHourController,
+      
+      {Key? key})
+      : super(key: key);
 
   @override
   State<EntryAndExit> createState() => _EntryAndExitState();
 }
 
 class _EntryAndExitState extends State<EntryAndExit> {
-  final TextEditingController _controllerDate = TextEditingController();
-
-  final TextEditingController _controllerHour = TextEditingController();
-
-  DateTime _selectedDate = DateTime.now();
-
-
+DateTime _selectedDate = DateTime.now();
   TimeOfDay _selectedHour = TimeOfDay.now();
-
+ 
+  
     
 
   // Validator function
@@ -55,7 +57,8 @@ class _EntryAndExitState extends State<EntryAndExit> {
       }
       setState(() {
         _selectedDate = pickedDate;
-        _controllerDate.text = DateFormat('dd/MM/y').format(_selectedDate);
+        widget.selectedDateController.text =
+            DateFormat('dd/MM/y').format(_selectedDate);
       });
     });
   }
@@ -76,7 +79,7 @@ class _EntryAndExitState extends State<EntryAndExit> {
       }
       setState(() {
         _selectedHour = selectedTime24Hour;
-        _controllerHour.text = DateFormat('HH:mm').format(
+        widget.selectedHourController.text = DateFormat('HH:mm').format(
           DateTime(
             _selectedDate.year,
             _selectedDate.month,
@@ -88,7 +91,7 @@ class _EntryAndExitState extends State<EntryAndExit> {
       });
     });
   }
-
+  
   @override
   Widget build(BuildContext context) {
    
@@ -101,22 +104,9 @@ class _EntryAndExitState extends State<EntryAndExit> {
           padding: EdgeInsets.symmetric(
               horizontal: horizontalPadding, vertical: verticalPadding),
           child: TextFormField(
-            validator: validateField,
-            decoration: const InputDecoration(
-              fillColor: Colors.white,
-              filled: true,
-              border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(30))),
-              hintText: '',
-              labelText: 'N° Matricula',
-            ),
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(
-              horizontal: horizontalPadding, vertical: verticalPadding),
-          child: TextFormField(
-            controller: _controllerDate,
+            readOnly: true,
+            onTap: _showDatePicker,
+            controller: widget.selectedDateController,
             validator: validateField,
             decoration: InputDecoration(
                 fillColor: Colors.white,
@@ -130,14 +120,18 @@ class _EntryAndExitState extends State<EntryAndExit> {
                       Icons.calendar_today,
                       color: Colors.black,
                       size: 30,
-                    ))),
+                ),
+              ),
+            ),
           ),
         ),
         Padding(
           padding: EdgeInsets.symmetric(
               horizontal: horizontalPadding, vertical: verticalPadding),
           child: TextFormField(
-            controller: _controllerHour,
+            readOnly: true,
+            onTap: _showTimePicker,
+            controller: widget.selectedHourController,
             validator: validateField,
             decoration: InputDecoration(
               fillColor: Colors.white,
