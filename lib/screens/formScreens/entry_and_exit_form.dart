@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:tcc_app/data/dummy_data.dart';
 import 'package:tcc_app/models/guardian.dart';
@@ -21,6 +22,7 @@ class _EntryAndExitFormState extends State<EntryAndExitForm>
   final _ExitFormKey = GlobalKey<FormState>();
   Guardian? _selectedOption;
   Student? studentIdentified;
+  late List<Guardian> studentGuardians = [];
   final DateFormat _dateFormat = DateFormat('dd/MM/yyyy HH:mm');
   final TextEditingController rNController = TextEditingController();
   final TextEditingController selectedDateController = TextEditingController();
@@ -65,31 +67,24 @@ class _EntryAndExitFormState extends State<EntryAndExitForm>
         entryAt: parsedDate,
         createdAt: DateTime.now(),
         updatedAt: DateTime.now());
-    _addNewStudentEntry(newStudentEntry);
-    Navigator.of(context).pop();
+    
+    Navigator.of(context).pop(newStudentEntry);
   }
 
-  void _addNewStudentEntry(StudentEntry entry) {
-    final newEntry = StudentEntry(
-        id: dummyStudentEntry.length + 1,
-        studentId: entry.studentId,
-        student: entry.student,
-        entryAt: entry.entryAt,
-        createdAt: entry.createdAt,
-        updatedAt: entry.updatedAt);
-    setState(() {
-      dummyStudentEntry.add(newEntry);
-    });
-  }
+  
 
   _submitExitForm() {
     final registrationNumber = rNController.text;
     final date = selectedDateController.text;
     final hour = selectedHourController.text;
+    final guardian = _selectedOption;
     print(registrationNumber);
     print(date);
     print(hour);
-    if (registrationNumber.isEmpty || date.isEmpty || hour.isEmpty) {
+    if (registrationNumber.isEmpty ||
+        date.isEmpty ||
+        hour.isEmpty ||
+        guardian == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Nenhum campo pode estar vazio.')),
       );
@@ -112,29 +107,19 @@ class _EntryAndExitFormState extends State<EntryAndExitForm>
       return;
     }
 
-    final StudentEntry newStudentEntry = StudentEntry(
+    final StudentExit newStudentExit = StudentExit(
         id: dummyStudentEntry.length + 1,
         studentId: student.id,
+        guardianId: guardian.id,
         student: student,
-        entryAt: parsedDate,
+        exitAt: parsedDate,
         createdAt: DateTime.now(),
-        updatedAt: DateTime.now());
-    _addNewStudentExit(newStudentEntry, _selectedOption!);
-    Navigator.of(context).pop();
+        updatedAt: DateTime.now(),
+        guardian: guardian);
+    Navigator.of(context).pop(newStudentExit);
   }
 
-  void _addNewStudentExit(StudentEntry exitIncomplete, Guardian guardian) {
-    final newExit = StudentExit(
-        id: dummyExits.length + 1,
-        studentId: exitIncomplete.studentId,
-        student: exitIncomplete.student,
-        guardianId: guardian.id,
-        exitAt: exitIncomplete.entryAt,
-        createdAt: exitIncomplete.createdAt,
-        updatedAt: exitIncomplete.updatedAt,
-        guardian: guardian);
-    dummyExits.add(newExit);
-  }
+  
 
 
 
@@ -184,8 +169,41 @@ class _EntryAndExitFormState extends State<EntryAndExitForm>
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    EntryAndExit(rNController, selectedDateController,
-                        selectedHourController),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: horizontalPadding,
+                          vertical: verticalPadding),
+                      child: TextFormField(
+                        controller: rNController,
+                        onFieldSubmitted: (String value) {
+                          try {
+                            // Find the student based on the entered registration number
+                            studentIdentified = dummyStudents.firstWhere(
+                              (student) => student.registrationNumber == value,
+                            );
+                          } catch (e) {
+                            // Handle the case where no student is found
+                            studentIdentified = null;
+                            studentGuardians = [];
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                  content: Text('Estudante não encontrado.')),
+                            );
+                          }
+                        },
+                        decoration: const InputDecoration(
+                          fillColor: Colors.white,
+                          filled: true,
+                          border: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(30))),
+                          hintText: '',
+                          labelText: 'N° Matricula',
+                        ),
+                      ),
+                    ),
+                    EntryAndExit(
+                        selectedDateController, selectedHourController),
                     Padding(
                       padding: EdgeInsets.symmetric(vertical: verticalPadding),
                       child: ElevatedButton(
@@ -220,23 +238,54 @@ class _EntryAndExitFormState extends State<EntryAndExitForm>
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    EntryAndExit(rNController, selectedDateController,
-                        selectedHourController),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: horizontalPadding,
+                          vertical: verticalPadding),
+                      child: TextFormField(
+                        controller: rNController,
+                        onFieldSubmitted: (String value) {
+                          setState(() {
+                            try {
+                              // Find the student based on the entered registration number
+                              studentIdentified = dummyStudents.firstWhere(
+                                (student) =>
+                                    student.registrationNumber == value,
+                              );
+                              // Update the list of guardians
+                              studentGuardians = studentIdentified!.guardians;
+                              // Reset the selected option
+                              _selectedOption = null;
+                            } catch (e) {
+                              // Handle the case where no student is found
+                              studentIdentified = null;
+                              studentGuardians = [];
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                    content: Text('Estudante não encontrado.')),
+                              );
+                            }
+                          });
+                        },
+                        decoration: const InputDecoration(
+                          fillColor: Colors.white,
+                          filled: true,
+                          border: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(30))),
+                          hintText: '',
+                          labelText: 'N° Matricula',
+                        ),
+                      ),
+                    ),
+                    EntryAndExit(
+                        
+                        selectedDateController, selectedHourController),
                     Padding(
                       padding: EdgeInsets.symmetric(
                           horizontal: horizontalPadding,
                           vertical: verticalPadding),
                       child: DropdownButtonFormField<Guardian>(
-                        onTap: () {
-                          setState(() {
-                            studentIdentified = dummyStudents.firstWhere(
-                              (student) =>
-                                  student.registrationNumber ==
-                                  rNController.text,
-                            );
-                          });
-                        },
-                        
                         decoration: InputDecoration(
                           labelText: "Selecione o Responsável",
                           border: OutlineInputBorder(
@@ -247,15 +296,12 @@ class _EntryAndExitFormState extends State<EntryAndExitForm>
                         ),
                         value: _selectedOption,
                         icon: const Icon(Icons.arrow_drop_down),
-                        items: studentIdentified != null
-                            ? studentIdentified!.guardians
-                                .map((Guardian option) {
-                                return DropdownMenuItem<Guardian>(
-                                  value: option,
-                                  child: Text(option.name),
-                                );
-                              }).toList()
-                            : [],
+                        items: studentGuardians.map((Guardian option) {
+                          return DropdownMenuItem<Guardian>(
+                            value: option,
+                            child: Text(option.name),
+                          );
+                        }).toList(),
                         onChanged: (Guardian? newValue) {
                           setState(() {
                             _selectedOption = newValue;

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+
 class EntryAndExit extends StatefulWidget {
 final TextEditingController selectedDateController;
   final TextEditingController selectedHourController;
-  final TextEditingController rNController;
-  const EntryAndExit(this.rNController, this.selectedDateController,
-      this.selectedHourController,
+  
+  EntryAndExit(this.selectedDateController, this.selectedHourController,
+      
       {Key? key})
       : super(key: key);
 
@@ -18,7 +19,7 @@ class _EntryAndExitState extends State<EntryAndExit> {
 DateTime _selectedDate = DateTime.now();
   TimeOfDay _selectedHour = TimeOfDay.now();
  
-
+  
     
 
   // Validator function
@@ -103,22 +104,8 @@ DateTime _selectedDate = DateTime.now();
           padding: EdgeInsets.symmetric(
               horizontal: horizontalPadding, vertical: verticalPadding),
           child: TextFormField(
-            controller: widget.rNController,
-            validator: validateField,
-            decoration: const InputDecoration(
-              fillColor: Colors.white,
-              filled: true,
-              border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(30))),
-              hintText: '',
-              labelText: 'N° Matricula',
-            ),
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(
-              horizontal: horizontalPadding, vertical: verticalPadding),
-          child: TextFormField(
+            readOnly: true,
+            onTap: _showDatePicker,
             controller: widget.selectedDateController,
             validator: validateField,
             decoration: InputDecoration(
@@ -142,6 +129,8 @@ DateTime _selectedDate = DateTime.now();
           padding: EdgeInsets.symmetric(
               horizontal: horizontalPadding, vertical: verticalPadding),
           child: TextFormField(
+            readOnly: true,
+            onTap: _showTimePicker,
             controller: widget.selectedHourController,
             validator: validateField,
             decoration: InputDecoration(

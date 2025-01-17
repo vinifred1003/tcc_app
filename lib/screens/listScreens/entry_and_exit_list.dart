@@ -69,10 +69,21 @@ class _EntryListState extends State<EntryList> {
       MaterialPageRoute(builder: (_) {
         return EntryAndExitForm();
       }),
-    );
+    ).then((result) {
+      if (result != null) {
+        final String stringResult = result.toString();
+        if (stringResult.contains("StudentExit")) {
+          setState(() {
+            dummyExits.add(result);
+          });
+        } else {
+          setState(() {
+            dummyStudentEntry.add(result);
+          });
+        }
+      }
+    });
   }
-
-  
 
   _editStudentEntry(StudentEntry entryChanged) {
     int index =
