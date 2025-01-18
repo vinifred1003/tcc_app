@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tcc_app/screens/home_screen.dart';
 import 'package:tcc_app/screens/listScreens/student_list.dart';
-import 'package:tcc_app/screens/listScreens/user_records.dart';
+import 'package:tcc_app/screens/listScreens/employee_list.dart';
 import 'package:tcc_app/screens/listScreens/warning_list.dart';
 import '../../listScreens/entry_and_exit_list.dart';
 import '../../../data/dummy_data.dart';
@@ -20,7 +20,7 @@ class AppDrawer extends StatelessWidget {
   void _selectUserRecords(BuildContext context) {
     Navigator.of(context).push(
       MaterialPageRoute(builder: (_) {
-        return UserRecords(dummyUser);
+        return EmployeeList(dummyEmployee);
       }),
     );
   }
@@ -42,7 +42,7 @@ class AppDrawer extends StatelessWidget {
   void _selectHome(BuildContext context) {
     Navigator.of(context).push(
       MaterialPageRoute(builder: (_) {
-        return HomeScreen(user: dummyUser[0]);
+        return HomeScreen(employee: dummyEmployee[0]);
       }),
     );
   }

@@ -6,11 +6,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:tcc_app/data/dummy_data.dart';
 import 'package:tcc_app/models/class.dart';
+import 'package:tcc_app/models/employee.dart';
 import 'package:tcc_app/models/guardian.dart';
 import 'package:tcc_app/models/student.dart';
 import 'package:tcc_app/models/student_entry.dart';
 import 'package:tcc_app/models/student_exit.dart';
-import 'package:tcc_app/screens/editScreens/edit_user.dart';
+import 'package:tcc_app/screens/editScreens/edit_employee.dart';
 import 'package:tcc_app/screens/login_screen.dart';
 import 'package:tcc_app/screens/profileScreens/student_profile.dart';
 
@@ -22,23 +23,21 @@ import 'components/home/footer.dart';
 import 'components/home/profile_display.dart';
 
 class HomeScreen extends StatefulWidget {
-  final User user;
+  final Employee employee;
 
-  const HomeScreen({super.key, required this.user});
+  const HomeScreen({super.key, required this.employee});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  late User u;
   late List<String> _guardiansOptions = [];
   String? _selectedOption;
   String scanResult = "";
   @override
   void initState() {
     super.initState();
-    u = widget.user;
   }
 
   void _selectLoginScreen(BuildContext context) {
@@ -256,23 +255,11 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  void _selectEntryAndExitForm(BuildContext context, user) {
-    showModalBottomSheet(
-      context: context,
-      builder: (_) {
-        return EditUser(user);
-      },
-    ).then((result) {
-      if (result != null) {
-        setState(() {
-          dummyUser.add(result);
-        });
-      }
-    });
-  }
+  
 
   @override
   Widget build(BuildContext context) {
+    final e = widget.employee;
     // Use MediaQuery with constraints to make the layout more responsive
     final mediaQuery = MediaQuery.of(context);
     final screenWidth = mediaQuery.size.width;
@@ -304,14 +291,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       vertical: verticalPadding,
                     ),
                     child: ProfileDisplay(
-                      name: u.name,
-                      classOrInstitution: 
-                          u.employee?.occupation?.name ?? 'Não informado',
+                      employee: e,
                     ),
                   ),
-                  IconButton(
-                      onPressed: () => _selectEntryAndExitForm(context, u),
-                      icon: Icon(Icons.edit)),
+                  
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: SizedBox(

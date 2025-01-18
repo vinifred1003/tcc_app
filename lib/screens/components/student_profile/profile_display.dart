@@ -1,44 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:tcc_app/data/dummy_data.dart';
-import 'package:tcc_app/models/employee.dart';
-import 'package:intl/intl.dart';
 import 'package:tcc_app/models/user.dart';
+import 'package:tcc_app/screens/editScreens/edit_entry.dart';
 import 'package:tcc_app/screens/editScreens/edit_employee.dart';
 
 class ProfileDisplay extends StatefulWidget {
-  
-  final Employee employee;
+  final String name;
+  final String classOrInstitution;
+  final String? jobPosition;
 
-  const ProfileDisplay({super.key, required this.employee, required});
+  const ProfileDisplay(
+      {super.key,
+      required this.name,
+      required this.classOrInstitution,
+      this.jobPosition});
 
   @override
   State<ProfileDisplay> createState() => _ProfileDisplayState();
 }
 
 class _ProfileDisplayState extends State<ProfileDisplay> {
-  
-  void _selectEditEmployeeForm(BuildContext context, e) {
-    showModalBottomSheet(
-      context: context,
-      builder: (_) {
-        return EditEmployee(e);
-      },
-    ).then((result) {
-      if (result[1] != null && result[0] != null) {
-        int indexUser = dummyUser.indexWhere((user) => user.id == result[0].id);
-        int indexEmployee =
-            dummyEmployee.indexWhere((employee) => employee.id == result[1].id);
-        setState(() {
-          dummyUser[indexUser] = result[0];
-          dummyEmployee[indexEmployee] = result[1];
-        });
-      }
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    final e = widget.employee;
     final mediaQuery = MediaQuery.of(context);
     final screenWidth = mediaQuery.size.width;
 
@@ -69,7 +52,7 @@ class _ProfileDisplayState extends State<ProfileDisplay> {
           FittedBox(
             fit: BoxFit.scaleDown,
             child: Text(
-              e.name,
+              widget.name,
               textAlign: TextAlign.center,
               style: const TextStyle(
                 fontSize: 25,
@@ -88,30 +71,26 @@ class _ProfileDisplayState extends State<ProfileDisplay> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    e.occupation!.name,
+                    widget.jobPosition ?? "Educando",
                     style: const TextStyle(
                       fontSize: 18,
                       color: Colors.white,
                     ),
                   ),
                   const Text(
-                    " Desde: ",
+                    " - ",
                     style: TextStyle(
                       fontSize: 18,
                       color: Colors.white,
                     ),
                   ),
                   Text(
-                    DateFormat('d/MM/y').format(e.admissionDate),
+                    widget.classOrInstitution,
                     style: const TextStyle(
                       fontSize: 18,
                       color: Colors.white,
                     ),
                   ),
-                  IconButton(
-                      onPressed: () => _selectEditEmployeeForm(context, e),
-                      icon: Icon(Icons.edit)),
-                  
                 ],
               ),
             ),

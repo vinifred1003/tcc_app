@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:tcc_app/models/student.dart';
 import 'package:intl/intl.dart';
-import 'package:tcc_app/screens/components/home/profile_display.dart';
+import 'package:tcc_app/screens/components/student_profile/profile_display.dart';
 import '../components/global/app_drawer.dart';
 import '../components/global/base_app_bar.dart';
 

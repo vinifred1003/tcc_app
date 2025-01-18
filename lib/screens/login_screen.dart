@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tcc_app/models/employee.dart';
 import 'package:tcc_app/screens/components/login/footer_buttons.dart';
 import 'package:tcc_app/screens/formScreens/manager_signup_form.dart';
 import 'components/global/base_app_bar.dart';
@@ -17,11 +18,11 @@ class LoginScreen extends StatefulWidget {
 
 bool isChecked = false;
 
-final User u0 = dummyUser[0];
+final Employee e0 = dummyEmployee[0];
 void _selectHome(BuildContext context) {
   Navigator.of(context).push(
     MaterialPageRoute(builder: (_) {
-      return HomeScreen(user: u0);
+      return HomeScreen(employee: e0);
     }),
   );
 }

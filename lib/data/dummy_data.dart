@@ -228,7 +228,7 @@ final dummyStudentEntry = [
     ),
   ),
 ];
-
+final dummyUserRoles = [];
 final dummyStudents = [
   Student(
     id: 1,
@@ -434,13 +434,12 @@ final List<Occupation> dummyOccupations = [
 
 final List<StudentExit> dummyExits = [
   StudentExit(
-    id: 1,
-    studentId: dummyStudents[1].id,
-    student: dummyStudents[1],
-    guardianId: 5,
-    exitAt: DateTime.now(),
-    createdAt: DateTime(2023, 12, 31),
-    updatedAt: DateTime(2024, 1, 1),
-      guardian: dummyStudents[1].guardians[1]
-  )
+      id: 1,
+      studentId: dummyStudents[1].id,
+      student: dummyStudents[1],
+      guardianId: 5,
+      exitAt: DateTime.now(),
+      createdAt: DateTime(2023, 12, 31),
+      updatedAt: DateTime(2024, 1, 1),
+      guardian: dummyStudents[1].guardians[1])
 ];

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tcc_app/data/dummy_data.dart';
 import 'package:tcc_app/screens/components/global/app_drawer.dart';
 import 'package:tcc_app/screens/components/global/base_app_bar.dart';
+import 'package:intl/intl.dart';
 
 class ManagerSignupForm extends StatefulWidget {
   const ManagerSignupForm({super.key});
@@ -18,12 +19,57 @@ class _ManagerSignupFormState extends State<ManagerSignupForm> {
       .toList()
       .cast<String>();
   String? _selectedOption;    
+final TextEditingController _controllerDate = TextEditingController();
+  DateTime _selectedDate = DateTime.now();
     // Validator function
   String? validateField(String? value) {
     if (value == null || value.isEmpty) {
       return 'Campo obrigatório';
     }
     return null;
+  }
+
+  _showDatePicker() {
+    showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(1924),
+      lastDate: DateTime.now(),
+    ).then((pickedDate) {
+      if (pickedDate == null) {
+        return;
+      }
+      setState(() {
+        _selectedDate = pickedDate;
+        _controllerDate.text = DateFormat('dd/MM/y').format(_selectedDate);
+      });
+    });
+
+    // void _submitForm() {
+    //   if (_formKey.currentState!.validate()) {
+    //     final u = widget.employee.user;
+
+    //     final employeeEdited = Employee(
+    //         id: widget.employee.id,
+    //         name: _nameController.text,
+    //         admissionDate: _selectedDate,
+    //         occupationId: _selectedOccupation!.id);
+
+    //     final userEdited = User(
+    //       id: widget.employee.user!.id,
+    //       name: _nameController.text,
+    //       email: _emailController.text,
+    //       password: _passwordController.text,
+    //       roleId: u!.roleId,
+    //       createdAt: u.createdAt,
+    //       updatedAt: DateTime.now(),
+    //       role: u.role,
+    //     );
+    //     final List twoClassList = [userEdited, employeeEdited];
+
+    //     Navigator.of(context).pop(twoClassList);
+    //   }
+    // }
   }
   @override
   Widget build(BuildContext context) {
@@ -137,6 +183,28 @@ class _ManagerSignupFormState extends State<ManagerSignupForm> {
                   padding: EdgeInsets.symmetric(
                       horizontal: horizontalPadding, vertical: verticalPadding),
                   child: TextFormField(
+                    controller: _controllerDate,
+                    validator: validateField,
+                    decoration: InputDecoration(
+                        fillColor: Colors.white,
+                        filled: true,
+                        border: const OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(30))),
+                        labelText: 'Data do Ocorrido',
+                        suffixIcon: IconButton(
+                            onPressed: _showDatePicker,
+                            icon: const Icon(
+                              Icons.calendar_today,
+                              color: Colors.black,
+                              size: 30,
+                            ))),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: horizontalPadding, vertical: verticalPadding),
+                  child: TextFormField(
                     validator: validateField,
                     decoration: const InputDecoration(
                       fillColor: Colors.white,
@@ -169,8 +237,7 @@ class _ManagerSignupFormState extends State<ManagerSignupForm> {
                   child: ElevatedButton(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        // If the form is valid, display a snackbar. In the real world,
-                        // you'd often call a server or save the information in a database.
+                        
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text('Processing Data')),
                         );
