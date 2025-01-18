@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:tcc_app/models/user.dart';
 import 'package:tcc_app/screens/components/global/app_drawer.dart';

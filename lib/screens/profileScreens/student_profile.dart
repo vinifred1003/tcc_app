@@ -1,13 +1,13 @@
-import 'dart:io';
+
 import 'package:pretty_qr_code/pretty_qr_code.dart';
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
-import 'package:tcc_app/models/student.dart';
 
+import 'package:tcc_app/models/student.dart';
+import 'package:intl/intl.dart';
 import 'package:tcc_app/screens/components/home/profile_display.dart';
 import '../components/global/app_drawer.dart';
 import '../components/global/base_app_bar.dart';
-import 'package:share_plus/share_plus.dart';
+
 
 class StudentProfile extends StatelessWidget {
   final Student student;
@@ -27,7 +27,7 @@ class StudentProfile extends StatelessWidget {
   }
   @override
   Widget build(BuildContext context) {
-    final double horizontalPadding = MediaQuery.of(context).size.width * 0.1;
+
     final double verticalPadding = MediaQuery.of(context).size.height * 0.05;
     bool entryIsEmpty = student.entries!.isEmpty;
     bool exitIsEmpty = student.exits!.isEmpty;
@@ -112,7 +112,9 @@ class StudentProfile extends StatelessWidget {
                               padding: EdgeInsets.symmetric(
                                   horizontal: horizontalPaddingText),
                               child: Text(
-                                'Data de Nascimento: ${student.birthDate}',
+                                'Data de Nascimento: ' +
+                                    DateFormat('d/MM/y')
+                                        .format(student.birthDate),
                                 style: TextStyle(
                                     color:
                                         Theme.of(context).colorScheme.primary,

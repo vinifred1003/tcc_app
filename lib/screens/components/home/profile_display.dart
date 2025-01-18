@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:tcc_app/data/dummy_data.dart';
+import 'package:tcc_app/models/user.dart';
+import 'package:tcc_app/screens/editScreens/edit_entry.dart';
+import 'package:tcc_app/screens/editScreens/edit_user.dart';
 
-import 'package:flutter/material.dart';
-
-class ProfileDisplay extends StatelessWidget {
+class ProfileDisplay extends StatefulWidget {
   final String name;
   final String classOrInstitution;
   final String? jobPosition;
@@ -12,6 +14,13 @@ class ProfileDisplay extends StatelessWidget {
       required this.name,
       required this.classOrInstitution,
       this.jobPosition});
+
+  @override
+  State<ProfileDisplay> createState() => _ProfileDisplayState();
+}
+
+class _ProfileDisplayState extends State<ProfileDisplay> {
+  
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +54,7 @@ class ProfileDisplay extends StatelessWidget {
           FittedBox(
             fit: BoxFit.scaleDown,
             child: Text(
-              name,
+              widget.name,
               textAlign: TextAlign.center,
               style: const TextStyle(
                 fontSize: 25,
@@ -64,7 +73,7 @@ class ProfileDisplay extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    jobPosition ?? "Educando",
+                    widget.jobPosition ?? "Educando",
                     style: const TextStyle(
                       fontSize: 18,
                       color: Colors.white,
@@ -78,12 +87,13 @@ class ProfileDisplay extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    classOrInstitution,
+                    widget.classOrInstitution,
                     style: const TextStyle(
                       fontSize: 18,
                       color: Colors.white,
                     ),
                   ),
+                  
                 ],
               ),
             ),

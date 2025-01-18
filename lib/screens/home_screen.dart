@@ -5,13 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:tcc_app/data/dummy_data.dart';
-import 'package:tcc_app/models/attendance.dart';
 import 'package:tcc_app/models/class.dart';
 import 'package:tcc_app/models/guardian.dart';
 import 'package:tcc_app/models/student.dart';
 import 'package:tcc_app/models/student_entry.dart';
 import 'package:tcc_app/models/student_exit.dart';
+import 'package:tcc_app/screens/editScreens/edit_user.dart';
 import 'package:tcc_app/screens/login_screen.dart';
+import 'package:tcc_app/screens/profileScreens/student_profile.dart';
 
 import '../models/user.dart';
 import 'components/global/app_drawer.dart';
@@ -34,7 +35,6 @@ class _HomeScreenState extends State<HomeScreen> {
   late List<String> _guardiansOptions = [];
   String? _selectedOption;
   String scanResult = "";
-  Set<String> _recentlyScanned = {};
   @override
   void initState() {
     super.initState();
@@ -50,7 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void addExit(Student student, Guardian guardian) {
-    if (student != null) {
+    
       dummyExits.add(StudentExit(
           id: dummyStudents.length + 1,
           studentId: student.id,
@@ -60,7 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
           guardian: guardian));
-    }
+    
     Navigator.pop(context, 'OK');
   }
 
@@ -217,22 +217,13 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  Future<void> warningScan() async {
-    String barcodeScanRes;
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    try {
-      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
-          '#ff6666', 'Cancel', true, ScanMode.QR);
-      print(barcodeScanRes);
-    } on PlatformException {
-      barcodeScanRes = 'Failed to get platform version.';
-    }
 
-    if (!mounted) return;
-
-    setState(() {
-      scanResult = barcodeScanRes;
-    });
+  void _selectStudentProfile(BuildContext context, Student studentSelected) {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) {
+        return StudentProfile(studentSelected);
+      }),
+    );
   }
 
   Future<void> profileScan() async {
@@ -246,12 +237,39 @@ class _HomeScreenState extends State<HomeScreen> {
       barcodeScanRes = 'Failed to get platform version.';
     }
     if (!mounted) return;
+    Student? student;
+    try {
+      student = dummyStudents.firstWhere(
+        (student) => student.registrationNumber == barcodeScanRes,
+      );
+    } catch (e) {
+      student = null;
+      const SnackBar(
+        content: Text(
+          'Estudante não encontrado!',
+        ),
+        duration: Duration(seconds: 2),
+      );
+    }
+    if (student != null) {
+      _selectStudentProfile(context, student);
+    }
+  }
 
-    setState(() {
-      scanResult = barcodeScanRes;
+  void _selectEntryAndExitForm(BuildContext context, user) {
+    showModalBottomSheet(
+      context: context,
+      builder: (_) {
+        return EditUser(user);
+      },
+    ).then((result) {
+      if (result != null) {
+        setState(() {
+          dummyUser.add(result);
+        });
+      }
     });
   }
-  
 
   @override
   Widget build(BuildContext context) {
@@ -291,6 +309,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           u.employee?.occupation?.name ?? 'Não informado',
                     ),
                   ),
+                  IconButton(
+                      onPressed: () => _selectEntryAndExitForm(context, u),
+                      icon: Icon(Icons.edit)),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: SizedBox(

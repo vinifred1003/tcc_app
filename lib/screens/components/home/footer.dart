@@ -5,8 +5,8 @@ class Footer extends StatelessWidget {
 
   void _selectLogin(BuildContext context) {
     Navigator.of(context).pushNamedAndRemoveUntil(
-      '/login', // Replace with your login route name
-      (Route<dynamic> route) => false, // This will remove all routes
+      '/login',
+      (Route<dynamic> route) => false, 
     );
   }
   Footer({super.key, required this.selectedLoginScreen});
