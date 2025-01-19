@@ -395,29 +395,32 @@ class StudentProfile extends StatelessWidget {
                                 height: 200,
                                 decoration: BoxDecoration(
                                   border: Border.all(
-                                    color: Colors.lightBlue, // Cor da borda
-                                    width: 3, // Largura da borda
-                                  ),
+                                      color: Colors.lightBlue, width: 3),
                                 ),
                                 child: Scrollbar(
                                   thumbVisibility: true,
                                   child: ListView.builder(
-                                      itemCount: student.entries!.length,
-                                      itemBuilder: (ctx, index) {
-                                        return Container(
-                                          child: ListTile(
-                                            onTap: () {},
-                                            title: Text(
-                                              student.entries![index].entryAt
-                                                  .toString(),
-                                              style: TextStyle(
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .primary),
+                                    itemCount: student.entries!.length,
+                                    itemBuilder: (ctx, index) {
+                                      final entry = student.entries![index];
+                                      final formattedDate =
+                                          DateFormat('dd/MM/yyyy HH:mm')
+                                              .format(entry.entryAt);
+                                      return Container(
+                                        child: ListTile(
+                                          onTap: () {},
+                                          title: Text(
+                                            formattedDate,
+                                            style: TextStyle(
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .primary,
                                             ),
                                           ),
-                                        );
-                                      }),
+                                        ),
+                                      );
+                                    },
+                                  ),
                                 ),
                               ),
                             ),
@@ -480,12 +483,15 @@ class StudentProfile extends StatelessWidget {
                                   child: ListView.builder(
                                       itemCount: student.exits!.length,
                                       itemBuilder: (ctx, index) {
+                                        final exit = student.exits![index];
+                                        final formattedDate =
+                                            DateFormat('dd/MM/yyyy HH:mm')
+                                                .format(exit.exitAt);
                                         return Container(
                                           child: ListTile(
                                             onTap: () {},
                                             title: Text(
-                                              student.exits![index].exitAt
-                                                  .toString(),
+                                              formattedDate,
                                               style: TextStyle(
                                                   color: Theme.of(context)
                                                       .colorScheme

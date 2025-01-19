@@ -1,8 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:tcc_app/data/dummy_data.dart';
-import 'package:tcc_app/models/class.dart';
-import 'package:tcc_app/models/student.dart';
+import 'package:http/http.dart' as http;
+import 'package:tcc_app/config.dart';
 import 'package:tcc_app/models/student_entry.dart';
 
 class EditEntry extends StatefulWidget {
@@ -16,7 +17,6 @@ class EditEntry extends StatefulWidget {
 }
 
 class _EditEntryState extends State<EditEntry> {
-  late TextEditingController _rNController;
   final _controllerHour = TextEditingController();
 
   late DateTime _selectedDate;
@@ -25,9 +25,6 @@ class _EditEntryState extends State<EditEntry> {
   @override
   void initState() {
     super.initState();
-    // Inicializa o controlador com o valor recebido
-    _rNController = TextEditingController(
-        text: widget.studentEntry.student.registrationNumber);
 
     _selectedDate = DateTime(
       widget.studentEntry.entryAt.year,
@@ -40,43 +37,7 @@ class _EditEntryState extends State<EditEntry> {
     );
   }
 
-  _submitForm() {
-
-    final registrationNumber = _rNController.text;
-    if (registrationNumber.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('O número de matrícula não pode estar vazio.')),
-      );
-      return;
-    }
-    
-    final StudentEntry entrySelected = widget.studentEntry;
-
-    final student = dummyStudents.firstWhere(
-      (student) => student.registrationNumber == registrationNumber,
-      orElse: () => Student(
-        id: 0,
-        name: 'Não encontrado',
-        registrationNumber: '',
-        birthDate: DateTime.now(),
-        classId: 0,
-        qrCode: '',
-        photo: '',
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
-        studentClass: Class(id: 0, name: 'Sem classe'),
-        guardians: [],
-        warnings: [],
-        entries: [],
-        exits: [],
-      ),
-    );
-    if (student.id == 0) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Estudante não encontrado.')),
-      );
-      return;
-    }
+  Future<void> _submitForm() async {
     DateTime combinedDateTime = DateTime(
       _selectedDate.year,
       _selectedDate.month,
@@ -84,15 +45,38 @@ class _EditEntryState extends State<EditEntry> {
       _selectedHour.hour,
       _selectedHour.minute,
     );
-    final StudentEntry newStudentEntry = StudentEntry(
-        id: entrySelected.id,
-        studentId: student.id,
-        student: student,
-        entryAt: combinedDateTime,
-        createdAt: entrySelected.createdAt,
-        updatedAt: DateTime.now());
-    widget.onSubmit(newStudentEntry);
-    Navigator.of(context).pop();
+
+    final response = await http.patch(
+      Uri.parse(
+          '${AppConfig.baseUrl}/students-attendance/entry/${widget.studentEntry.id}'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: json.encode(<String, String>{
+        'entryAt': combinedDateTime.toIso8601String(),
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final entryResponse = StudentEntry.fromJson(json.decode(response.body));
+
+      widget.onSubmit(entryResponse);
+      Navigator.of(context).pop();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Entrada atualizada com sucesso.'),
+          backgroundColor: Colors.green,
+        ),
+      );
+    } else {
+      final errorMessage = json.decode(response.body)['message'];
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(errorMessage ?? 'Erro ao atualizar entrada.'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 
   _showTimePicker() {
@@ -148,12 +132,14 @@ class _EditEntryState extends State<EditEntry> {
         padding: const EdgeInsets.all(10),
         child: Column(
           children: [
-            TextField(
-              controller: _rNController,
-              onSubmitted: (_) => _submitForm(),
-              decoration: const InputDecoration(
-                labelText: 'N° Matricula',
-              ),
+            Text(
+              'N° Matricula: ${widget.studentEntry.student!.registrationNumber}',
+              style: TextStyle(fontSize: 18),
+            ),
+            SizedBox(height: 10),
+            Text(
+              'Nome: ${widget.studentEntry.student!.name}',
+              style: TextStyle(fontSize: 18),
             ),
             Container(
               height: 70,

@@ -13,7 +13,7 @@ class AppDrawer extends StatelessWidget {
   void _selectEntryRecords(BuildContext context) {
     Navigator.of(context).push(
       MaterialPageRoute(builder: (_) {
-        return EntryList(dummyStudentEntry, dummyExits);
+        return EntryList();
       }),
     );
   }
@@ -33,6 +33,7 @@ class AppDrawer extends StatelessWidget {
       }),
     );
   }
+
   void _selectWarningRecords(BuildContext context) {
     Navigator.of(context).push(
       MaterialPageRoute(builder: (_) {
@@ -40,6 +41,7 @@ class AppDrawer extends StatelessWidget {
       }),
     );
   }
+
   void _selectHome(BuildContext context) {
     Navigator.of(context).push(
       MaterialPageRoute(builder: (_) {
@@ -85,11 +87,11 @@ class AppDrawer extends StatelessWidget {
               onTap: () => _selectUserRecords(context),
             ),
             ListTile(
-              title: const Text('Entradas e Saidas'),
+              title: const Text('Entradas e Saídas'),
               onTap: () => _selectEntryRecords(context),
             ),
             ListTile(
-              title: const Text('Advertencias'),
+              title: const Text('Advertências'),
               onTap: () => _selectWarningRecords(context),
             ),
             // ListTile(

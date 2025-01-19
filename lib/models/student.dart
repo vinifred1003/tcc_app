@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:tcc_app/models/class.dart';
 import 'package:tcc_app/models/guardian.dart';
 import 'package:tcc_app/models/student_entry.dart';
@@ -19,6 +21,8 @@ class Student {
   List<StudentWarning>? warnings;
   List<StudentEntry>? entries;
   List<StudentExit>? exits;
+
+  Uint8List? photoBytes;
 
   Student({
     required this.id,

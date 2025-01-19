@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:tcc_app/config.dart';
 import 'package:tcc_app/data/dummy_data.dart';
 import 'package:tcc_app/models/attendance.dart';
 import 'package:tcc_app/models/class.dart';
@@ -19,6 +21,7 @@ import 'components/global/base_app_bar.dart';
 import 'components/home/center_buttons.dart';
 import 'components/home/footer.dart';
 import 'components/home/profile_display.dart';
+import 'package:http/http.dart' as http;
 
 class HomeScreen extends StatefulWidget {
   final User user;
@@ -77,127 +80,149 @@ class _HomeScreenState extends State<HomeScreen> {
       });
 
       if (barcodeScanRes != '-1') {
-        // Busca o primeiro estudante com o registrationNumber igual a '812'
-        final student = dummyStudents.firstWhere(
-          (student) => student.registrationNumber == barcodeScanRes,
-          orElse: () => Student(
-            id: 0,
-            name: 'Não encontrado',
-            registrationNumber: '',
-            birthDate: DateTime.now(),
-            classId: 0,
-            qrCode: '',
-            photo: '',
-            createdAt: DateTime.now(),
-            updatedAt: DateTime.now(),
-            studentClass: Class(id: 0, name: 'Sem classe'),
-            guardians: [],
-            warnings: [],
-            entries: [],
-            exits: [],
-          ),
-        );
-        _guardiansOptions =
-            student.guardians.map((guardian) => guardian.name).toList();
-        showDialog<String>(
-          context: context,
-          builder: (BuildContext context) => AlertDialog(
-            title: const Text('QR Scan Result'),
-            content: Text('Scanned content: $barcodeScanRes'),
-            actions: <Widget>[
-              DropdownButtonFormField<String>(
-                decoration: InputDecoration(
-                  labelText: "Selecione o Responsável",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  filled: true,
-                  fillColor: Colors.white,
-                ),
-                value: _selectedOption,
-                icon: const Icon(Icons.arrow_drop_down),
-                items: _guardiansOptions.map((String option) {
-                  return DropdownMenuItem<String>(
-                    value: option,
-                    child: Text(option),
-                  );
-                }).toList(),
-                onChanged: (String? newValue) {
-                  setState(() {
-                    _selectedOption = newValue;
-                  });
-                },
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Selecione uma opção';
-                  }
-                  return null;
-                },
-              ),
-              TextButton(
-                onPressed: () => Navigator.pop(context, 'Cancel'),
-                child: const Text('Cancel'),
-              ),
-              TextButton(
-                onPressed: () {
-                  final selectedGuardian = student.guardians.firstWhere(
-                      (guardian) => guardian.name == _selectedOption);
+        final url = Uri.parse(
+            '${AppConfig.baseUrl}/student/registration-number/$barcodeScanRes');
+        final response = await http.get(url);
 
-                  // Chama o método addExit
-                  addExit(student, selectedGuardian);
-                },
-                child: const Text('OK'),
-              ),
-            ],
-          ),
-        );
+        if (response.statusCode == 200) {
+          final responseData = jsonDecode(response.body);
+          final student = Student.fromJson(responseData);
+
+          _guardiansOptions =
+              student.guardians.map((guardian) => guardian.name).toList();
+          showDialog<String>(
+            context: context,
+            builder: (BuildContext context) => AlertDialog(
+              // title: const Text('QR Scan Result'),
+              content: Text('Registrar saída do estudante ${student.name}'),
+              actions: <Widget>[
+                DropdownButtonFormField<String>(
+                  decoration: InputDecoration(
+                    labelText: "Selecione o Responsável",
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    filled: true,
+                    fillColor: Colors.white,
+                  ),
+                  value: _selectedOption,
+                  icon: const Icon(Icons.arrow_drop_down),
+                  items: _guardiansOptions.map((String option) {
+                    return DropdownMenuItem<String>(
+                      value: option,
+                      child: Text(option),
+                    );
+                  }).toList(),
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      _selectedOption = newValue;
+                    });
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Selecione uma opção';
+                    }
+                    return null;
+                  },
+                ),
+                TextButton(
+                  onPressed: () => Navigator.pop(context, 'Cancel'),
+                  child: const Text('Cancel'),
+                ),
+                TextButton(
+                  onPressed: () async {
+                    final selectedGuardian = student.guardians.firstWhere(
+                        (guardian) => guardian.name == _selectedOption);
+
+                    final exitUrl = Uri.parse(
+                        '${AppConfig.baseUrl}/students-attendance/exit');
+                    final payload = jsonEncode({
+                      'registrationNumber': barcodeScanRes,
+                      'guardianId': selectedGuardian.id,
+                    });
+
+                    final exitResponse = await http.post(
+                      exitUrl,
+                      headers: {'Content-Type': 'application/json'},
+                      body: payload,
+                    );
+
+                    if (exitResponse.statusCode == 201) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Saída registrada com sucesso!'),
+                          duration: Duration(seconds: 2),
+                          backgroundColor: Colors.green,
+                        ),
+                      );
+                    } else {
+                      final errorMessage =
+                          jsonDecode(exitResponse.body)['message'];
+
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(errorMessage ??
+                              'Ocorreu um erro ao tentar registrar a entrada do estudante.'),
+                          duration: Duration(seconds: 2),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    }
+
+                    Navigator.pop(context, 'OK');
+                  },
+                  child: const Text('OK'),
+                ),
+              ],
+            ),
+          );
+        } else {
+          final errorMessage = jsonDecode(response.body)['message'];
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(errorMessage ??
+                  'Ocorreu um erro ao tentar registrar a enytrada do estudante.'),
+              duration: Duration(seconds: 2),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
       }
     } on PlatformException {
       barcodeScanRes = 'Failed to scan QR code';
     }
   }
 
-  void addEntry(String studentRegistration) {
-    // Busca o estudante pelo código de registro
-    final student = dummyStudents.firstWhere(
-      (student) => student.registrationNumber == studentRegistration,
-      orElse: () => Student(
-        id: 0,
-        name: 'Não encontrado',
-        registrationNumber: '',
-        birthDate: DateTime.now(),
-        classId: 0,
-        qrCode: '',
-        photo: '',
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
-        studentClass: Class(id: 0, name: 'Sem classe'),
-        guardians: [],
-        warnings: [],
-        entries: [],
-        exits: [],
-      ),
+  void addEntry(String studentRegistration) async {
+    final url = Uri.parse('${AppConfig.baseUrl}/students-attendance/entry');
+    final payload = jsonEncode({'registrationNumber': studentRegistration});
+
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: payload,
     );
-    // Adiciona entrada à lista de entradas
-    dummyStudentEntry.add(StudentEntry(
-      id: dummyStudentEntry.length + 1,
-      studentId: student.id,
-      student: student,
-      entryAt: DateTime.now(),
-      createdAt: DateTime.now(),
-      updatedAt: DateTime.now(),
-    ));
-    // Exibe mensagem informando que a entrada foi registrada
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          student.id != 0
-              ? 'Entrada registrada para o estudante ${student.name}!'
-              : 'Estudante não encontrado!',
+
+    if (response.statusCode == 201) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Entrada registrada com sucesso!'),
+          duration: Duration(seconds: 2),
+          backgroundColor: Colors.green,
         ),
-        duration: Duration(seconds: 2),
-      ),
-    );
+      );
+    } else {
+      final errorMessage = jsonDecode(response.body)['message'];
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(errorMessage ??
+              'Ocorreu um erro ao tentar registrar a enytrada do estudante.'),
+          duration: Duration(seconds: 2),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 
   Future<void> entryScan() async {
@@ -251,7 +276,6 @@ class _HomeScreenState extends State<HomeScreen> {
       scanResult = barcodeScanRes;
     });
   }
-  
 
   @override
   Widget build(BuildContext context) {
@@ -287,7 +311,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     child: ProfileDisplay(
                       name: u.name,
-                      classOrInstitution: 
+                      classOrInstitution:
                           u.employee?.occupation?.name ?? 'Não informado',
                     ),
                   ),
