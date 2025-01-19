@@ -1,12 +1,13 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-import 'dart:convert';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:tcc_app/config.dart';
 import 'package:tcc_app/models/guardian.dart';
 import 'package:tcc_app/models/student.dart';
 import 'package:tcc_app/screens/components/global/app_drawer.dart';
-
 import '../components/entry_and_exit_form/entry_and_exit.dart';
 
 class EntryAndExitForm extends StatefulWidget {
@@ -46,7 +47,7 @@ class _EntryAndExitFormState extends State<EntryAndExitForm>
       setState(() {
         studentIdentified = Student.fromJson(responseData);
         studentGuardians = studentIdentified!.guardians;
-        _selectedOption = null;
+        _selectedOption = null; // Reset the selected guardian
       });
     } else {
       setState(() {
@@ -88,7 +89,7 @@ class _EntryAndExitFormState extends State<EntryAndExitForm>
 
     if (response.statusCode == 201) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Registro de entrada efetuado com sucesso.")),
+        SnackBar(content: Text('Entrada registrada com sucesso.')),
       );
       Navigator.of(context).pop('success');
     } else {
@@ -137,7 +138,7 @@ class _EntryAndExitFormState extends State<EntryAndExitForm>
 
     if (response.statusCode == 201) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Registro de saída efetuado com sucesso.")),
+        SnackBar(content: Text('Entrada registrada com sucesso.')),
       );
       Navigator.of(context).pop('success');
     } else {
@@ -149,6 +150,22 @@ class _EntryAndExitFormState extends State<EntryAndExitForm>
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(errorMessage)),
       );
+    }
+  }
+
+  Future<void> _scanQRCode() async {
+    String barcodeScanRes;
+    try {
+      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
+          '#ff6666', 'Cancel', true, ScanMode.QR);
+      if (barcodeScanRes != '-1') {
+        setState(() {
+          rNController.text = barcodeScanRes;
+        });
+        _fetchStudent();
+      }
+    } on PlatformException {
+      barcodeScanRes = 'Failed to get platform version.';
     }
   }
 
@@ -201,17 +218,27 @@ class _EntryAndExitFormState extends State<EntryAndExitForm>
                       padding: EdgeInsets.symmetric(
                           horizontal: horizontalPadding,
                           vertical: verticalPadding),
-                      child: TextFormField(
-                        controller: rNController,
-                        decoration: const InputDecoration(
-                          fillColor: Colors.white,
-                          filled: true,
-                          border: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(30))),
-                          hintText: '',
-                          labelText: 'N° Matricula',
-                        ),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: TextFormField(
+                              controller: rNController,
+                              decoration: const InputDecoration(
+                                fillColor: Colors.white,
+                                filled: true,
+                                border: OutlineInputBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(30))),
+                                hintText: '',
+                                labelText: 'N° Matricula',
+                              ),
+                            ),
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.qr_code_scanner),
+                            onPressed: _scanQRCode,
+                          ),
+                        ],
                       ),
                     ),
                     EntryAndExit(
@@ -261,17 +288,27 @@ class _EntryAndExitFormState extends State<EntryAndExitForm>
                       padding: EdgeInsets.symmetric(
                           horizontal: horizontalPadding,
                           vertical: verticalPadding),
-                      child: TextFormField(
-                        controller: rNController,
-                        decoration: const InputDecoration(
-                          fillColor: Colors.white,
-                          filled: true,
-                          border: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(30))),
-                          hintText: '',
-                          labelText: 'N° Matricula',
-                        ),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: TextFormField(
+                              controller: rNController,
+                              decoration: const InputDecoration(
+                                fillColor: Colors.white,
+                                filled: true,
+                                border: OutlineInputBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(30))),
+                                hintText: '',
+                                labelText: 'N° Matricula',
+                              ),
+                            ),
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.qr_code_scanner),
+                            onPressed: _scanQRCode,
+                          ),
+                        ],
                       ),
                     ),
                     EntryAndExit(
