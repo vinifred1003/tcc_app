@@ -5,31 +5,35 @@ import 'package:tcc_app/models/student.dart';
 class StudentExit extends Attendance {
   int guardianId;
   DateTime exitAt;
-  DateTime createdAt;
-  DateTime updatedAt;
-  Guardian guardian;
+  DateTime? createdAt;
+  DateTime? updatedAt;
+  Guardian? guardian;
 
   StudentExit({
     required super.id,
     required super.studentId,
-    required super.student,
+    super.student,
     required this.guardianId,
     required this.exitAt,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.guardian,
+    this.createdAt,
+    this.updatedAt,
+    this.guardian,
   });
 
   factory StudentExit.fromJson(Map<String, dynamic> json) {
     return StudentExit(
       id: json['id'],
-      studentId: json['student_id'],
-      guardianId: json['guardian_id'],
-      exitAt: DateTime.parse(json['exit_at']),
-      createdAt: DateTime.parse(json['created_at']),
-      updatedAt: DateTime.parse(json['updated_at']),
-      student: Student.fromJson(json['student']),
-      guardian: Guardian.fromJson(json['guardian']),
+      studentId: json['studentId'],
+      guardianId: json['guardianId'],
+      exitAt: DateTime.parse(json['exitAt']),
+      createdAt:
+          json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
+      updatedAt:
+          json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : null,
+      student:
+          json['student'] != null ? Student.fromJson(json['student']) : null,
+      guardian:
+          json['guardian'] != null ? Guardian.fromJson(json['guardian']) : null,
     );
   }
 }

@@ -1,14 +1,15 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-import 'package:tcc_app/data/dummy_data.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:tcc_app/config.dart';
 import 'package:tcc_app/models/guardian.dart';
 import 'package:tcc_app/models/student.dart';
-import 'package:tcc_app/models/student_entry.dart';
-import 'package:tcc_app/models/student_exit.dart';
 import 'package:tcc_app/screens/components/global/app_drawer.dart';
-
 import '../components/entry_and_exit_form/entry_and_exit.dart';
+
 class EntryAndExitForm extends StatefulWidget {
   const EntryAndExitForm({super.key});
 
@@ -28,59 +29,87 @@ class _EntryAndExitFormState extends State<EntryAndExitForm>
   final TextEditingController selectedDateController = TextEditingController();
   final TextEditingController selectedHourController = TextEditingController();
 
-  _submitEntryForm() {
+  Future<void> _fetchStudent() async {
+    final registrationNumber = rNController.text;
+    if (registrationNumber.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Por favor, preencha o número de matrícula.')),
+      );
+      return;
+    }
+
+    final url = Uri.parse(
+        '${AppConfig.baseUrl}/student/registration-number/$registrationNumber');
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      final responseData = jsonDecode(response.body);
+      setState(() {
+        studentIdentified = Student.fromJson(responseData);
+        studentGuardians = studentIdentified!.guardians;
+        _selectedOption = null; // Reset the selected guardian
+      });
+    } else {
+      setState(() {
+        studentIdentified = null;
+        studentGuardians = [];
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Estudante não encontrado.')),
+      );
+    }
+  }
+
+  Future<void> _submitEntryForm() async {
     final registrationNumber = rNController.text;
     final date = selectedDateController.text;
     final hour = selectedHourController.text;
-    print(registrationNumber);
-    print(date);
-    print(hour);
+
     if (registrationNumber.isEmpty || date.isEmpty || hour.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Nenhum campo pode estar vazio.')),
       );
       return;
     }
+
     final completeDate = date + " " + hour;
-    print(completeDate);
     DateTime parsedDate = _dateFormat.parse(completeDate);
 
-    Student? student;
-    try {
-      student = dummyStudents.firstWhere(
-        (student) => student.registrationNumber == registrationNumber,
-      );
-    } catch (e) {
-      student = null;
-    }
-    if (student == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Estudante não encontrado.')),
-      );
-      return;
-    }
+    final url = Uri.parse('${AppConfig.baseUrl}/students-attendance/entry');
+    final response = await http.post(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'entryAt': parsedDate.toIso8601String(),
+        'registrationNumber': registrationNumber,
+      }),
+    );
 
-    final StudentEntry newStudentEntry = StudentEntry(
-        id: dummyStudentEntry.length + 1,
-        studentId: student.id,
-        student: student,
-        entryAt: parsedDate,
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now());
-    
-    Navigator.of(context).pop(newStudentEntry);
+    if (response.statusCode == 201) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Entrada registrada com sucesso.')),
+      );
+      Navigator.of(context).pop('success');
+    } else {
+      final responseData = json.decode(response.body);
+      final errorMessage = responseData.containsKey('message')
+          ? responseData['message']
+          : 'Erro ao registrar entrada.';
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(errorMessage)),
+      );
+    }
   }
 
-  
-
-  _submitExitForm() {
+  Future<void> _submitExitForm() async {
     final registrationNumber = rNController.text;
     final date = selectedDateController.text;
     final hour = selectedHourController.text;
     final guardian = _selectedOption;
-    print(registrationNumber);
-    print(date);
-    print(hour);
+
     if (registrationNumber.isEmpty ||
         date.isEmpty ||
         hour.isEmpty ||
@@ -90,38 +119,55 @@ class _EntryAndExitFormState extends State<EntryAndExitForm>
       );
       return;
     }
+
     final completeDate = date + " " + hour;
     DateTime parsedDate = _dateFormat.parse(completeDate);
-    Student? student;
-    try {
-      student = dummyStudents.firstWhere(
-        (student) => student.registrationNumber == registrationNumber,
-      );
-    } catch (e) {
-      student = null;
-    }
-    if (student == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Estudante não encontrado.')),
-      );
-      return;
-    }
 
-    final StudentExit newStudentExit = StudentExit(
-        id: dummyStudentEntry.length + 1,
-        studentId: student.id,
-        guardianId: guardian.id,
-        student: student,
-        exitAt: parsedDate,
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
-        guardian: guardian);
-    Navigator.of(context).pop(newStudentExit);
+    final url = Uri.parse('${AppConfig.baseUrl}/students-attendance/exit');
+    final response = await http.post(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, dynamic>{
+        'exitAt': parsedDate.toIso8601String(),
+        'registrationNumber': registrationNumber,
+        'guardianId': guardian.id,
+      }),
+    );
+
+    if (response.statusCode == 201) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Entrada registrada com sucesso.')),
+      );
+      Navigator.of(context).pop('success');
+    } else {
+      final responseData = json.decode(response.body);
+      final errorMessage = responseData.containsKey('message')
+          ? responseData['message']
+          : 'Erro ao registrar saída.';
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(errorMessage)),
+      );
+    }
   }
 
-  
-
-
+  Future<void> _scanQRCode() async {
+    String barcodeScanRes;
+    try {
+      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
+          '#ff6666', 'Cancel', true, ScanMode.QR);
+      if (barcodeScanRes != '-1') {
+        setState(() {
+          rNController.text = barcodeScanRes;
+        });
+        _fetchStudent();
+      }
+    } on PlatformException {
+      barcodeScanRes = 'Failed to get platform version.';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -152,7 +198,6 @@ class _EntryAndExitFormState extends State<EntryAndExitForm>
               ),
               Tab(
                 icon: Icon(Icons.exit_to_app, color: Colors.white),
-                
                 child: Text(
                   "Saida",
                   style: TextStyle(
@@ -175,23 +220,7 @@ class _EntryAndExitFormState extends State<EntryAndExitForm>
                           vertical: verticalPadding),
                       child: TextFormField(
                         controller: rNController,
-                        onFieldSubmitted: (String value) {
-                          try {
-                            // Find the student based on the entered registration number
-                            studentIdentified = dummyStudents.firstWhere(
-                              (student) => student.registrationNumber == value,
-                            );
-                          } catch (e) {
-                            // Handle the case where no student is found
-                            studentIdentified = null;
-                            studentGuardians = [];
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                  content: Text('Estudante não encontrado.')),
-                            );
-                          }
-                        },
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           fillColor: Colors.white,
                           filled: true,
                           border: OutlineInputBorder(
@@ -199,6 +228,10 @@ class _EntryAndExitFormState extends State<EntryAndExitForm>
                                   BorderRadius.all(Radius.circular(30))),
                           hintText: '',
                           labelText: 'N° Matricula',
+                          suffixIcon: IconButton(
+                            icon: Icon(Icons.qr_code_scanner),
+                            onPressed: _scanQRCode,
+                          ),
                         ),
                       ),
                     ),
@@ -208,12 +241,19 @@ class _EntryAndExitFormState extends State<EntryAndExitForm>
                       padding: EdgeInsets.symmetric(vertical: verticalPadding),
                       child: ElevatedButton(
                         onPressed: () {
-                          _submitEntryForm();
                           if (_EntryFormKey.currentState!.validate()) {
-                            
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Processing Data')),
+                            showDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              builder: (BuildContext context) {
+                                return const Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                              },
                             );
+                            _submitEntryForm().then((_) {
+                              Navigator.of(context).pop();
+                            });
                           }
                         },
                         style: ElevatedButton.styleFrom(
@@ -244,30 +284,7 @@ class _EntryAndExitFormState extends State<EntryAndExitForm>
                           vertical: verticalPadding),
                       child: TextFormField(
                         controller: rNController,
-                        onFieldSubmitted: (String value) {
-                          setState(() {
-                            try {
-                              // Find the student based on the entered registration number
-                              studentIdentified = dummyStudents.firstWhere(
-                                (student) =>
-                                    student.registrationNumber == value,
-                              );
-                              // Update the list of guardians
-                              studentGuardians = studentIdentified!.guardians;
-                              // Reset the selected option
-                              _selectedOption = null;
-                            } catch (e) {
-                              // Handle the case where no student is found
-                              studentIdentified = null;
-                              studentGuardians = [];
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                    content: Text('Estudante não encontrado.')),
-                              );
-                            }
-                          });
-                        },
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           fillColor: Colors.white,
                           filled: true,
                           border: OutlineInputBorder(
@@ -275,44 +292,57 @@ class _EntryAndExitFormState extends State<EntryAndExitForm>
                                   BorderRadius.all(Radius.circular(30))),
                           hintText: '',
                           labelText: 'N° Matricula',
+                          suffixIcon: IconButton(
+                            icon: Icon(Icons.qr_code_scanner),
+                            onPressed: _scanQRCode,
+                          ),
                         ),
                       ),
                     ),
                     EntryAndExit(
-                        
                         selectedDateController, selectedHourController),
                     Padding(
                       padding: EdgeInsets.symmetric(
                           horizontal: horizontalPadding,
                           vertical: verticalPadding),
-                      child: DropdownButtonFormField<Guardian>(
-                        decoration: InputDecoration(
-                          labelText: "Selecione o Responsável",
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: DropdownButtonFormField<Guardian>(
+                              decoration: InputDecoration(
+                                labelText: "Selecione o Responsável",
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(30),
+                                ),
+                                filled: true,
+                                fillColor: Colors.white,
+                              ),
+                              value: _selectedOption,
+                              icon: const Icon(Icons.arrow_drop_down),
+                              items: studentGuardians.map((Guardian option) {
+                                return DropdownMenuItem<Guardian>(
+                                  value: option,
+                                  child: Text(option.name),
+                                );
+                              }).toList(),
+                              onChanged: (Guardian? newValue) {
+                                setState(() {
+                                  _selectedOption = newValue;
+                                });
+                              },
+                              validator: (value) {
+                                if (value == null || value.name.isEmpty) {
+                                  return 'Selecione uma opção';
+                                }
+                                return null;
+                              },
+                            ),
                           ),
-                          filled: true,
-                          fillColor: Colors.white,
-                        ),
-                        value: _selectedOption,
-                        icon: const Icon(Icons.arrow_drop_down),
-                        items: studentGuardians.map((Guardian option) {
-                          return DropdownMenuItem<Guardian>(
-                            value: option,
-                            child: Text(option.name),
-                          );
-                        }).toList(),
-                        onChanged: (Guardian? newValue) {
-                          setState(() {
-                            _selectedOption = newValue;
-                          });
-                        },
-                        validator: (value) {
-                          if (value == null || value.name.isEmpty) {
-                            return 'Selecione uma opção';
-                          }
-                          return null;
-                        },
+                          IconButton(
+                            icon: Icon(Icons.refresh),
+                            onPressed: _fetchStudent,
+                          ),
+                        ],
                       ),
                     ),
                     Padding(
@@ -320,10 +350,18 @@ class _EntryAndExitFormState extends State<EntryAndExitForm>
                       child: ElevatedButton(
                         onPressed: () {
                           if (_ExitFormKey.currentState!.validate()) {
-                            _submitExitForm();
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Processing Data')),
+                            showDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              builder: (BuildContext context) {
+                                return const Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                              },
                             );
+                            _submitExitForm().then((_) {
+                              Navigator.of(context).pop();
+                            });
                           }
                         },
                         style: ElevatedButton.styleFrom(
@@ -345,7 +383,6 @@ class _EntryAndExitFormState extends State<EntryAndExitForm>
             ),
           ],
         ),
-       
       ),
     );
   }

@@ -1,16 +1,15 @@
-import 'package:intl/intl.dart';
+import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:tcc_app/data/dummy_data.dart';
+import 'package:flutter/services.dart';
+import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:tcc_app/config.dart';
 import 'package:tcc_app/models/class.dart';
 import 'package:tcc_app/models/employee.dart';
 import 'package:tcc_app/models/student.dart';
-import 'package:tcc_app/models/student_warning.dart';
 import 'package:tcc_app/screens/components/global/app_drawer.dart';
 import 'package:tcc_app/screens/components/global/base_app_bar.dart';
-import 'package:flutter/services.dart';
-
-const Duration fakeAPIDuration = Duration(seconds: 1);
 
 class WarningForm extends StatefulWidget {
   const WarningForm({super.key});
@@ -22,32 +21,72 @@ class WarningForm extends StatefulWidget {
 class _WarningFormState extends State<WarningForm> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _controllerDate = TextEditingController();
-  final TextEditingController _controllerEmissor = TextEditingController();
   final TextEditingController _controllerDescricao = TextEditingController();
   final List<String> _studentsSelected = [];
   final List<Student> _studentsEnvolved = [];
   String? _searchingWithQuery;
   late Iterable<Widget> _lastOptions = <Widget>[];
-  final List<String> studentsName =
-      dummyStudents.map((student) => student.name).toList().cast<String>();
+  List<Student> students = [];
+  List<Employee> employees = [];
+  Employee? _selectedEmployee;
   DateTime _selectedDate = DateTime.now();
-  String? validateField(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Campo obrigatório';
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchData();
+  }
+
+  Future<void> _fetchData() async {
+    await Future.wait([_fetchStudents(), _fetchEmployees()]);
+  }
+
+  Future<void> _fetchStudents() async {
+    final response = await http.get(Uri.parse('${AppConfig.baseUrl}/student'));
+    if (response.statusCode == 200) {
+      final List<dynamic> data = json.decode(response.body);
+      setState(() {
+        students = data.map((json) => Student.fromJson(json)).toList();
+      });
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Erro ao carregar estudantes.'),
+          duration: Duration(seconds: 3),
+          backgroundColor: Colors.red,
+        ),
+      );
     }
-    return null;
+  }
+
+  Future<void> _fetchEmployees() async {
+    final response = await http.get(Uri.parse('${AppConfig.baseUrl}/employee'));
+    if (response.statusCode == 200) {
+      final List<dynamic> data = json.decode(response.body);
+      setState(() {
+        employees = data.map((json) => Employee.fromJson(json)).toList();
+        print(employees);
+      });
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Erro ao carregar funcionários.'),
+          duration: Duration(seconds: 3),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 
   Future<void> warningScan() async {
     String barcodeScanRes;
     try {
-      // Inicia o fluxo de leitura do QR code
       barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
           '#ff6666', 'Cancelar', true, ScanMode.QR);
       if (!mounted) return;
 
       if (barcodeScanRes != '-1') {
-        final student = dummyStudents.firstWhere(
+        final student = students.firstWhere(
           (student) => student.registrationNumber == barcodeScanRes,
           orElse: () => Student(
             id: 0,
@@ -66,29 +105,29 @@ class _WarningFormState extends State<WarningForm> {
             exits: [],
           ),
         );
-        _studentsEnvolved.add(student);
-        setState(() {
-          _studentsSelected.add(student.name);
-        });
+        if (!_studentsSelected.contains(student.name)) {
+          // Para a apresentação, apenas 1 estudante está sendo inserido
+          _studentsEnvolved.clear();
+
+          _studentsEnvolved.add(student);
+          setState(() {
+            // Para a apresentação, apenas 1 estudante está sendo inserido
+            _studentsSelected.clear();
+
+            _studentsSelected.add(student.name);
+          });
+        }
       }
     } on PlatformException {
       print('Erro ao tentar acessar a câmera para leitura do QR code.');
     }
   }
 
-  int getEmployeeIdByName(String name) {
-    final employee = dummyEmployee.firstWhere(
-      (employee) => employee.name.toLowerCase() == name.toLowerCase(),
-    );
-    print(employee.name);
-    return employee.id;
-  }
-
-  Employee getEmployeeByName(String name) {
-    final employee = dummyEmployee.firstWhere(
-      (employee) => employee.name.toLowerCase() == name.toLowerCase(),
-    );
-    return employee;
+  String? validateField(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Campo obrigatório';
+    }
+    return null;
   }
 
   _showDatePicker() {
@@ -108,6 +147,53 @@ class _WarningFormState extends State<WarningForm> {
     });
   }
 
+  Future<void> _submitWarningForm() async {
+    if (_formKey.currentState!.validate()) {
+      final DateTime issuedAtDate =
+          DateFormat('dd/MM/y').parse(_controllerDate.text);
+      final List<int> studentIds =
+          _studentsEnvolved.map((student) => student.id).toList();
+
+      final url = Uri.parse('${AppConfig.baseUrl}/students-warning');
+      final response = await http.post(
+        url,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, dynamic>{
+          'issuedBy': _selectedEmployee!.id,
+          'issuedAt': issuedAtDate.toIso8601String(),
+          'reason': _controllerDescricao.text,
+          'studentId': studentIds[0],
+        }),
+      );
+
+      if (response.statusCode == 201) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Advertência registrada com sucesso.'),
+            duration: Duration(seconds: 3),
+            backgroundColor: Colors.green,
+          ),
+        );
+        Navigator.of(context).pop();
+      } else {
+        final responseData = json.decode(response.body);
+        final errorMessage = responseData.containsKey('message')
+            ? responseData['message']
+            : 'Erro ao registrar advertência.';
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(errorMessage),
+            duration: Duration(seconds: 3),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final double horizontalPadding = MediaQuery.of(context).size.width * 0.02;
@@ -125,16 +211,32 @@ class _WarningFormState extends State<WarningForm> {
               Padding(
                 padding: EdgeInsets.symmetric(
                     horizontal: horizontalPadding, vertical: verticalPadding),
-                child: TextFormField(
-                  validator: validateField,
+                child: DropdownButtonFormField<Employee>(
                   decoration: const InputDecoration(
                     fillColor: Colors.white,
                     filled: true,
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(30))),
-                    hintText: '',
-                    labelText: ' Nome Completo do Emissor da Ocorrência',
+                    labelText: 'Emissor da Ocorrência',
                   ),
+                  value: _selectedEmployee,
+                  items: employees.map((Employee employee) {
+                    return DropdownMenuItem<Employee>(
+                      value: employee,
+                      child: Text(employee.name),
+                    );
+                  }).toList(),
+                  onChanged: (Employee? newValue) {
+                    setState(() {
+                      _selectedEmployee = newValue;
+                    });
+                  },
+                  validator: (value) {
+                    if (value == null) {
+                      return 'Selecione um emissor';
+                    }
+                    return null;
+                  },
                 ),
               ),
               Padding(
@@ -200,15 +302,22 @@ class _WarningFormState extends State<WarningForm> {
                           return _lastOptions;
                         }
 
-                        _lastOptions = List<ListTile>.generate(
-                            studentsName.length, (int index) {
-                          final String item = studentsName[index];
+                        _lastOptions = List<ListTile>.generate(students.length,
+                            (int index) {
+                          final String item = students[index].name;
                           return ListTile(
                             title: Text(item),
                             onTap: () {
-                              setState(() {
-                                _studentsSelected.add(item);
-                              });
+                              if (!_studentsSelected.contains(item)) {
+                                setState(() {
+                                  // Para a apresentação, apenas 1 estudante está sendo inserido
+                                  _studentsEnvolved.clear();
+                                  _studentsSelected.clear();
+
+                                  _studentsSelected.add(item);
+                                  _studentsEnvolved.add(students[index]);
+                                });
+                              }
                               controller.closeView(null);
                             },
                           );
@@ -226,7 +335,8 @@ class _WarningFormState extends State<WarningForm> {
                           itemBuilder: (ctx, index) {
                             return SizedBox(
                               child: Container(
-                                width: 80,
+                                // width: 80,
+                                width: MediaQuery.of(context).size.width * 0.8,
                                 margin: EdgeInsets.all(horizontalPadding),
                                 child: Card(
                                   child: Padding(
@@ -238,11 +348,13 @@ class _WarningFormState extends State<WarningForm> {
                                       children: [
                                         Expanded(
                                           child: Text(
-                                            _studentsSelected[index][0]
-                                                .toUpperCase(),
+                                            // Para a apresentação, apenas 1 estudante está sendo inserido
+                                            // _studentsSelected[index][0]
+                                            //     .toUpperCase(),
+                                            _studentsSelected[index],
                                             overflow: TextOverflow.ellipsis,
                                             style: TextStyle(
-                                              fontSize: 30,
+                                              fontSize: 20,
                                               color: Theme.of(context)
                                                   .colorScheme
                                                   .primary,
@@ -252,6 +364,10 @@ class _WarningFormState extends State<WarningForm> {
                                         IconButton(
                                           onPressed: () {
                                             setState(() {
+                                              _studentsEnvolved.removeWhere(
+                                                  (student) =>
+                                                      student.name ==
+                                                      _studentsSelected[index]);
                                               _studentsSelected.removeAt(index);
                                             });
                                           },
@@ -277,6 +393,7 @@ class _WarningFormState extends State<WarningForm> {
                 padding: EdgeInsets.symmetric(
                     horizontal: horizontalPadding, vertical: verticalPadding),
                 child: TextFormField(
+                  controller: _controllerDescricao,
                   validator: validateField,
                   keyboardType: TextInputType.multiline,
                   maxLines: 5,
@@ -293,28 +410,7 @@ class _WarningFormState extends State<WarningForm> {
               Padding(
                 padding: EdgeInsets.symmetric(vertical: verticalPadding),
                 child: ElevatedButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Processing Data')),
-                      );
-                      final DateTime issuedAtDate =
-                          DateFormat('dd/MM/y').parse(_controllerDate.text);
-                      dummyWarnings.add(StudentWarning(
-                          id: dummyWarnings.length + 1,
-                          studentId: _studentsEnvolved[0].id,
-                          issuedBy:
-                              getEmployeeIdByName(_controllerEmissor.text),
-                          issuedAt: issuedAtDate,
-                          reason: _controllerDescricao.text,
-                          severity: "Grave",
-                          createdAt: DateTime.now(),
-                          updatedAt: DateTime.now(),
-                          student: _studentsEnvolved[0],
-                          issuedByEmployee:
-                              getEmployeeByName(_controllerEmissor.text)));
-                    }
-                  },
+                  onPressed: _submitWarningForm,
                   style: ElevatedButton.styleFrom(
                     backgroundColor:
                         Theme.of(context).textTheme.labelLarge?.color,
@@ -334,5 +430,3 @@ class _WarningFormState extends State<WarningForm> {
     );
   }
 }
-
-

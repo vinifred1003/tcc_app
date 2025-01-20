@@ -1,25 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:tcc_app/data/dummy_data.dart';
-import 'package:tcc_app/models/user.dart';
-import 'package:tcc_app/screens/editScreens/edit_entry.dart';
-import 'package:tcc_app/screens/editScreens/edit_employee.dart';
+import 'package:http/http.dart';
 
-class ProfileDisplay extends StatefulWidget {
+class StudentProfileDisplay extends StatelessWidget {
   final String name;
   final String classOrInstitution;
   final String? jobPosition;
+  final Response? photoResponse;
 
-  const ProfileDisplay(
-      {super.key,
-      required this.name,
-      required this.classOrInstitution,
-      this.jobPosition});
+  const StudentProfileDisplay({
+    super.key,
+    required this.name,
+    required this.classOrInstitution,
+    this.jobPosition,
+    this.photoResponse,
+  });
 
-  @override
-  State<ProfileDisplay> createState() => _ProfileDisplayState();
-}
-
-class _ProfileDisplayState extends State<ProfileDisplay> {
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
@@ -39,20 +34,25 @@ class _ProfileDisplayState extends State<ProfileDisplay> {
               width: 150,
               height: 150,
               color: Colors.white10, // Added background to ensure visibility
-              child: const Opacity(
-                opacity: 0.85,
-                child: Image(
-                  image: AssetImage('assets/images/foto_perfil.png'),
-                  fit: BoxFit.cover,
-                ),
-              ),
+              child: photoResponse != null && photoResponse!.statusCode == 200
+                  ? CircleAvatar(
+                      radius: 30,
+                      backgroundImage: MemoryImage(photoResponse!.bodyBytes),
+                    )
+                  : const Opacity(
+                      opacity: 0.85,
+                      child: Image(
+                        image: AssetImage('assets/images/foto_perfil.png'),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
             ),
           ),
           const SizedBox(height: 16), // Added spacing
           FittedBox(
             fit: BoxFit.scaleDown,
             child: Text(
-              widget.name,
+              name,
               textAlign: TextAlign.center,
               style: const TextStyle(
                 fontSize: 25,
@@ -71,7 +71,7 @@ class _ProfileDisplayState extends State<ProfileDisplay> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    widget.jobPosition ?? "Educando",
+                    jobPosition ?? "Educando",
                     style: const TextStyle(
                       fontSize: 18,
                       color: Colors.white,
@@ -85,7 +85,7 @@ class _ProfileDisplayState extends State<ProfileDisplay> {
                     ),
                   ),
                   Text(
-                    widget.classOrInstitution,
+                    classOrInstitution,
                     style: const TextStyle(
                       fontSize: 18,
                       color: Colors.white,

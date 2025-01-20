@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-
 class EntryAndExit extends StatefulWidget {
-final TextEditingController selectedDateController;
+  final TextEditingController selectedDateController;
   final TextEditingController selectedHourController;
-  
+
   EntryAndExit(this.selectedDateController, this.selectedHourController,
-      
       {Key? key})
       : super(key: key);
 
@@ -16,11 +14,8 @@ final TextEditingController selectedDateController;
 }
 
 class _EntryAndExitState extends State<EntryAndExit> {
-DateTime _selectedDate = DateTime.now();
+  DateTime _selectedDate = DateTime.now();
   TimeOfDay _selectedHour = TimeOfDay.now();
- 
-  
-    
 
   // Validator function
   String? validateField(String? value) {
@@ -91,10 +86,9 @@ DateTime _selectedDate = DateTime.now();
       });
     });
   }
-  
+
   @override
   Widget build(BuildContext context) {
-   
     final double horizontalPadding = MediaQuery.of(context).size.width * 0.02;
     final double verticalPadding = MediaQuery.of(context).size.height * 0.02;
 
@@ -109,17 +103,17 @@ DateTime _selectedDate = DateTime.now();
             controller: widget.selectedDateController,
             validator: validateField,
             decoration: InputDecoration(
-                fillColor: Colors.white,
-                filled: true,
-                border: const OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(30))),
-                labelText: 'Data do Ocorrido',
-                suffixIcon: IconButton(
-                    onPressed: _showDatePicker,
-                    icon: const Icon(
-                      Icons.calendar_today,
-                      color: Colors.black,
-                      size: 30,
+              fillColor: Colors.white,
+              filled: true,
+              border: const OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(30))),
+              labelText: 'Data do Ocorrido',
+              suffixIcon: IconButton(
+                onPressed: _showDatePicker,
+                icon: const Icon(
+                  Icons.calendar_today,
+                  color: Colors.black,
+                  size: 30,
                 ),
               ),
             ),
@@ -142,7 +136,7 @@ DateTime _selectedDate = DateTime.now();
               suffixIcon: IconButton(
                 onPressed: _showTimePicker,
                 icon: const Icon(
-                  Icons.hourglass_bottom,
+                  Icons.access_alarm,
                   color: Colors.black,
                   size: 30,
                 ),

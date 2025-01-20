@@ -19,10 +19,10 @@ class Class {
     return Class(
       id: json['id'],
       name: json['name'],
-      createdAt: DateTime.parse(json['created_at']),
-      updatedAt: DateTime.parse(json['updated_at']),
-      students:
-          (json['students'] as List).map((i) => Student.fromJson(i)).toList(),
+      // createdAt: DateTime.parse(json['created_at']),
+      // updatedAt: DateTime.parse(json['updated_at']),
+      // students:
+      //     (json['students'] as List).map((i) => Student.fromJson(i)).toList(),
     );
   }
 }

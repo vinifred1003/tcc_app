@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:tcc_app/models/class.dart';
 import 'package:tcc_app/models/guardian.dart';
 import 'package:tcc_app/models/student_entry.dart';
@@ -19,6 +21,8 @@ class Student {
   List<StudentWarning>? warnings;
   List<StudentEntry>? entries;
   List<StudentExit>? exits;
+
+  Uint8List? photoBytes;
 
   Student({
     required this.id,
@@ -54,8 +58,9 @@ class Student {
       updatedAt: json['updatedAt'] != null
           ? DateTime.parse(json['updatedAt'])
           : DateTime.now(),
-      studentClass:
-          json['class'] != null ? Class.fromJson(json['class']) : null,
+      studentClass: json['studentClass'] != null
+          ? Class.fromJson(json['studentClass'])
+          : null,
       guardians: json['guardians'] != null
           ? (json['guardians'] as List)
               .map((i) => Guardian.fromJson(i))
