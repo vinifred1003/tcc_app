@@ -19,7 +19,6 @@ class _EmployeeFormState extends State<EmployeeForm> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _roleController = TextEditingController();
 
   late DateTime _selectedDate;
 
@@ -61,11 +60,7 @@ class _EmployeeFormState extends State<EmployeeForm> {
 
   void _submitForm() {
     if (_formKey.currentState!.validate()) {
-      final newEmployee = Employee(
-          id: dummyEmployee.length + 1,
-          name: _nameController.text,
-          admissionDate: _selectedDate,
-          occupationId: _selectedOccupation!.id);
+      
 
       final newUser = User(
         id: dummyUser.length + 1,
@@ -75,6 +70,16 @@ class _EmployeeFormState extends State<EmployeeForm> {
         roleId: _selectedRole?.id ?? UserRolesEnum.employee,
         role: _selectedRole ?? dummyUserRoles[1],
       );
+
+      final newEmployee = Employee(
+          id: dummyEmployee.length + 1,
+          name: _nameController.text,
+          admissionDate: _selectedDate,
+          occupationId: _selectedOccupation!.id,
+          user: newUser,
+          occupation: _selectedOccupation);
+          
+
       final List twoClassList = [newUser, newEmployee];
 
       Navigator.of(context).pop(twoClassList);
@@ -131,6 +136,7 @@ class _EmployeeFormState extends State<EmployeeForm> {
                       horizontal: horizontalPadding, vertical: verticalPadding),
                   child: TextFormField(
                     validator: validateField,
+                    controller: _nameController,
                     decoration: const InputDecoration(
                       fillColor: Colors.white,
                       filled: true,
@@ -146,6 +152,7 @@ class _EmployeeFormState extends State<EmployeeForm> {
                       horizontal: horizontalPadding, vertical: verticalPadding),
                   child: TextFormField(
                     validator: validateField,
+                    controller: _emailController,
                     decoration: const InputDecoration(
                       fillColor: Colors.white,
                       filled: true,
@@ -249,6 +256,7 @@ class _EmployeeFormState extends State<EmployeeForm> {
                       horizontal: horizontalPadding, vertical: verticalPadding),
                   child: TextFormField(
                     validator: validateField,
+                    controller: _passwordController,
                     decoration: const InputDecoration(
                       fillColor: Colors.white,
                       filled: true,

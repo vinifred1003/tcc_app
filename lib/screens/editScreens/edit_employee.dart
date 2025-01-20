@@ -47,11 +47,7 @@ class _EditEmployeeState extends State<EditEmployee> {
     if (_formKey.currentState!.validate()) {
       final u = widget.employee.user;
 
-      final employeeEdited = Employee(
-          id: widget.employee.id,
-          name: _nameController.text,
-          admissionDate: _selectedDate,
-          occupationId: _selectedOccupation!.id);
+      
 
       final userEdited = User(
         id: widget.employee.user?.id ?? 1,
@@ -59,10 +55,16 @@ class _EditEmployeeState extends State<EditEmployee> {
         email: _emailController.text,
         password: _passwordController.text,
         roleId: u?.roleId ?? UserRolesEnum.employee,
-        
         updatedAt: DateTime.now(),
         role: u?.role ?? dummyUserRoles[1],
       );
+      final employeeEdited = Employee(
+          id: widget.employee.id,
+          name: _nameController.text,
+          admissionDate: _selectedDate,
+          occupationId: _selectedOccupation!.id,
+          user: userEdited,
+          occupation: _selectedOccupation);
       final List twoClassList = [userEdited, employeeEdited];
 
       Navigator.of(context).pop(twoClassList);
@@ -122,20 +124,6 @@ class _EditEmployeeState extends State<EditEmployee> {
                     if (value == null || value.isEmpty) {
                       return 'Por favor preencha o campo do Email';
                     } 
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 16.0),
-                TextFormField(
-                  controller: _passwordController,
-                  decoration: const InputDecoration(labelText: 'Senha'),
-                  obscureText: true,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Por favor preencha o campo da Senha';
-                    } else if (value.length < 6) {
-                      return 'Senha deve ter pelo menos 6 caracteres';
-                    }
                     return null;
                   },
                 ),
