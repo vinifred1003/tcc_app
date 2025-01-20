@@ -45,12 +45,7 @@ final dummyUser = [
     roleId: UserRolesEnum.admin,
     createdAt: DateTime.now(),
     updatedAt: DateTime.now(),
-    role: UserRole(id: UserRolesEnum.admin, name: 'Professor', isAdmin: true),
-    employee: Employee(
-        id: 1,
-        name: 'Vinícius Fedrigo Frederico',
-        admissionDate: DateTime.now(),
-        occupationId: 1),
+    role: dummyUserRoles[0],
   ),
   User(
       id: 2,
@@ -60,12 +55,8 @@ final dummyUser = [
       roleId: UserRolesEnum.admin,
       createdAt: DateTime.now(),
       updatedAt: DateTime.now(),
-      role: UserRole(id: UserRolesEnum.admin, name: 'Professor', isAdmin: true),
-      employee: Employee(
-          id: 2,
-          name: 'Julia Ribeiro Paiva',
-          admissionDate: DateTime.now(),
-          occupationId: 1)),
+    role: dummyUserRoles[1],
+  ),
   User(
       id: 3,
       name: 'Jhony Allan Paes',
@@ -74,7 +65,7 @@ final dummyUser = [
       roleId: UserRolesEnum.admin,
       createdAt: DateTime.now(),
       updatedAt: DateTime.now(),
-      role: UserRole(id: UserRolesEnum.admin, name: 'Professor', isAdmin: true),
+      role: dummyUserRoles[1],
       employee: Employee(
           id: 3,
           name: 'Jhony Allan Paes',
@@ -228,7 +219,10 @@ final dummyStudentEntry = [
     ),
   ),
 ];
-final dummyUserRoles = [];
+final List<UserRole> dummyUserRoles = [
+  UserRole(id: UserRolesEnum.admin, name: "Adm"),
+  UserRole(id: UserRolesEnum.employee, name: "employee"),
+];
 final dummyStudents = [
   Student(
     id: 1,
@@ -398,7 +392,7 @@ final List<Employee> dummyEmployee = [
 // Dados falsos para funcionários
   Employee(
     id: 1,
-    name: 'Ana Santos',
+    name: 'Vinicius Frederico',
     userId: dummyUser[0].id,
     admissionDate: DateTime.now().subtract(const Duration(days: 1500)),
     occupationId: 1,
@@ -410,7 +404,7 @@ final List<Employee> dummyEmployee = [
   ),
   Employee(
     id: 2,
-    name: 'Marcos Silva',
+    name: 'julia Ribeiro Paiva',
     userId: dummyUser[1].id,
     admissionDate: DateTime.now().subtract(const Duration(days: 1200)),
     occupationId: 2,

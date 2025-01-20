@@ -4,6 +4,7 @@ import 'package:tcc_app/models/employee.dart';
 import 'package:tcc_app/models/occupation.dart';
 import 'package:tcc_app/models/user.dart';
 import 'package:intl/intl.dart';
+import 'package:tcc_app/models/user_role.dart';
 
 class EditEmployee extends StatefulWidget {
   final Employee employee;
@@ -15,16 +16,32 @@ class EditEmployee extends StatefulWidget {
 
 class _EditEmployeeState extends State<EditEmployee> {
   final _formKey = GlobalKey<FormState>();
-
   // Controllers for input fields
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _roleController = TextEditingController();
+  late TextEditingController _nameController = TextEditingController();
+  late TextEditingController _emailController = TextEditingController();
+  late TextEditingController _passwordController = TextEditingController();
+  late TextEditingController _roleController = TextEditingController();
 
-  late DateTime _selectedDate;
+  late DateTime _selectedDate; 
 
   late Occupation? _selectedOccupation;
+
+  void initState() {
+    super.initState();
+    final e = widget.employee;
+
+    _nameController = TextEditingController(text: e.name);
+    _emailController =
+        TextEditingController(text: e.user?.email ?? "Não informado");
+    _passwordController =
+        TextEditingController(text: e.user?.password ?? "Não informado");
+    _roleController =
+        TextEditingController(text: e.user?.role.name ?? "Não informado");
+
+    _selectedDate = e.admissionDate;
+
+    _selectedOccupation = e.occupation;
+  }
 
   void _submitForm() {
     if (_formKey.currentState!.validate()) {
@@ -37,14 +54,14 @@ class _EditEmployeeState extends State<EditEmployee> {
           occupationId: _selectedOccupation!.id);
 
       final userEdited = User(
-        id: widget.employee.user!.id,
+        id: widget.employee.user?.id ?? 1,
         name: _nameController.text,
         email: _emailController.text,
         password: _passwordController.text,
-        roleId: u!.roleId,
-        createdAt: u.createdAt,
+        roleId: u?.roleId ?? UserRolesEnum.employee,
+        
         updatedAt: DateTime.now(),
-        role: u.role,
+        role: u?.role ?? dummyUserRoles[1],
       );
       final List twoClassList = [userEdited, employeeEdited];
 
@@ -104,9 +121,7 @@ class _EditEmployeeState extends State<EditEmployee> {
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Por favor preencha o campo do Email';
-                    } else if (!RegExp(r'^\S+@\S+\.\S+\$').hasMatch(value)) {
-                      return 'Por favor coloque um email válido!';
-                    }
+                    } 
                     return null;
                   },
                 ),

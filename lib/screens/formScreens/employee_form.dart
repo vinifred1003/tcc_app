@@ -1,27 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:tcc_app/data/dummy_data.dart';
+import 'package:tcc_app/models/employee.dart';
+import 'package:tcc_app/models/occupation.dart';
+import 'package:tcc_app/models/user.dart';
+import 'package:tcc_app/models/user_role.dart';
 import 'package:tcc_app/screens/components/global/app_drawer.dart';
 import 'package:tcc_app/screens/components/global/base_app_bar.dart';
 import 'package:intl/intl.dart';
 
-class ManagerSignupForm extends StatefulWidget {
-  const ManagerSignupForm({super.key});
+class EmployeeForm extends StatefulWidget {
+  const EmployeeForm({super.key});
 
   @override
-  State<ManagerSignupForm> createState() => _ManagerSignupFormState();
+  State<EmployeeForm> createState() => _EmployeeFormState();
 }
 
-class _ManagerSignupFormState extends State<ManagerSignupForm> {
+class _EmployeeFormState extends State<EmployeeForm> {
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _roleController = TextEditingController();
+
+  late DateTime _selectedDate;
+
+  Occupation? _selectedOccupation;
+
+  UserRole? _selectedRole;
 
   final _formKey = GlobalKey<FormState>();
   final List<String> rolesName = dummyOccupations
       .map((occupation) => occupation.name)
       .toList()
       .cast<String>();
-  String? _selectedOption;    
-final TextEditingController _controllerDate = TextEditingController();
-  DateTime _selectedDate = DateTime.now();
-    // Validator function
+
+  final TextEditingController _controllerDate = TextEditingController();
+  // Validator function
   String? validateField(String? value) {
     if (value == null || value.isEmpty) {
       return 'Campo obrigatório';
@@ -44,33 +57,30 @@ final TextEditingController _controllerDate = TextEditingController();
         _controllerDate.text = DateFormat('dd/MM/y').format(_selectedDate);
       });
     });
-
-    // void _submitForm() {
-    //   if (_formKey.currentState!.validate()) {
-    //     final u = widget.employee.user;
-
-    //     final employeeEdited = Employee(
-    //         id: widget.employee.id,
-    //         name: _nameController.text,
-    //         admissionDate: _selectedDate,
-    //         occupationId: _selectedOccupation!.id);
-
-    //     final userEdited = User(
-    //       id: widget.employee.user!.id,
-    //       name: _nameController.text,
-    //       email: _emailController.text,
-    //       password: _passwordController.text,
-    //       roleId: u!.roleId,
-    //       createdAt: u.createdAt,
-    //       updatedAt: DateTime.now(),
-    //       role: u.role,
-    //     );
-    //     final List twoClassList = [userEdited, employeeEdited];
-
-    //     Navigator.of(context).pop(twoClassList);
-    //   }
-    // }
   }
+
+  void _submitForm() {
+    if (_formKey.currentState!.validate()) {
+      final newEmployee = Employee(
+          id: dummyEmployee.length + 1,
+          name: _nameController.text,
+          admissionDate: _selectedDate,
+          occupationId: _selectedOccupation!.id);
+
+      final newUser = User(
+        id: dummyUser.length + 1,
+        name: _nameController.text,
+        email: _emailController.text,
+        password: _passwordController.text,
+        roleId: _selectedRole?.id ?? UserRolesEnum.employee,
+        role: _selectedRole ?? dummyUserRoles[1],
+      );
+      final List twoClassList = [newUser, newEmployee];
+
+      Navigator.of(context).pop(twoClassList);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final double horizontalPadding = MediaQuery.of(context).size.width * 0.02;
@@ -149,30 +159,63 @@ final TextEditingController _controllerDate = TextEditingController();
                 Padding(
                   padding: EdgeInsets.symmetric(
                       horizontal: horizontalPadding, vertical: verticalPadding),
-                  child: DropdownButtonFormField<String>(
+                  child: DropdownButtonFormField<Occupation>(
                     decoration: InputDecoration(
-                      labelText: "Selecione o Cargo",
+                      labelText: "Selecione o Cargo:",
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(30),
                       ),
                       filled: true,
                       fillColor: Colors.white,
                     ),
-                    value: _selectedOption,
+                    value: _selectedOccupation,
                     icon: const Icon(Icons.arrow_drop_down),
-                    items: rolesName.map((String option) {
-                      return DropdownMenuItem<String>(
+                    items: dummyOccupations.map((Occupation option) {
+                      return DropdownMenuItem<Occupation>(
                         value: option,
-                        child: Text(option),
+                        child: Text(option.name),
                       );
                     }).toList(),
-                    onChanged: (String? newValue) {
+                    onChanged: (Occupation? newValue) {
                       setState(() {
-                        _selectedOption = newValue;
+                        _selectedOccupation = newValue;
                       });
                     },
                     validator: (value) {
-                      if (value == null || value.isEmpty) {
+                      if (value == null) {
+                        return 'Selecione uma opção';
+                      }
+                      return null;
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: horizontalPadding, vertical: verticalPadding),
+                  child: DropdownButtonFormField<UserRole>(
+                    decoration: InputDecoration(
+                      labelText: "Selecione o tipo de Usuário: ",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      filled: true,
+                      fillColor: Colors.white,
+                    ),
+                    value: _selectedRole,
+                    icon: const Icon(Icons.arrow_drop_down),
+                    items: dummyUserRoles.map((UserRole option) {
+                      return DropdownMenuItem<UserRole>(
+                        value: option,
+                        child: Text(option.name),
+                      );
+                    }).toList(),
+                    onChanged: (UserRole? newValue) {
+                      setState(() {
+                        _selectedRole = newValue;
+                      });
+                    },
+                    validator: (value) {
+                      if (value == null) {
                         return 'Selecione uma opção';
                       }
                       return null;
@@ -191,7 +234,7 @@ final TextEditingController _controllerDate = TextEditingController();
                         border: const OutlineInputBorder(
                             borderRadius:
                                 BorderRadius.all(Radius.circular(30))),
-                        labelText: 'Data do Ocorrido',
+                        labelText: 'Data de Admissão: ',
                         suffixIcon: IconButton(
                             onPressed: _showDatePicker,
                             icon: const Icon(
@@ -218,29 +261,15 @@ final TextEditingController _controllerDate = TextEditingController();
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(
-                      horizontal: horizontalPadding, vertical: verticalPadding),
-                  child: TextFormField(
-                    validator: validateField,
-                    decoration: const InputDecoration(
-                      fillColor: Colors.white,
-                      filled: true,
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(30))),
-                      hintText: '',
-                      labelText: 'Confirmar senha',
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(
                       horizontal: horizontalButton, vertical: verticalPadding),
                   child: ElevatedButton(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text('Processing Data')),
                         );
+
+                        _submitForm();
                       }
                     },
                     style: ElevatedButton.styleFrom(

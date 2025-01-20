@@ -28,8 +28,8 @@ class User {
   String email;
   String password;
   UserRolesEnum roleId;
-  DateTime createdAt;
-  DateTime updatedAt;
+  DateTime? createdAt;
+  DateTime? updatedAt;
   UserRole role;
   Employee? employee;
   Guardian? guardian;
@@ -40,8 +40,8 @@ class User {
     required this.email,
     required this.password,
     required this.roleId,
-    required this.createdAt,
-    required this.updatedAt,
+    this.createdAt,
+    this.updatedAt,
     required this.role,
     this.employee,
     this.guardian,

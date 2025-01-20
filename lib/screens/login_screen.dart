@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tcc_app/models/employee.dart';
-import 'package:tcc_app/screens/components/login/footer_buttons.dart';
-import 'package:tcc_app/screens/formScreens/manager_signup_form.dart';
+import 'package:tcc_app/screens/formScreens/employee_form.dart';
 import 'components/global/base_app_bar.dart';
 import 'components/login/inputs.dart';
 import 'components/login/center_buttons.dart';
@@ -31,14 +30,6 @@ void rememberLoginAndPassword(bool? value) {
   // setState(() {
   //   isChecked = value ?? false;
   // });
-}
-
-void _selectRegister(BuildContext context) {
-  Navigator.of(context).push(
-    MaterialPageRoute(builder: (_) {
-      return ManagerSignupForm();
-    }),
-  );
 }
 
 class _LoginScreenState extends State<LoginScreen> {
@@ -78,9 +69,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 CenterButtons(
                   selectedHome: () => _selectHome(context),
-                ),
-                FooterButtons(
-                  selectedRegister: () => _selectRegister(context),
                 ),
               ],
             ),

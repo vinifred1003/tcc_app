@@ -1,19 +1,52 @@
 import 'package:flutter/material.dart';
+import 'package:tcc_app/data/dummy_data.dart';
 import 'package:tcc_app/models/employee.dart';
-import 'package:tcc_app/screens/formScreens/manager_signup_form.dart';
+import 'package:tcc_app/screens/editScreens/edit_employee.dart';
+import 'package:tcc_app/screens/formScreens/employee_form.dart';
 import '../components/global/base_app_bar.dart';
 import '../components/global/app_drawer.dart';
 
-class EmployeeList extends StatelessWidget {
+class EmployeeList extends StatefulWidget {
   final List<Employee>? employees;
   const EmployeeList(this.employees, {Key? key}) : super(key: key);
 
+  @override
+  State<EmployeeList> createState() => _EmployeeListState();
+}
+
+class _EmployeeListState extends State<EmployeeList> {
   void _selectManagerSignupForm(BuildContext context) {
     Navigator.of(context).push(
       MaterialPageRoute(builder: (_) {
-        return ManagerSignupForm();
+        return EmployeeForm();
       }),
-    );
+    ).then((result) {
+      if (result[1] != null && result[0] != null) {
+        setState(() {
+          dummyUser.add(result[0]);
+          dummyEmployee.add(result[1]);
+        });
+      }
+    });
+  }
+
+  void _selectEditEmployeeForm(BuildContext context, Employee e) {
+    showModalBottomSheet(
+      context: context,
+      builder: (_) {
+        return EditEmployee(e);
+      },
+    ).then((result) {
+      if (result[1] != null && result[0] != null) {
+        int indexUser = dummyUser.indexWhere((user) => user.id == result[0].id);
+        int indexEmployee =
+            dummyEmployee.indexWhere((employee) => employee.id == result[1].id);
+        setState(() {
+          dummyUser[indexUser] = result[0];
+          dummyEmployee[indexEmployee] = result[1];
+        });
+      }
+    });
   }
 
   @override
@@ -54,9 +87,9 @@ class EmployeeList extends StatelessWidget {
           ),
           Expanded(
             child: ListView.builder(
-              itemCount: employees?.length,
+              itemCount: widget.employees?.length,
               itemBuilder: (ctx, index) {
-                final employee = employees?[index];
+                final employee = widget.employees![index];
 
                 return Card(
                   elevation: 5,
@@ -81,8 +114,7 @@ class EmployeeList extends StatelessWidget {
                     trailing: PopupMenuButton<String>(
                       onSelected: (value) {
                         if (value == 'edit') {
-                          // Ação para Editar
-                          print('Editar item $index');
+                          _selectEditEmployeeForm(context, employee);
                         } else if (value == 'delete') {
                           // Ação para Deletar
                           print('Deletar item $index');
