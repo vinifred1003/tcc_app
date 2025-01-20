@@ -1,7 +1,8 @@
 import 'package:tcc_app/models/user.dart';
 
 enum UserRolesEnum {
-  admin(1);
+  admin(1),
+  employee(2);
 
   final int id;
   const UserRolesEnum(this.id);
@@ -10,13 +11,11 @@ enum UserRolesEnum {
 class UserRole {
   UserRolesEnum id;
   String name;
-  bool isAdmin;
   List<User>? users;
 
   UserRole({
     required this.id,
     required this.name,
-    required this.isAdmin,
     this.users,
   });
 
@@ -24,7 +23,6 @@ class UserRole {
     return UserRole(
       id: UserRolesEnum.values.firstWhere((e) => e.index == json['id']),
       name: json['name'],
-      isAdmin: json['is_admin'],
       users: (json['users'] as List).map((i) => User.fromJson(i)).toList(),
     );
   }
