@@ -17,10 +17,10 @@ import 'package:path_provider/path_provider.dart';
 
 class StudentProfile extends StatelessWidget {
   final Student student;
-  final Response studentPhoto;
+  Response? studentPhoto;
   late QrImage qrCode;
 
-  StudentProfile(this.student, this.studentPhoto, {super.key});
+  StudentProfile({super.key, required this.student, this.studentPhoto});
 
   Future<void> exportQrCodeAsPng() async {
     final qrImageBytes = await qrCode.toImageAsBytes(
