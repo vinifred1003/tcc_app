@@ -7,6 +7,7 @@ import 'package:tcc_app/models/guardian.dart';
 import 'package:tcc_app/models/student.dart';
 
 import 'package:tcc_app/screens/components/home/profile_display.dart';
+import 'package:tcc_app/screens/components/student_profile/profile_display.dart';
 import '../components/global/app_drawer.dart';
 import '../components/global/base_app_bar.dart';
 import 'package:share_plus/share_plus.dart';
@@ -144,7 +145,7 @@ class StudentProfile extends StatelessWidget {
                 width: 500,
                 child: Padding(
                   padding: EdgeInsets.symmetric(vertical: verticalPadding),
-                  child: ProfileDisplay(
+                  child: StudentProfileDisplay(
                     name: student.name,
                     classOrInstitution: student.studentClass!.name,
                     photoResponse: studentPhoto,
