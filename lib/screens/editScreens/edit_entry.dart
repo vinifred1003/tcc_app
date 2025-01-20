@@ -126,89 +126,99 @@ class _EditEntryState extends State<EditEntry> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 5,
-      child: Padding(
-        padding: const EdgeInsets.all(10),
-        child: Column(
-          children: [
-            Text(
-              'N° Matricula: ${widget.studentEntry.student!.registrationNumber}',
-              style: TextStyle(fontSize: 18),
-            ),
-            SizedBox(height: 10),
-            Text(
-              'Nome: ${widget.studentEntry.student!.name}',
-              style: TextStyle(fontSize: 18),
-            ),
-            Container(
-              height: 70,
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                        'Data Selecionada: ${DateFormat('dd/MM/y').format(_selectedDate)}'),
-                  ),
-                  TextButton(
-                    onPressed: _showDatePicker,
-                    child: Text(
-                      'Selecionar Data',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            ),
-            SizedBox(
-              height: 70,
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Text('Hora Selecionada: ${DateFormat('HH:mm').format(
-                      DateTime(
-                        _selectedDate.year,
-                        _selectedDate.month,
-                        _selectedDate.day,
-                        _selectedHour.hour,
-                        _selectedHour.minute,
-                      ),
-                    )}'),
-                  ),
-                  TextButton(
-                    onPressed: _showTimePicker,
-                    child: Text(
-                      'Selecionar Hora',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                ElevatedButton(
-                  onPressed: _submitForm,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).colorScheme.primary,
-                    foregroundColor:
-                        Theme.of(context).textTheme.labelLarge?.color,
-                  ),
-                  child: const Text(
-                    'Enviar',
-                  ),
-                ),
-              ],
-            )
-          ],
+    return Scaffold(
+        appBar: AppBar(
+          title: const Text('Editar Advertência'),
+          backgroundColor: Theme.of(context).colorScheme.primary,
         ),
-      ),
-    );
+        body: Padding(
+          padding: EdgeInsets.all(16.0),
+          child: Card(
+            elevation: 5,
+            child: Padding(
+              padding: const EdgeInsets.all(10),
+              child: Column(
+                children: [
+                  Text(
+                    'N° Matricula: ${widget.studentEntry.student!.registrationNumber}',
+                    style: TextStyle(fontSize: 18),
+                  ),
+                  SizedBox(height: 10),
+                  Text(
+                    'Nome: ${widget.studentEntry.student!.name}',
+                    style: TextStyle(fontSize: 18),
+                  ),
+                  Container(
+                    height: 70,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                              'Data Selecionada: ${DateFormat('dd/MM/y').format(_selectedDate)}'),
+                        ),
+                        TextButton(
+                          onPressed: _showDatePicker,
+                          child: Text(
+                            'Selecionar Data',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 70,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                              'Hora Selecionada: ${DateFormat('HH:mm').format(
+                            DateTime(
+                              _selectedDate.year,
+                              _selectedDate.month,
+                              _selectedDate.day,
+                              _selectedHour.hour,
+                              _selectedHour.minute,
+                            ),
+                          )}'),
+                        ),
+                        TextButton(
+                          onPressed: _showTimePicker,
+                          child: Text(
+                            'Selecionar Hora',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      ElevatedButton(
+                        onPressed: _submitForm,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor:
+                              Theme.of(context).colorScheme.primary,
+                          foregroundColor:
+                              Theme.of(context).textTheme.labelLarge?.color,
+                        ),
+                        child: const Text(
+                          'Enviar',
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
+          ),
+        ));
   }
 }

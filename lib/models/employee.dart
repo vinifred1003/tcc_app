@@ -8,7 +8,7 @@ class Employee {
   int? userId;
   DateTime admissionDate;
   int occupationId;
-  List<int>? photo;
+  String? photo;
   DateTime? createdAt;
   DateTime? updatedAt;
   User? user;
@@ -34,16 +34,22 @@ class Employee {
       id: json['id'],
       name: json['name'],
       userId: json['user_id'],
-      admissionDate: DateTime.parse(json['admission_date']),
-      occupationId: json['occupation_id'],
-      photo: List<int>.from(json['photo']),
-      createdAt: DateTime.parse(json['created_at']),
-      updatedAt: DateTime.parse(json['updated_at']),
-      user: User.fromJson(json['user']),
-      occupation: Occupation.fromJson(json['occupation']),
-      warnings: (json['warnings'] as List)
-          .map((i) => StudentWarning.fromJson(i))
-          .toList(),
+      admissionDate: DateTime.parse(json['admissionDate']),
+      occupationId: json['occupationId'],
+      photo: json['photo'] != null ? json['photo'] as String : '',
+      createdAt:
+          json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
+      updatedAt:
+          json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : null,
+      user: json['user'] != null ? User.fromJson(json['user']) : null,
+      occupation: json['occupation'] != null
+          ? Occupation.fromJson(json['occupation'])
+          : null,
+      warnings: json['warnings'] != null
+          ? (json['warnings'] as List)
+              .map((i) => StudentWarning.fromJson(i))
+              .toList()
+          : null,
     );
   }
 }

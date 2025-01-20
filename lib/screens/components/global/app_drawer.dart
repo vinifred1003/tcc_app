@@ -36,7 +36,7 @@ class AppDrawer extends StatelessWidget {
   void _selectWarningRecords(BuildContext context) {
     Navigator.of(context).push(
       MaterialPageRoute(builder: (_) {
-        return WarningList(dummyWarnings);
+        return WarningList();
       }),
     );
   }

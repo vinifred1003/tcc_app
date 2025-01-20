@@ -218,27 +218,21 @@ class _EntryAndExitFormState extends State<EntryAndExitForm>
                       padding: EdgeInsets.symmetric(
                           horizontal: horizontalPadding,
                           vertical: verticalPadding),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: TextFormField(
-                              controller: rNController,
-                              decoration: const InputDecoration(
-                                fillColor: Colors.white,
-                                filled: true,
-                                border: OutlineInputBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(30))),
-                                hintText: '',
-                                labelText: 'N° Matricula',
-                              ),
-                            ),
-                          ),
-                          IconButton(
+                      child: TextFormField(
+                        controller: rNController,
+                        decoration: InputDecoration(
+                          fillColor: Colors.white,
+                          filled: true,
+                          border: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(30))),
+                          hintText: '',
+                          labelText: 'N° Matricula',
+                          suffixIcon: IconButton(
                             icon: Icon(Icons.qr_code_scanner),
                             onPressed: _scanQRCode,
                           ),
-                        ],
+                        ),
                       ),
                     ),
                     EntryAndExit(
@@ -288,27 +282,21 @@ class _EntryAndExitFormState extends State<EntryAndExitForm>
                       padding: EdgeInsets.symmetric(
                           horizontal: horizontalPadding,
                           vertical: verticalPadding),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: TextFormField(
-                              controller: rNController,
-                              decoration: const InputDecoration(
-                                fillColor: Colors.white,
-                                filled: true,
-                                border: OutlineInputBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(30))),
-                                hintText: '',
-                                labelText: 'N° Matricula',
-                              ),
-                            ),
-                          ),
-                          IconButton(
+                      child: TextFormField(
+                        controller: rNController,
+                        decoration: InputDecoration(
+                          fillColor: Colors.white,
+                          filled: true,
+                          border: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(30))),
+                          hintText: '',
+                          labelText: 'N° Matricula',
+                          suffixIcon: IconButton(
                             icon: Icon(Icons.qr_code_scanner),
                             onPressed: _scanQRCode,
                           ),
-                        ],
+                        ),
                       ),
                     ),
                     EntryAndExit(

@@ -378,7 +378,7 @@ final List<Employee> dummyEmployee = [
     userId: dummyUser[0].id,
     admissionDate: DateTime.now().subtract(const Duration(days: 1500)),
     occupationId: 1,
-    photo: [255, 216, 200], // Dados simulados de foto
+    // photo: [255, 216, 200], // Dados simulados de foto
     createdAt: DateTime.now().subtract(const Duration(days: 1500)),
     updatedAt: DateTime.now().subtract(const Duration(days: 5)),
     user: dummyUser[0],
@@ -390,7 +390,7 @@ final List<Employee> dummyEmployee = [
     userId: dummyUser[1].id,
     admissionDate: DateTime.now().subtract(const Duration(days: 1200)),
     occupationId: 2,
-    photo: [255, 100, 150], // Dados simulados de foto
+    // photo: [255, 100, 150], // Dados simulados de foto
     createdAt: DateTime.now().subtract(const Duration(days: 1200)),
     updatedAt: DateTime.now().subtract(const Duration(days: 3)),
     user: dummyUser[1],
@@ -402,9 +402,6 @@ final List<Occupation> dummyOccupations = [
   Occupation(
     id: 1,
     name: "Project Manager",
-    createdAt: DateTime(2022, 5, 25),
-    updatedAt: DateTime(2023, 7, 30),
-    employees: null,
   )
 ];
 

@@ -86,14 +86,14 @@ class _ProfileDisplayState extends State<ProfileDisplay> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    e.occupation!.name,
+                    e.occupation?.name ?? 'Não informado',
                     style: const TextStyle(
                       fontSize: 18,
                       color: Colors.white,
                     ),
                   ),
                   const Text(
-                    " Desde: ",
+                    " - Desde: ",
                     style: TextStyle(
                       fontSize: 18,
                       color: Colors.white,
