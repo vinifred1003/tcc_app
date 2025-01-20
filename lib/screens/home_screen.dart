@@ -7,13 +7,15 @@ import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:tcc_app/config.dart';
 import 'package:tcc_app/data/dummy_data.dart';
-import 'package:tcc_app/models/attendance.dart';
 import 'package:tcc_app/models/class.dart';
+import 'package:tcc_app/models/employee.dart';
 import 'package:tcc_app/models/guardian.dart';
 import 'package:tcc_app/models/student.dart';
 import 'package:tcc_app/models/student_entry.dart';
 import 'package:tcc_app/models/student_exit.dart';
+import 'package:tcc_app/screens/editScreens/edit_employee.dart';
 import 'package:tcc_app/screens/login_screen.dart';
+import 'package:tcc_app/screens/profileScreens/student_profile.dart';
 
 import '../models/user.dart';
 import 'components/global/app_drawer.dart';
@@ -24,24 +26,21 @@ import 'components/home/profile_display.dart';
 import 'package:http/http.dart' as http;
 
 class HomeScreen extends StatefulWidget {
-  final User user;
+  final Employee employee;
 
-  const HomeScreen({super.key, required this.user});
+  const HomeScreen({super.key, required this.employee});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  late User u;
   late List<String> _guardiansOptions = [];
   String? _selectedOption;
   String scanResult = "";
-  Set<String> _recentlyScanned = {};
   @override
   void initState() {
     super.initState();
-    u = widget.user;
   }
 
   void _selectLoginScreen(BuildContext context) {
@@ -53,17 +52,16 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void addExit(Student student, Guardian guardian) {
-    if (student != null) {
-      dummyExits.add(StudentExit(
-          id: dummyStudents.length + 1,
-          studentId: student.id,
-          student: student,
-          guardianId: guardian.id,
-          exitAt: DateTime.now(),
-          createdAt: DateTime.now(),
-          updatedAt: DateTime.now(),
-          guardian: guardian));
-    }
+    dummyExits.add(StudentExit(
+        id: dummyStudents.length + 1,
+        studentId: student.id,
+        student: student,
+        guardianId: guardian.id,
+        exitAt: DateTime.now(),
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+        guardian: guardian));
+
     Navigator.pop(context, 'OK');
   }
 
@@ -242,22 +240,12 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  Future<void> warningScan() async {
-    String barcodeScanRes;
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    try {
-      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
-          '#ff6666', 'Cancel', true, ScanMode.QR);
-      print(barcodeScanRes);
-    } on PlatformException {
-      barcodeScanRes = 'Failed to get platform version.';
-    }
-
-    if (!mounted) return;
-
-    setState(() {
-      scanResult = barcodeScanRes;
-    });
+  void _selectStudentProfile(BuildContext context, Student studentSelected) {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) {
+        return StudentProfile(student: studentSelected);
+      }),
+    );
   }
 
   Future<void> profileScan() async {
@@ -271,14 +259,28 @@ class _HomeScreenState extends State<HomeScreen> {
       barcodeScanRes = 'Failed to get platform version.';
     }
     if (!mounted) return;
-
-    setState(() {
-      scanResult = barcodeScanRes;
-    });
+    Student? student;
+    try {
+      student = dummyStudents.firstWhere(
+        (student) => student.registrationNumber == barcodeScanRes,
+      );
+    } catch (e) {
+      student = null;
+      const SnackBar(
+        content: Text(
+          'Estudante não encontrado!',
+        ),
+        duration: Duration(seconds: 2),
+      );
+    }
+    if (student != null) {
+      _selectStudentProfile(context, student);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    final e = widget.employee;
     // Use MediaQuery with constraints to make the layout more responsive
     final mediaQuery = MediaQuery.of(context);
     final screenWidth = mediaQuery.size.width;
@@ -310,9 +312,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       vertical: verticalPadding,
                     ),
                     child: ProfileDisplay(
-                      name: u.name,
-                      classOrInstitution:
-                          u.employee?.occupation?.name ?? 'Não informado',
+                      employee: e,
                     ),
                   ),
                   Padding(

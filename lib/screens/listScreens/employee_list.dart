@@ -1,22 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:tcc_app/models/student.dart';
-import 'package:tcc_app/models/user.dart';
+import 'package:tcc_app/models/employee.dart';
 import 'package:tcc_app/screens/formScreens/manager_signup_form.dart';
 import '../components/global/base_app_bar.dart';
 import '../components/global/app_drawer.dart';
 
-class UserRecords extends StatelessWidget {
-  final List<User>? users;
-  const UserRecords(this.users, {Key? key}) : super(key: key);
+class EmployeeList extends StatelessWidget {
+  final List<Employee>? employees;
+  const EmployeeList(this.employees, {Key? key}) : super(key: key);
 
-
-void _selectManagerSignupForm(BuildContext context) {
+  void _selectManagerSignupForm(BuildContext context) {
     Navigator.of(context).push(
       MaterialPageRoute(builder: (_) {
         return ManagerSignupForm();
       }),
     );
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,10 +54,10 @@ void _selectManagerSignupForm(BuildContext context) {
           ),
           Expanded(
             child: ListView.builder(
-              itemCount: users?.length,
+              itemCount: employees?.length,
               itemBuilder: (ctx, index) {
-                final user = users?[index];
-                
+                final employee = employees?[index];
+
                 return Card(
                   elevation: 5,
                   margin: const EdgeInsets.symmetric(
@@ -74,11 +73,11 @@ void _selectManagerSignupForm(BuildContext context) {
                       ),
                     ),
                     title: Text(
-                      user?.name ?? "Fail",
+                      employee?.name ?? "Fail",
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
-                    subtitle: Text(user?.employee?.occupation?.name ??
-                        "Cargo não informado"),
+                    subtitle: Text(
+                        employee?.occupation?.name ?? "Cargo não informado"),
                     trailing: PopupMenuButton<String>(
                       onSelected: (value) {
                         if (value == 'edit') {

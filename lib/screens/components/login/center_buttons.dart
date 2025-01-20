@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:tcc_app/screens/home_screen.dart';
 
 class CenterButtons extends StatelessWidget {
-  void Function() selectedHome;
+  final void Function() selectedHome;
   CenterButtons({super.key, required this.selectedHome});
 
   @override

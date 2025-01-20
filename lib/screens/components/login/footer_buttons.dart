@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class FooterButtons extends StatelessWidget {
-  void Function() selectedRegister;
+  final void Function() selectedRegister;
   FooterButtons({super.key, required this.selectedRegister});
 
   @override

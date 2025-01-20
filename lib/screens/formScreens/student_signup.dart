@@ -9,7 +9,6 @@ import 'package:tcc_app/config.dart';
 import 'package:tcc_app/screens/components/global/app_drawer.dart';
 import 'package:tcc_app/screens/components/global/base_app_bar.dart';
 import 'package:tcc_app/screens/formScreens/guardian_form.dart';
-import '../components/student_signup/qrcode_generator.dart';
 import 'package:http_parser/http_parser.dart';
 
 class StudentSignup extends StatefulWidget {
@@ -41,7 +40,6 @@ class _StudentSignupState extends State<StudentSignup> {
   @override
   void initState() {
     super.initState();
-    qrCodeGenerator = QRCodeGenerator(qrDataStudent: qrData);
     _fetchClassIds();
     if (widget.studentId != null) {
       _fetchStudentData(widget.studentId!);
