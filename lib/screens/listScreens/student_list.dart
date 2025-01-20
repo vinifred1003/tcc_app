@@ -170,7 +170,10 @@ class _StudentListState extends State<StudentList> {
 
       Navigator.of(context).push(
         MaterialPageRoute(builder: (_) {
-          return StudentProfile(student, photoResponse);
+          return StudentProfile(
+            student: student,
+            studentPhoto: photoResponse,
+          );
         }),
       );
     } else {
