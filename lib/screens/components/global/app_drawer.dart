@@ -20,7 +20,7 @@ class AppDrawer extends StatelessWidget {
   void _selectUserRecords(BuildContext context) {
     Navigator.of(context).push(
       MaterialPageRoute(builder: (_) {
-        return EmployeeList(dummyEmployee);
+        return EmployeeList();
       }),
     );
   }

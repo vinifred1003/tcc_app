@@ -21,9 +21,8 @@ class UserRole {
 
   factory UserRole.fromJson(Map<String, dynamic> json) {
     return UserRole(
-      id: UserRolesEnum.values.firstWhere((e) => e.index == json['id']),
+      id: UserRolesEnum.values.firstWhere((e) => e.id == json['id']),
       name: json['name'],
-      users: (json['users'] as List).map((i) => User.fromJson(i)).toList(),
     );
   }
 }

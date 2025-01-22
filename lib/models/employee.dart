@@ -5,6 +5,7 @@ import 'package:tcc_app/models/user.dart';
 class Employee {
   int id;
   String name;
+  String cpf;
   int? userId;
   DateTime admissionDate;
   int occupationId;
@@ -18,6 +19,7 @@ class Employee {
   Employee({
     required this.id,
     required this.name,
+    required this.cpf,
     this.userId,
     required this.admissionDate,
     required this.occupationId,
@@ -33,6 +35,7 @@ class Employee {
     return Employee(
       id: json['id'],
       name: json['name'],
+      cpf: json['cpf'],
       userId: json['user_id'],
       admissionDate: DateTime.parse(json['admissionDate']),
       occupationId: json['occupationId'],

@@ -48,13 +48,13 @@ final dummyUser = [
     role: dummyUserRoles[0],
   ),
   User(
-      id: 2,
-      name: 'Julia Ribeiro Paiva',
-      email: 'juliaRibPaiva@gmail.com',
-      password: '123456',
-      roleId: UserRolesEnum.admin,
-      createdAt: DateTime.now(),
-      updatedAt: DateTime.now(),
+    id: 2,
+    name: 'Julia Ribeiro Paiva',
+    email: 'juliaRibPaiva@gmail.com',
+    password: '123456',
+    roleId: UserRolesEnum.admin,
+    createdAt: DateTime.now(),
+    updatedAt: DateTime.now(),
     role: dummyUserRoles[1],
   ),
   User(
@@ -70,6 +70,7 @@ final dummyUser = [
           id: 3,
           name: 'Jhony Allan Paes',
           admissionDate: DateTime.now(),
+          cpf: '',
           occupationId: 1)),
 ];
 
@@ -368,6 +369,7 @@ final List<Employee> dummyEmployee = [
 // Dados falsos para funcionários
   Employee(
     id: 1,
+    cpf: '',
     name: 'Vinicius Frederico',
     userId: dummyUser[0].id,
     admissionDate: DateTime.now().subtract(const Duration(days: 1500)),
@@ -380,6 +382,7 @@ final List<Employee> dummyEmployee = [
   ),
   Employee(
     id: 2,
+    cpf: '',
     name: 'julia Ribeiro Paiva',
     userId: dummyUser[1].id,
     admissionDate: DateTime.now().subtract(const Duration(days: 1200)),

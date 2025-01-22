@@ -102,7 +102,7 @@ class _EditWarningState extends State<EditWarning> {
       final StudentWarning newStudentWarning = StudentWarning(
         id: widget.studentWarning.id,
         studentId: _selectedStudent!.id,
-        issuedBy: _selectedEmployee!.id,
+        issuedBy: _selectedEmployee!.id!,
         issuedAt: _selectedDate,
         reason: _descriptionController.text,
         severity: "Grave",
