@@ -92,11 +92,13 @@ class _EditEmployeeState extends State<EditEmployee> {
           occupationId: _selectedOccupation!.id,
           cpf: _cpfController.text);
 
+
       final userEdited = User(
         id: widget.employee.user?.id ?? 1,
         name: _nameController.text,
         email: _emailController.text,
         password: _passwordController.text,
+
         roleId: _selectedRole!.id,
         updatedAt: DateTime.now(),
         role: _selectedRole!,
@@ -119,6 +121,8 @@ class _EditEmployeeState extends State<EditEmployee> {
           },
         }),
       );
+
+
 
       if (response.statusCode == 200) {
         Navigator.of(context).pop([userEdited, employeeEdited]);
@@ -197,6 +201,7 @@ class _EditEmployeeState extends State<EditEmployee> {
                     return null;
                   },
                 ),
+
                 const SizedBox(height: 16.0),
                 TextFormField(
                   controller: _cpfController,
@@ -237,6 +242,7 @@ class _EditEmployeeState extends State<EditEmployee> {
                         },
                         decoration: const InputDecoration(labelText: 'Role'),
                       ),
+
                 SizedBox(
                   height: 70,
                   child: Row(

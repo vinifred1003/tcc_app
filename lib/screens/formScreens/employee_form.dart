@@ -26,6 +26,7 @@ class _EmployeeFormState extends State<EmployeeForm> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
   final TextEditingController _controllerDate = TextEditingController();
   final TextEditingController _cpfController = TextEditingController();
 
@@ -128,6 +129,7 @@ class _EmployeeFormState extends State<EmployeeForm> {
 
   Future<void> _submitForm() async {
     if (_formKey.currentState!.validate()) {
+
       setState(() {
         _isLoading = true;
       });
@@ -269,6 +271,7 @@ class _EmployeeFormState extends State<EmployeeForm> {
                   child: TextFormField(
                     controller: _nameController,
                     validator: validateField,
+                    controller: _nameController,
                     decoration: const InputDecoration(
                       fillColor: Colors.white,
                       filled: true,
@@ -285,6 +288,7 @@ class _EmployeeFormState extends State<EmployeeForm> {
                   child: TextFormField(
                     controller: _emailController,
                     validator: validateField,
+                    controller: _emailController,
                     decoration: const InputDecoration(
                       fillColor: Colors.white,
                       filled: true,
@@ -432,6 +436,7 @@ class _EmployeeFormState extends State<EmployeeForm> {
                   child: TextFormField(
                     controller: _passwordController,
                     validator: validateField,
+                    controller: _passwordController,
                     decoration: const InputDecoration(
                       fillColor: Colors.white,
                       filled: true,
