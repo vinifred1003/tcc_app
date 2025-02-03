@@ -6,7 +6,6 @@ import 'package:tcc_app/models/user.dart';
 import 'package:tcc_app/screens/editScreens/edit_employee.dart';
 
 class ProfileDisplay extends StatefulWidget {
-  
   final Employee employee;
 
   const ProfileDisplay({super.key, required this.employee, required});
@@ -16,7 +15,6 @@ class ProfileDisplay extends StatefulWidget {
 }
 
 class _ProfileDisplayState extends State<ProfileDisplay> {
-  
   void _selectEditEmployeeForm(BuildContext context, e) {
     showModalBottomSheet(
       context: context,
@@ -95,7 +93,7 @@ class _ProfileDisplayState extends State<ProfileDisplay> {
                     ),
                   ),
                   const Text(
-                    " desde: ",
+                    " - Desde: ",
                     style: TextStyle(
                       fontSize: 18,
                       color: Colors.white,
@@ -111,7 +109,6 @@ class _ProfileDisplayState extends State<ProfileDisplay> {
                   IconButton(
                       onPressed: () => _selectEditEmployeeForm(context, e),
                       icon: Icon(Icons.edit)),
-                  
                 ],
               ),
             ),

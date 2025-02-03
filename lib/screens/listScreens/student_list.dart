@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:tcc_app/config.dart';
 import 'dart:convert';
 import 'package:tcc_app/models/student.dart';
+import 'package:tcc_app/models/student_entry.dart';
+import 'package:tcc_app/models/student_exit.dart';
 import 'package:tcc_app/screens/components/global/app_drawer.dart';
 import 'package:tcc_app/screens/components/global/base_app_bar.dart';
 import 'package:tcc_app/screens/formScreens/student_signup.dart';
@@ -28,8 +31,7 @@ class _StudentListState extends State<StudentList> {
   }
 
   Future<void> fetchClasses() async {
-    final response =
-        await http.get(Uri.parse('http://172.31.38.224:3070/class'));
+    final response = await http.get(Uri.parse('${AppConfig.baseUrl}/class'));
 
     if (response.statusCode == 200) {
       final List<dynamic> data = json.decode(response.body);
@@ -47,7 +49,7 @@ class _StudentListState extends State<StudentList> {
 
   Future<void> fetchStudents(String? classId) async {
     final response = await http
-        .get(Uri.parse('http://172.31.38.224:3070/student?classId=$classId'));
+        .get(Uri.parse('${AppConfig.baseUrl}/student?classId=$classId'));
 
     if (response.statusCode == 200) {
       final List<dynamic> data = json.decode(response.body);
@@ -74,8 +76,8 @@ class _StudentListState extends State<StudentList> {
       return const Icon(Icons.person);
     }
 
-    final response = await http
-        .get(Uri.parse('http://172.31.38.224:3070/upload/$photoFilename'));
+    final response =
+        await http.get(Uri.parse('${AppConfig.baseUrl}/upload/$photoFilename'));
     if (response.statusCode == 200) {
       return CircleAvatar(
         radius: 30,
@@ -88,7 +90,7 @@ class _StudentListState extends State<StudentList> {
 
   Future<void> _deleteStudent(Student student) async {
     final response = await http.delete(
-      Uri.parse('http://172.31.38.224:3070/student/${student.id}'),
+      Uri.parse('${AppConfig.baseUrl}/student/${student.id}'),
     );
 
     if (response.statusCode == 200) {
@@ -135,12 +137,50 @@ class _StudentListState extends State<StudentList> {
     );
   }
 
-  void _selectStudentProfile(BuildContext context, Student studentSelected) {
-    Navigator.of(context).push(
-      MaterialPageRoute(builder: (_) {
-        return StudentProfile(studentSelected);
-      }),
-    );
+  void _selectStudentProfile(BuildContext context, int studentId) async {
+    final studentRes =
+        await http.get(Uri.parse('${AppConfig.baseUrl}/student/$studentId'));
+
+    final studentEntriesRes = await http.get(Uri.parse(
+        '${AppConfig.baseUrl}/students-attendance/entry?studentId=$studentId'));
+
+    final studentExitsRes = await http.get(Uri.parse(
+        '${AppConfig.baseUrl}/students-attendance/exit?studentId=$studentId'));
+
+    if (studentRes.statusCode == 200) {
+      final student = Student.fromJson(json.decode(studentRes.body));
+      final photoResponse = await http
+          .get(Uri.parse('${AppConfig.baseUrl}/upload/${student.photo}'));
+
+      if (studentEntriesRes.statusCode == 200) {
+        final List<dynamic> entriesJson = json.decode(studentEntriesRes.body);
+        student.entries =
+            entriesJson.map((json) => StudentEntry.fromJson(json)).toList();
+      } else {
+        student.entries = [];
+      }
+
+      if (studentExitsRes.statusCode == 200) {
+        final List<dynamic> exitsJson = json.decode(studentExitsRes.body);
+        student.exits =
+            exitsJson.map((json) => StudentExit.fromJson(json)).toList();
+      } else {
+        student.exits = [];
+      }
+
+      Navigator.of(context).push(
+        MaterialPageRoute(builder: (_) {
+          return StudentProfile(
+            student: student,
+            studentPhoto: photoResponse,
+          );
+        }),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Erro ao visualizar o estudante')),
+      );
+    }
   }
 
   @override
@@ -208,7 +248,6 @@ class _StudentListState extends State<StudentList> {
                           itemCount: filteredStudents.length,
                           itemBuilder: (ctx, index) {
                             final student = filteredStudents[index];
-                            
                             return Card(
                               elevation: 5,
                               margin: const EdgeInsets.symmetric(
@@ -260,7 +299,7 @@ class _StudentListState extends State<StudentList> {
                                   ],
                                 ),
                                 onTap: () =>
-                                    _selectStudentProfile(context, student),
+                                    _selectStudentProfile(context, student.id),
                               ),
                             );
                           },

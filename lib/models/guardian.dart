@@ -40,12 +40,12 @@ class Guardian {
   String phone;
   String email;
   GuardianType type;
-  List<int> photo;
-  DateTime createdAt;
-  DateTime updatedAt;
-  List<Student>? students;
-  List<Guardian>? exits;
-  User? user;
+  // List<int> photo;
+  DateTime? createdAt;
+  DateTime? updatedAt;
+  // List<Student>? students;
+  // List<Guardian>? exits;
+  // User? user;
 
   Guardian({
     required this.id,
@@ -55,12 +55,12 @@ class Guardian {
     required this.phone,
     required this.email,
     required this.type,
-    required this.photo,
-    required this.createdAt,
-    required this.updatedAt,
-    this.students,
-    this.exits,
-    this.user,
+    // required this.photo,
+    this.createdAt,
+    this.updatedAt,
+    // this.students,
+    // this.exits,
+    // this.user,
   });
 
   factory Guardian.fromJson(Map<String, dynamic> json) {
@@ -71,13 +71,14 @@ class Guardian {
       userId: json['user_id'],
       phone: json['phone'],
       email: json['email'],
-      type: GuardianType.values.firstWhere((e) => e.key == json['type']),
-      photo: List<int>.from(json['photo']),
-      createdAt: DateTime.parse(json['created_at']),
-      updatedAt: DateTime.parse(json['updated_at']),
-      students:
-          (json['students'] as List).map((i) => Student.fromJson(i)).toList(),
-      exits: (json['exits'] as List).map((i) => Guardian.fromJson(i)).toList(),
+      type:
+          GuardianType.values.firstWhere((e) => e.displayName == json['type']),
+      // photo: List<int>.from(json['photo']),
+      // createdAt: DateTime.parse(json['created_at']),
+      // updatedAt: DateTime.parse(json['updated_at']),
+      //   students:
+      //       (json['students'] as List).map((i) => Student.fromJson(i)).toList(),
+      //   exits: (json['exits'] as List).map((i) => Guardian.fromJson(i)).toList(),
     );
   }
 }

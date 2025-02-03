@@ -23,26 +23,26 @@ import 'package:tcc_app/models/guardian.dart';
 import 'package:tcc_app/models/user_role.dart';
 
 class User {
-  int id;
+  int? id;
   String name;
   String email;
-  String password;
+  String? password;
   UserRolesEnum roleId;
   DateTime? createdAt;
   DateTime? updatedAt;
-  UserRole role;
+  UserRole? role;
   Employee? employee;
   Guardian? guardian;
 
   User({
-    required this.id,
+    this.id,
     required this.name,
     required this.email,
-    required this.password,
+    this.password,
     required this.roleId,
     this.createdAt,
     this.updatedAt,
-    required this.role,
+    this.role,
     this.employee,
     this.guardian,
   });
@@ -53,13 +53,12 @@ class User {
       name: json['name'],
       email: json['email'],
       password: json['password'],
-      roleId:
-          UserRolesEnum.values.firstWhere((e) => e.index == json['role_id']),
-      createdAt: DateTime.parse(json['created_at']),
-      updatedAt: DateTime.parse(json['updated_at']),
+      roleId: UserRolesEnum.values.firstWhere((e) => e.id == json['roleId']),
+      // createdAt: DateTime.parse(json['createdAt']),
+      // updatedAt: DateTime.parse(json['updatedAt']),
       role: UserRole.fromJson(json['role']),
-      employee: Employee.fromJson(json['employee']),
-      guardian: Guardian.fromJson(json['guardian']),
+      // employee: Employee.fromJson(json['employee']),
+      // guardian: Guardian.fromJson(json['guardian']),
     );
   }
 }

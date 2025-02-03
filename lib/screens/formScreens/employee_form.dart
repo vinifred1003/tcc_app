@@ -1,12 +1,19 @@
+import 'dart:convert';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:tcc_app/data/dummy_data.dart';
+import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
+import 'package:intl/intl.dart';
+import 'package:tcc_app/config.dart';
 import 'package:tcc_app/models/employee.dart';
 import 'package:tcc_app/models/occupation.dart';
 import 'package:tcc_app/models/user.dart';
 import 'package:tcc_app/models/user_role.dart';
 import 'package:tcc_app/screens/components/global/app_drawer.dart';
 import 'package:tcc_app/screens/components/global/base_app_bar.dart';
-import 'package:intl/intl.dart';
+import 'package:tcc_app/utils/validations.dart';
 
 class EmployeeForm extends StatefulWidget {
   const EmployeeForm({super.key});
@@ -20,20 +27,82 @@ class _EmployeeFormState extends State<EmployeeForm> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
+  final TextEditingController _controllerDate = TextEditingController();
+  final TextEditingController _cpfController = TextEditingController();
+
   late DateTime _selectedDate;
-
   Occupation? _selectedOccupation;
-
   UserRole? _selectedRole;
+  List<Occupation> occupations = [];
+  List<UserRole> userRoles = [
+    UserRole(id: UserRolesEnum.admin, name: 'Administrador'),
+    UserRole(id: UserRolesEnum.employee, name: 'Funcionário'),
+  ];
 
   final _formKey = GlobalKey<FormState>();
-  final List<String> rolesName = dummyOccupations
-      .map((occupation) => occupation.name)
-      .toList()
-      .cast<String>();
+  String? _photoFilename;
+  Uint8List? _imageData;
+  bool _isLoading = false;
 
-  final TextEditingController _controllerDate = TextEditingController();
-  // Validator function
+  @override
+  void initState() {
+    super.initState();
+    _fetchOccupations();
+  }
+
+  Future<void> _fetchOccupations() async {
+    final response =
+        await http.get(Uri.parse('${AppConfig.baseUrl}/employee/occupation'));
+    if (response.statusCode == 200) {
+      final List<dynamic> data = json.decode(response.body);
+      setState(() {
+        occupations = data.map((json) => Occupation.fromJson(json)).toList();
+      });
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Erro ao carregar cargos.'),
+          duration: Duration(seconds: 3),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
+  Future<void> _pickImage(ImageSource source) async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: source);
+    if (image != null) {
+      final bytes = await image.readAsBytes();
+      final request = http.MultipartRequest(
+        'POST',
+        Uri.parse('${AppConfig.baseUrl}/upload/image'),
+      );
+      request.files.add(http.MultipartFile.fromBytes(
+        'file',
+        bytes,
+        filename: image.name,
+        contentType: MediaType(
+          'image',
+          'jpeg',
+        ),
+      ));
+      final response = await request.send();
+      if (response.statusCode == 201) {
+        final responseData = await http.Response.fromStream(response);
+        final data = json.decode(responseData.body);
+        setState(() {
+          _photoFilename = data['filename'];
+          _imageData = bytes;
+        });
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Falha ao fazer upload da foto.')),
+        );
+      }
+    }
+  }
+
   String? validateField(String? value) {
     if (value == null || value.isEmpty) {
       return 'Campo obrigatório';
@@ -58,31 +127,72 @@ class _EmployeeFormState extends State<EmployeeForm> {
     });
   }
 
-  void _submitForm() {
+  Future<void> _submitForm() async {
     if (_formKey.currentState!.validate()) {
-      
+
+      setState(() {
+        _isLoading = true;
+      });
+
+      final newEmployee = Employee(
+        id: 0,
+        name: _nameController.text,
+        admissionDate: _selectedDate,
+        occupationId: _selectedOccupation!.id,
+        cpf: _cpfController.text.replaceAll(RegExp(r'[^0-9]'), ''),
+      );
 
       final newUser = User(
-        id: dummyUser.length + 1,
         name: _nameController.text,
         email: _emailController.text,
         password: _passwordController.text,
         roleId: _selectedRole?.id ?? UserRolesEnum.employee,
-        role: _selectedRole ?? dummyUserRoles[1],
+        role: _selectedRole ?? userRoles[1],
       );
 
-      final newEmployee = Employee(
-          id: dummyEmployee.length + 1,
-          name: _nameController.text,
-          admissionDate: _selectedDate,
-          occupationId: _selectedOccupation!.id,
-          user: newUser,
-          occupation: _selectedOccupation);
-          
+      final url = Uri.parse('${AppConfig.baseUrl}/employee');
+      final response = await http.post(
+        url,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, dynamic>{
+          'name': newEmployee.name,
+          'admissionDate': newEmployee.admissionDate.toIso8601String(),
+          'occupationId': newEmployee.occupationId,
+          'photo': _photoFilename,
+          'cpf': newEmployee.cpf,
+          'user': {
+            'name': newUser.name,
+            'email': newUser.email,
+            'password': newUser.password,
+            'roleId': newUser.roleId.id,
+          },
+        }),
+      );
 
-      final List twoClassList = [newUser, newEmployee];
+      setState(() {
+        _isLoading = false;
+      });
 
-      Navigator.of(context).pop(twoClassList);
+      if (response.statusCode == 201) {
+        Navigator.of(context).pop();
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Funcionário cadastrado com sucesso.'),
+            duration: Duration(seconds: 3),
+            backgroundColor: Colors.green,
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Erro ao cadastrar funcionário.'),
+            duration: Duration(seconds: 3),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     }
   }
 
@@ -113,18 +223,42 @@ class _EmployeeFormState extends State<EmployeeForm> {
                         borderRadius: BorderRadius.circular(100),
                         child: InkWell(
                           borderRadius: BorderRadius.circular(100),
-                          onTap: () {},
-                          child: const Opacity(
-                            opacity: 0.85,
-                            child: SizedBox(
-                              height: 150,
-                              width: 150,
-                              child: Image(
-                                image:
-                                    AssetImage('assets/images/foto_perfil.png'),
-                                fit: BoxFit.cover,
+                          onTap: () {
+                            showModalBottomSheet(
+                              context: context,
+                              builder: (BuildContext context) => Wrap(
+                                children: [
+                                  ListTile(
+                                    leading: const Icon(Icons.camera_alt),
+                                    title: const Text('Tirar foto'),
+                                    onTap: () {
+                                      Navigator.pop(context);
+                                      _pickImage(ImageSource.camera);
+                                    },
+                                  ),
+                                  ListTile(
+                                    leading: const Icon(Icons.photo_library),
+                                    title: const Text('Adicionar foto'),
+                                    onTap: () {
+                                      Navigator.pop(context);
+                                      _pickImage(ImageSource.gallery);
+                                    },
+                                  ),
+                                ],
                               ),
+                            );
+                          },
+                          child: Container(
+                            height: 150,
+                            width: 150,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(100),
+                              color: Colors.grey[300],
                             ),
+                            child: _imageData == null
+                                ? const Icon(Icons.camera_alt,
+                                    size: 50, color: Colors.grey)
+                                : Image.memory(_imageData!, fit: BoxFit.cover),
                           ),
                         ),
                       ),
@@ -135,6 +269,7 @@ class _EmployeeFormState extends State<EmployeeForm> {
                   padding: EdgeInsets.symmetric(
                       horizontal: horizontalPadding, vertical: verticalPadding),
                   child: TextFormField(
+                    controller: _nameController,
                     validator: validateField,
                     controller: _nameController,
                     decoration: const InputDecoration(
@@ -151,6 +286,7 @@ class _EmployeeFormState extends State<EmployeeForm> {
                   padding: EdgeInsets.symmetric(
                       horizontal: horizontalPadding, vertical: verticalPadding),
                   child: TextFormField(
+                    controller: _emailController,
                     validator: validateField,
                     controller: _emailController,
                     decoration: const InputDecoration(
@@ -166,9 +302,52 @@ class _EmployeeFormState extends State<EmployeeForm> {
                 Padding(
                   padding: EdgeInsets.symmetric(
                       horizontal: horizontalPadding, vertical: verticalPadding),
+                  child: TextFormField(
+                    controller: _cpfController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Campo obrigatório';
+                      }
+                      if (!isValidCPF(value)) {
+                        return 'CPF inválido';
+                      }
+                      return null;
+                    },
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      TextInputFormatter.withFunction((oldValue, newValue) {
+                        final text = newValue.text;
+                        if (text.length > 11) return oldValue;
+                        String newText = '';
+                        for (int i = 0; i < text.length; i++) {
+                          if (i == 3 || i == 6) newText += '.';
+                          if (i == 9) newText += '-';
+                          newText += text[i];
+                        }
+                        return newValue.copyWith(
+                          text: newText,
+                          selection:
+                              TextSelection.collapsed(offset: newText.length),
+                        );
+                      }),
+                    ],
+                    decoration: const InputDecoration(
+                      fillColor: Colors.white,
+                      filled: true,
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(30))),
+                      hintText: '',
+                      labelText: 'CPF',
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: horizontalPadding, vertical: verticalPadding),
                   child: DropdownButtonFormField<Occupation>(
                     decoration: InputDecoration(
-                      labelText: "Selecione o Cargo:",
+                      labelText: "Cargo:",
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(30),
                       ),
@@ -177,7 +356,7 @@ class _EmployeeFormState extends State<EmployeeForm> {
                     ),
                     value: _selectedOccupation,
                     icon: const Icon(Icons.arrow_drop_down),
-                    items: dummyOccupations.map((Occupation option) {
+                    items: occupations.map((Occupation option) {
                       return DropdownMenuItem<Occupation>(
                         value: option,
                         child: Text(option.name),
@@ -201,7 +380,7 @@ class _EmployeeFormState extends State<EmployeeForm> {
                       horizontal: horizontalPadding, vertical: verticalPadding),
                   child: DropdownButtonFormField<UserRole>(
                     decoration: InputDecoration(
-                      labelText: "Selecione o tipo de Usuário: ",
+                      labelText: "Tipo de Usuário: ",
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(30),
                       ),
@@ -210,7 +389,7 @@ class _EmployeeFormState extends State<EmployeeForm> {
                     ),
                     value: _selectedRole,
                     icon: const Icon(Icons.arrow_drop_down),
-                    items: dummyUserRoles.map((UserRole option) {
+                    items: userRoles.map((UserRole option) {
                       return DropdownMenuItem<UserRole>(
                         value: option,
                         child: Text(option.name),
@@ -255,6 +434,7 @@ class _EmployeeFormState extends State<EmployeeForm> {
                   padding: EdgeInsets.symmetric(
                       horizontal: horizontalPadding, vertical: verticalPadding),
                   child: TextFormField(
+                    controller: _passwordController,
                     validator: validateField,
                     controller: _passwordController,
                     decoration: const InputDecoration(
@@ -273,9 +453,9 @@ class _EmployeeFormState extends State<EmployeeForm> {
                   child: ElevatedButton(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Processing Data')),
-                        );
+                        setState(() {
+                          _isLoading = true;
+                        });
 
                         _submitForm();
                       }
@@ -286,10 +466,15 @@ class _EmployeeFormState extends State<EmployeeForm> {
                       foregroundColor: Theme.of(context).colorScheme.primary,
                       minimumSize: const Size(50, 75),
                     ),
-                    child: const Text(
-                      "Cadastrar",
-                      style: TextStyle(fontSize: 25),
-                    ),
+                    child: _isLoading
+                        ? CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                                Theme.of(context).colorScheme.primary),
+                          )
+                        : const Text(
+                            "Cadastrar",
+                            style: TextStyle(fontSize: 25),
+                          ),
                   ),
                 ),
               ],

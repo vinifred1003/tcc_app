@@ -1,5 +1,4 @@
 bool isValidCPF(String cpf) {
-  print("ENTROU");
   cpf = cpf.replaceAll(RegExp(r'[^0-9]'), '');
 
   if (cpf.length != 11) {

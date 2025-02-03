@@ -3,11 +3,11 @@ import 'package:tcc_app/models/student.dart';
 abstract class Attendance {
   int id;
   int studentId;
-  Student student;
+  Student? student;
 
   Attendance({
     required this.id,
     required this.studentId,
-    required this.student,
+    this.student,
   });
 }
